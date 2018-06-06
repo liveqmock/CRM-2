@@ -261,7 +261,7 @@
                     .post(url, data)
                     .then(res => {
                         if (res.data.code == 200) {
-                            this.$message.success(res.data.msg);
+                            this.$message.success(res.data.data);
                             this.btnLoading = false;
                             this.addMask = false;
                             this.editMask = false;

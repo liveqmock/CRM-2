@@ -140,7 +140,6 @@
             submitForm(form) {
                 let that = this;
                 that.btnLoading = true;
-                console.log(this.form.productcIds)
                 that.$refs[form].validate(valid => {
                     if (valid) {
                         let data = {};
@@ -157,7 +156,7 @@
                             .then(res => {
                                 that.btnLoading = false;
                                 if (res.data.code == 200) {
-                                    that.$message.success(res.data.msg);
+                                    that.$message.success(res.data.data);
                                     setTimeout(function () {
                                         that.$router.push('/brandManage')
                                     }, 1000)

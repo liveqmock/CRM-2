@@ -138,7 +138,7 @@
                             .then(res => {
                                 that.btnLoading = false;
                                 if (res.data.code == 200) {
-                                    that.$message.success(res.data);
+                                    that.$message.success(res.data.data);
                                     setTimeout(function () {
                                         that.$router.push('/brandManage')
                                     }, 1000)
