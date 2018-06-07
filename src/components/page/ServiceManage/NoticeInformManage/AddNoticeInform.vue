@@ -180,6 +180,7 @@
             this.isIndeterminate=false;
             this.checkAll=false;
             this.date='';
+            this.checked = [true, false];
             // this.form.pushType='1';
             // this.form.pushCountry='3';
             this.getLevelList();
