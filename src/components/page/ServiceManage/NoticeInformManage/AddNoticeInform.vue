@@ -102,9 +102,9 @@
                 form: {
                     nType: '1',//   1:公告   2：通知
                     content: '',//   内容
-                    pushType: '1',//   1：即时推送  2：定时推送
+                    pushType: '',//   1：即时推送  2：定时推送
                     pushWay: '',//   推送人群
-                    pushCountry: '3',//   1：全国 2：国外 3：定省
+                    pushCountry: '',//   1：全国 2：国外 3：定省
                     createAdmin: '',//   发布人
                     original_img: '',
                     small_img: ''
@@ -305,9 +305,9 @@
                 that.checkedUsers = val ? that.users : [];
                 that.isIndeterminate = false;
                 if (val) {
-                    let result = 0;
+                    let result = '';
                     for (let i = 0; i < that.users.length; i++) {
-                        result += Math.pow(2, i)
+                        result += that.users[i].id+',';
                     }
                     that.form.pushWay = result;
                 } else {
@@ -317,11 +317,11 @@
             handleCheckedUsersChange(value) {
                 let that = this;
                 let checkedCount = value.length;
-                let result = 0;
+                let result = '';
                 for (let i in that.users) {
                     for(let j in value){
                         if (that.users[i].id == value[j].id) {
-                            result += Math.pow(2, i)
+                            result += that.users[i].id+',';
                         }
                     }
                 }
@@ -334,7 +334,13 @@
                 let that = this;
                 that.checked = [false, false];
                 that.checked[num] = true;
+                utils.cleanData(1,this.form);
                 that.form.nType = num + 1;
+                that.isIndeterminate=false;
+                that.checkAll=false;
+                that.date='';
+                that.getLevelList();
+                that.ajax=false;
                 if (num == 1) {
                     that.title = ''
                 }
@@ -354,27 +360,56 @@
                 params.small_img=that.form.small_img;
                 if (that.form.nType == 1) {
                     params.title = that.title;
-                }
-                if (that.form.pushType == 2) {
-                    params.orderTime = that.date ? moment(that.date).format('YYYY-MM-DD HH:mm:ss') : '';
-                }
-                if(that.form.pushCountry==3){
-                    if(that.address){
-                        params.provinceId=that.address[0];
-                        if(that.address[1]){
-                            params.cityId=that.address[1];
-                        }else{
-                            params.cityId=''
-                        }
-                        if(that.address[2]){
-                            params.areaId=that.address[2];
-                        }else{
-                            params.areaId=''
-                        }
-                    }else{
-                        that.$message.warning('请选择推送区域!');
+                    if(!params.title){
+                        that.$message.warning('请输入公告标题!');
                         return
                     }
+                }
+                if(!params.content){
+                    that.$message.warning('请输入详情!');
+                    return
+                }
+                if(!params.pushType){
+                    that.$message.warning('请选择推送方式!');
+                    return
+                }else{
+                    if(params.pushType==2){
+                        if(!that.date){
+                            that.$message.warning('请选择推送时间!');
+                            return
+                        }else{
+                            params.orderTime = moment(that.date).format('YYYY-MM-DD HH:mm:ss');
+                        }
+                    }
+                }
+                if(!params.pushWay){
+                    that.$message.warning('请选择推送人群!');
+                    return
+                }else{
+                    params.pushWay=params.pushWay.slice(0,-1)
+                }
+                if(params.pushCountry!=undefined){
+                    if(params.pushCountry==3){
+                        if(that.address){
+                            params.provinceId=that.address[0];
+                            if(that.address[1]){
+                                params.cityId=that.address[1];
+                            }else{
+                                params.cityId=''
+                            }
+                            if(that.address[2]){
+                                params.areaId=that.address[2];
+                            }else{
+                                params.areaId=''
+                            }
+                        }else{
+                            that.$message.warning('请选择具体推送区域!');
+                            return
+                        }
+                    }
+                }else{
+                    that.$message.warning('请选择推送区域!');
+                    return
                 }
                 params.url=pApi.addNotice;
                 that.btnLoading = true;

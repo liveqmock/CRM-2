@@ -181,7 +181,8 @@
                 status:'',
                 id:'',
                 btnLoading:false,
-                levels:[]
+                levels:[],
+                levelIds:[]
             }
         },
         created() {
@@ -212,7 +213,9 @@
                         if (resData.data.code == 200) {
                             for (let i in resData.data.data) {
                                 let name=resData.data.data[i].name;
+                                let id=resData.data.data[i].id;
                                 that.levels.push(name);
+                                that.levelIds.push(id);
                             }
                             this.getList(this.page.currentPage)
                         } else {
@@ -255,22 +258,15 @@
                         if (res.data.code == 200) {
                             that.tableLoading = false;
                             for(let i in res.data.data.data){
-                                let num=res.data.data.data[i].push_way;
-                                let arr = [];
-                                for (let j = 0; 1; j++) {
-                                    if (num / 2 >= 1) {
-                                        arr[j] = num % 2;
-                                        num = parseInt(num / 2);
-                                    } else {
-                                        arr[j] = 1;
-                                        break;
-                                    }
-                                }
+                                let arr=res.data.data.data[i].push_way.split(',');
                                 let temp=[];
-                                for(let k in arr){
-                                    if (arr[k] && arr[k] == 1) {
-                                        if(temp.indexOf(name)==-1){
-                                            temp.push(that.levels[k])
+                                for(let j in that.levelIds){
+                                    for(let k in arr){
+                                        if (arr[k] ==that.levelIds[j]) {
+                                            let name=that.levels[k];
+                                            if(temp.indexOf(name)==-1){
+                                                temp.push(that.levels[k])
+                                            }
                                         }
                                     }
                                 }

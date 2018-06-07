@@ -190,27 +190,19 @@
                                 .post(api.getDealerLevelList, param)
                                 .then(resData => {
                                     let count = 0;
-                                    let num=res.data.data.push_way;
-                                    let arr = [];
-                                    for (let i = 0; 1; i++) {
-                                        if (num / 2 >= 1) {
-                                            arr[i] = num % 2;
-                                            num = parseInt(num / 2);
-                                        } else {
-                                            arr[i] = 1;
-                                            break;
-                                        }
-                                    }
+                                    let arr=res.data.data.push_way.split(',');
                                     if (resData.data.code == 200) {
                                         for (let i in resData.data.data) {
                                             let name=resData.data.data[i].name;
                                             if(that.users.indexOf(name)==-1){
                                                 that.users.push(name);
                                             }
-                                            if (arr[i] && arr[i] == 1) {
-                                                count++;
-                                                if(that.checkedUsers.indexOf(name)==-1){
-                                                    that.checkedUsers.push(name)
+                                            for(let j in arr){
+                                                if(arr[j]==resData.data.data[i].id){
+                                                    count++;
+                                                    if(that.checkedUsers.indexOf(name)==-1){
+                                                        that.checkedUsers.push(name)
+                                                    }
                                                 }
                                             }
                                         }
