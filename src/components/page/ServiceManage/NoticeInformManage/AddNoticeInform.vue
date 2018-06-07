@@ -344,6 +344,7 @@
                 if (num == 1) {
                     that.title = ''
                 }
+                this.form.createAdmin = localStorage.getItem("ms_userID");
             },
             // 提交表单
             submitForm() {
