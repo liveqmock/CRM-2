@@ -57,11 +57,16 @@
                     <div>
                         <el-button type="primary" @click="toMemberTree" style="margin-left: 0">查看会员树状图</el-button>
                     </div>
-                    <!--<el-button type="primary" style="margin-left: 0">用户操作日志</el-button>-->
+                    <div>
+                        <el-button type="primary" @click="toOperateLog" style="margin-left: 0">用户操作日志</el-button>
+                    </div>
+                    <div>
+                        <el-button type="primary" @click="toMemberTree" style="margin-left: 0">他的账户</el-button>
+                    </div>
                 </div>
                 <div class="clearfix"></div>
             </div>
-            <div class="author-inf-area">
+            <div class="author-inf-area line">
                 <div class="left">
                     <div class="title">
                         <h3>授权信息</h3>
@@ -73,10 +78,13 @@
                             <span v-if="permit.d_type==2">供货经销商</span>
                             <span v-if="permit.d_type==3">网红经销商</span>
                         </div>
-                        <div class="item-row">
-                            <div class="item">授权码：{{permit.code}}</div>
-                            <div class="item">授权层级：{{permit.levelName}}级</div>
-                        </div>
+                    </div>
+                    <div class="item-row">
+                        <div class="item">授权码：{{permit.code}}</div>
+                        <div class="item">授权层级：{{permit.levelName}}级</div>
+                    </div>
+                    <div class="item-row">
+                        <div class="item">经验值：{{permit.code}}</div>
                     </div>
                 </div>
                 <div class="center">
@@ -84,78 +92,93 @@
                 </div>
                 <div class="clearfix"></div>
             </div>
-            <!--<div class="promote-inf-area line">
+            <div class="line">
+                <div class="left">
+                    <div class="title">
+                        <h3>拼店信息</h3>
+                    </div>
+                    <div class="item-row">
+                        <div class="item">参与店铺：{{}}</div>
+                        <div class="item">开设店铺：{{}}</div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="promote-inf-area line">
                 <div class="left">
                     <div class="title">
                         <h3>晋升记录</h3>
                     </div>
                     <div class="item-row">
                         <div class="item">
-                            <span>实习省代&#45;&#45;省级代理</span>
+                            <span>实习省代--省级代理</span>
                             <span style="margin-left: 20px">2018-05-12 12:32:31</span>
                         </div>
                     </div>
                     <div class="item-row">
                         <div class="item">
-                            <span>实习省代&#45;&#45;省级代理</span>
+                            <span>实习省代--省级代理</span>
                             <span style="margin-left: 20px">2018-05-12 12:32:31</span>
                         </div>
                     </div>
                 </div>
                 <div class="clearfix"></div>
-            </div>-->
-            <!--<div class="others-inf-area line">
+            </div>
+            <div class="others-inf-area line">
                 <div class="left">
                     <div class="title">
                         <h3>其他信息</h3>
                     </div>
                     <div class="item-row">
                         <div class="item-row">
-                            <div class="item">获得荣誉：<span class="color-blue">{{detail.ID}}</span></div>
+                            <div class="item">获得荣誉：<span class="color-blue">{{dealer.id}}</span></div>
+                            <div class="item">消费金额：<span class="color-red">{{dealer.id}}</span>/元</div>
                         </div>
                         <div class="item-row">
-                            <div class="item">消费金额：<span class="color-red">{{detail.ID}}</span>/元</div>
-                            <div class="item">经验值积分：{{detail.ID}}</div>
+                            <div class="item">活跃度积分：{{dealer.id}}分</div>
+                            <div class="item">活跃等级：{{dealer.id}}</div>
                         </div>
+
                     </div>
                 </div>
                 <div class="clearfix"></div>
-            </div>-->
-            <!--<div class="user-tag-area">-->
-                <!--<div class="title">-->
-                    <!--<h3>用户标签</h3>-->
-                <!--</div>-->
-                <!--<div class="tags-area">-->
-                    <!--<el-tag-->
-                            <!--:key="tag"-->
-                            <!--v-for="tag in dynamicTags"-->
-                            <!--closable-->
-                            <!--color="#fff"-->
-                            <!--:disable-transitions="false"-->
-                            <!--@close="handleClose(tag)">-->
-                        <!--{{tag}}-->
-                    <!--</el-tag>-->
-                    <!--<div style="margin-top: 20px">-->
-                        <!--<el-input-->
-                                <!--class="input-new-tag"-->
-                                <!--v-if="inputVisible"-->
-                                <!--v-model="inputValue"-->
-                                <!--ref="saveTagInput"-->
-                                <!--@keyup.enter.native="handleInputConfirm"-->
-                                <!--@blur="handleInputConfirm"-->
-                                <!--placeholder="请输入标签文字"-->
-                        <!--</el-input>-->
-                        <!--<el-button type="primary" class="button-new-tag" @click="showInput">添加标签</el-button>-->
-                    <!--</div>-->
-                <!--</div>-->
-            <!--</div>-->
+            </div>
+            <div class="user-tag-area">
+                <div class="title">
+                    <h3>用户标签</h3>
+                </div>
+                <div class="tags-area">
+                    <el-tag
+                        :key="tag"
+                        v-for="tag in dynamicTags"
+                        closable
+                        color="#fff"
+                        :disable-transitions="false"
+                        @close="handleClose(tag)">
+                        {{tag}}
+                    </el-tag>
+                    <div style="margin-top: 20px">
+                        <el-input
+                            class="input-new-tag"
+                            v-if="inputVisible"
+                            v-model="inputValue"
+                            ref="saveTagInput"
+                            @keyup.enter.native="handleInputConfirm"
+                            @blur="handleInputConfirm"
+                            placeholder="请输入标签文字"
+                        >
+                        </el-input>
+                        <el-button type="primary" class="button-new-tag" @click="showInput">添加标签</el-button>
+                    </div>
+                </div>
+            </div>
             <div style="margin:50px">
                 <el-button type="primary" @click="backToList">返回列表</el-button>
             </div>
         </div>
 
         <!--基础信息修改弹窗-->
-        <edit-basic  @msg='basicToast' :dealer='dealer' :id="id" v-if="isShowEditBasic"></edit-basic>
+        <edit-basic @msg='basicToast' :dealer='dealer' :id="id" v-if="isShowEditBasic"></edit-basic>
         <!--授权信息修改弹窗-->
         <edit-author @msg='authorToast' :permit='permit' :id="id" v-if="isShowEditAuthor"></edit-author>
     </div>
@@ -177,9 +200,9 @@
         data: function () {
             return {
                 // 权限控制
-                p:{
-                    updateDealerById:false,
-                    updateDealerPermitById:false,
+                p: {
+                    updateDealerById: false,
+                    updateDealerPermitById: false,
                 },
 
                 dealer: {},
@@ -190,8 +213,8 @@
                 isShowEditBasic: false,
                 isShowEditAuthor: false,
                 formLabelWidth: '100px',
-                id:'',
-                loading:false
+                id: '',
+                loading: false
             }
         },
         activated() {
@@ -209,27 +232,27 @@
                 }
             },
             basicToast(msg) {
-                let that=this;
+                let that = this;
                 that.isShowEditBasic = msg;
                 setTimeout(function () {
                     that.getDetail()
-                },1000)
+                }, 1000)
             },
             authorToast(msg) {
-                let that=this;
+                let that = this;
                 that.isShowEditAuthor = msg;
                 setTimeout(function () {
                     that.getDetail()
-                },1000)
+                }, 1000)
             },
             //获取详情
             getDetail() {
                 let that = this;
                 let data = {
                     id: that.id,
-                    url:pApi.findDealerById
+                    url: pApi.findDealerById
                 };
-                that.loading=true;
+                that.loading = true;
                 that.$axios
                     .post(api.findDealerById, data)
                     .then(res => {
@@ -272,15 +295,15 @@
             },
             //跳到下级代理页面
             toLowerAgent() {
-                let that=this;
-                sessionStorage.setItem('memberId',that.id);
+                let that = this;
+                sessionStorage.setItem('memberId', that.id);
                 that.$router.push({path: '/lowerMemberManage'})
             },
             //跳到会员树状图页面
             toMemberTree() {
-                let that=this;
-                sessionStorage.setItem('memberId',that.id);
-                this.$router.push({path: '/memberTree', query: {'memberId':that.id}})
+                let that = this;
+                sessionStorage.setItem('memberId', that.id);
+                this.$router.push({path: '/memberTree', query: {'memberId': that.id}})
             },
             //修改基础信息
             updateBasicInf() {
@@ -290,6 +313,12 @@
             updateAuthorInf() {
                 this.isShowEditAuthor = true;
             },
+            //跳到用户日志
+            toOperateLog(){
+                let id=this.id;
+                sessionStorage.setItem('userId',id);
+                this.$router.push({path:'/operateLog',userId:id})
+            }
 
         }
     }

@@ -110,6 +110,7 @@
                         if (res.data.code == 200) {
                             that.loading = false;
                             that.form = res.data.data.product;
+                            that.form.status=that.form.status.toString();
                             that.detailData = res.data.data.userProduct;
                         } else {
                             that.loading = false;
