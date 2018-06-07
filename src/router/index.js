@@ -102,6 +102,18 @@ export default new Router({
                     meta: { title: '下级代理',url:'/admin/dealer/queryDealerPageList' }
                 },
                 {
+                    name:'MemberAccount',
+                    path: '/MemberAccount',
+                    component: resolve => require(['../components/page/MemberManage/MemberManage/MemberAccount.vue'], resolve),
+                    meta: { title: '会员账户',url:'' }
+                },
+                {
+                    name:'MemberCard',
+                    path: '/MemberCard',
+                    component: resolve => require(['../components/page/MemberManage/MemberManage/MemberCard.vue'], resolve),
+                    meta: { title: '会员银行卡',url:'' }
+                },
+                {
                     name:'memberDetail',
                     path: '/memberDetail',
                     component: resolve => require(['../components/page/MemberManage/MemberManage/MemberDetail.vue'], resolve),
@@ -271,7 +283,7 @@ export default new Router({
                     path: '/editMangerMsg',
                     component: resolve => require(['../components/page/Permission/EditMangerMsg.vue'], resolve),
                     meta: { title: '管理员基础信息修改',url:'/editMangerMsg' }
-                },
+                }
             ]
         },
         {
