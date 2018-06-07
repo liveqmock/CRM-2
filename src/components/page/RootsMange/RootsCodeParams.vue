@@ -177,7 +177,6 @@
             getList() {
                 let that = this;
                 let data = {
-                    // page: val
                     url: pApi.getAllCategoryBrand
                 };
                 this.tableLoading = true;
@@ -280,9 +279,8 @@
                 that.$axios.post(api.productAllCode, param)
                     .then(res => {
                         if (res.data.code == 200) {
-                            that.$message.success(res.data.msg);
+                            that.$message.success('操作成功');
                             that.getList();
-                            console.log()
                         } else {
                             that.$message.warning(res.data.msg);
                         }
@@ -315,7 +313,7 @@
                 that.$axios.post(api.loseCategoryBrandCode, param)
                     .then(res => {
                         if (res.data.code == 200) {
-                            that.$message.success(res.data.data);
+                            that.$message.success('修改成功!');
                             that.getList();
                         } else {
                             that.$message.warning(res.data.msg);
