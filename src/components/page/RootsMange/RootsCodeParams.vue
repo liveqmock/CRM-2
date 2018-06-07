@@ -315,7 +315,7 @@
                 that.$axios.post(api.loseCategoryBrandCode, param)
                     .then(res => {
                         if (res.data.code == 200) {
-                            that.$message.success(res.data.msg);
+                            that.$message.success(res.data.data);
                             that.getList();
                         } else {
                             that.$message.warning(res.data.msg);
