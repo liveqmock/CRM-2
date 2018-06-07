@@ -131,6 +131,36 @@ export default new Router({
                     component: resolve => require(['../components/page/MemberManage/JoinManage/InviteLink.vue'], resolve),
                     meta: { title: '邀请链接' }
                 },
+                {
+                    name:'operateLog',
+                    path: '/operateLog',
+                    component: resolve => require(['../components/page/MemberManage/OperateLog/OperateLog.vue'], resolve),
+                    meta: { title: '查看会员操作日志' }
+                },
+                {
+                    name:'cashAccountBalance',
+                    path: '/cashAccountBalance',
+                    component: resolve => require(['../components/page/MemberManage/UserAccount/CashAccountBalance.vue'], resolve),
+                    meta: { title: '现金账户收支明细' }
+                },
+                {
+                    name:'tokenAccountBalance',
+                    path: '/tokenAccountBalance',
+                    component: resolve => require(['../components/page/MemberManage/UserAccount/TokenAccountBalance.vue'], resolve),
+                    meta: { title: '代币账户收支明细' }
+                },
+                {
+                    name:'shareAccountBalance',
+                    path: '/shareAccountBalance',
+                    component: resolve => require(['../components/page/MemberManage/UserAccount/ShareAccountBalance.vue'], resolve),
+                    meta: { title: '分红账户收支明细' }
+                },
+                {
+                    name:'integralAccountBalance',
+                    path: '/integralAccountBalance',
+                    component: resolve => require(['../components/page/MemberManage/UserAccount/IntegralAccountBalance.vue'], resolve),
+                    meta: { title: '积分账户收支明细' }
+                },
                 //服务管理
                 {
                     name:'noticeInformManage',

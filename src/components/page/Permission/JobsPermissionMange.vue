@@ -2,7 +2,7 @@
     <div>
         <breadcrumb :nav='nav'></breadcrumb>
         <el-card>
-            <el-button v-if="p.addRole" type='primary' @click="addRole">添加角色</el-button>
+            <el-button v-if="p.addRole" type='primary' @click="addRole">添加岗位</el-button>
             <el-table v-loading="tableLoading" class="w-table" stripe :data="tableData" :height="height" border style="width: 100%">
                 <el-table-column prop="id" label="ID" width="180" align="center"></el-table-column>
                 <el-table-column prop="rname" label="角色名称" align="center"></el-table-column>
