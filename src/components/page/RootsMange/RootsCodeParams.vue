@@ -73,8 +73,8 @@
                 <span style="color:red;font-size:12px;margin-left:80px">仅限4位前置防伪码，不可与之前设置的防伪码相同</span>
             </div>
             <div slot="footer" class="dialog-footer">
-                <el-button @click="isShowDialog = false">取 消</el-button>
                 <el-button type="primary" @click="confirmAdd()">确 定</el-button>
+                <el-button @click="isShowDialog = false">取 消</el-button>
             </div>
         </el-dialog>
         <el-dialog title="生成备码" :visible.sync="isShowCreateCode" width="30%">
@@ -300,6 +300,7 @@
                         if (res.data.code == 200) {
                             that.$message.success('操作成功');
                             that.getList();
+                            that.isShowCreateCode = false;
                         } else {
                             that.$message.warning(res.data.msg);
                         }
@@ -307,7 +308,6 @@
                     .catch(err => {
                         console.log(err);
                     });
-                that.isShowCreateCode = false;
             },
 
             // 失效

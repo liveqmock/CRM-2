@@ -35,7 +35,8 @@
                           <el-button v-if="p.deleteCodeTemplate" type="danger" @click="deleteTpl(scope.row)">删除</el-button>
                         </template>
                         <template v-if="scope.row.productCount > 0">
-                          <el-button v-if="p.loseCodeTemplate" type="warning" @click="failureTpl(scope.row)">失效</el-button>
+                          <el-button v-if="p.loseCodeTemplate && scope.row.status == 1" type="warning" @click="failureTpl(scope.row)">失效</el-button>
+                          <el-button v-if="p.loseCodeTemplate && scope.row.status == 0" type="warning" disabled>已失效</el-button>
                         </template>
                     </template>
                 </el-table-column>
@@ -314,6 +315,7 @@ export default {
         if(res.data.code == 200){
           this.$message.success('修改成功!');
           this.getList(this.page.currentPage)
+          row.status = 0;
         }else{
           this.$message.warning(res.data.msg);
         }

@@ -114,8 +114,8 @@
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
-            <el-button @click="isShowDialog = false">取 消</el-button>
             <el-button type="primary" @click="confirmCreateCode('diaForm')">确 定</el-button>
+            <el-button @click="isShowDialog = false">取 消</el-button>
           </div>
         </el-dialog>
     </div>
