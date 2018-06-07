@@ -11,9 +11,11 @@
                 <el-table-column prop="code" label="设置参数" align="center"></el-table-column>
                 <el-table-column v-if="isShowOperate" label="操作" align="center">
                     <template slot-scope="scope">
-                        <el-button type="primary" v-if="p.productAllCode&&scope.row.code&&scope.row.status==1" @click='createCode(scope.row)'>生成备码
+                        <el-button type="primary" v-if="p.productAllCode&&scope.row.code&&scope.row.status==1"
+                                   @click='createCode(scope.row)'>生成备码
                         </el-button>
-                        <el-button type="danger" v-if="p.loseCategoryBrandCode&&scope.row.code&&scope.row.status==1||scope.row.status==3"
+                        <el-button type="danger"
+                                   v-if="p.loseCategoryBrandCode&&scope.row.code&&scope.row.status==1||scope.row.status==3"
                                    @click='lostFunc(scope.row)'>失效
                         </el-button>
                         <span v-if="scope.row.status==2">生成中</span>
@@ -66,7 +68,7 @@
             </div>
             <div style="margin-top:20px">
                 设置参数
-                <el-input style="width:300px;margin-left:20px" v-model="setParams"></el-input>
+                <el-input style="width:300px;margin-left:20px" @blur="paramsReg" v-model="setParams"></el-input>
                 <br/>
                 <span style="color:red;font-size:12px;margin-left:80px">仅限4位前置防伪码，不可与之前设置的防伪码相同</span>
             </div>
@@ -76,7 +78,8 @@
             </div>
         </el-dialog>
         <el-dialog title="生成备码" :visible.sync="isShowCreateCode" width="30%">
-            <div style="width:100%;text-align:center;font-size:16px"><span v-if="sended">已</span>向{{showPhone}}发送验证码，请输入验证码才可以进行生成操作</div>
+            <div style="width:100%;text-align:center;font-size:16px"><span v-if="sended">已</span>向{{showPhone}}发送验证码，请输入验证码才可以进行生成操作
+            </div>
             <div style="width:100%;">
                 <el-input style="width:210px;margin:5% 0 0 12%" v-model="telephoneCode" placeholder="请输入验证码"></el-input>
                 <el-button @click="getCode('create')" class="code-btn" type="primary" v-if="code">获取验证码</el-button>
@@ -88,9 +91,11 @@
             </div>
         </el-dialog>
         <el-dialog title="失效操作" :visible.sync="isShowlostFunc" width="30%">
-            <div style="width:100%;text-align:center;font-size:16px"><span v-if="sended1">已</span>向{{showPhone}}发送验证码，请输入验证码才可以进行生成操作</div>
+            <div style="width:100%;text-align:center;font-size:16px"><span v-if="sended1">已</span>向{{showPhone}}发送验证码，请输入验证码才可以进行生成操作
+            </div>
             <div style="width:100%;">
-                <el-input style="width:210px;margin:5% 0 0 12%" v-model="telephoneCode1" placeholder="请输入验证码"></el-input>
+                <el-input style="width:210px;margin:5% 0 0 12%" v-model="telephoneCode1"
+                          placeholder="请输入验证码"></el-input>
                 <el-button @click="getCode('lost')" class="code-btn" type="primary" v-if="code1">获取验证码</el-button>
                 <el-button class="code-btn" type="primary" v-else>{{codeTime1}}s</el-button>
             </div>
@@ -114,12 +119,12 @@
         data() {
             return {
                 // 权限控制
-                p:{
-                    addCategoryBrandCode:false,
-                    productAllCode:false,
-                    loseCategoryBrandCode:false,
+                p: {
+                    addCategoryBrandCode: false,
+                    productAllCode: false,
+                    loseCategoryBrandCode: false,
                 },
-                isShowOperate:true,
+                isShowOperate: true,
 
                 nav: ["溯源管理", "防伪码参数设置"],
                 loading: false,
@@ -129,16 +134,16 @@
                 isShowCreateCode: false,
                 isShowlostFunc: false,
                 phone: '',
-                showPhone:'',
+                showPhone: '',
                 codeTime: 0,
                 code: true,
                 codeTime1: 0,
                 code1: true,
                 telephoneCode: '',
                 telephoneCode1: '',
-                sended:false,
-                sended1:false,
-                productCode:'',
+                sended: false,
+                sended1: false,
+                productCode: '',
                 firstIndex: -1,
                 secondIndex: -1,
                 thirdIndex: -1,
@@ -151,9 +156,9 @@
                     currentPage: 1,
                     totalPage: 0
                 },
-                id:'',
-                cId:'',//产品id
-                bId:''//品牌id
+                id: '',
+                cId: '',//产品id
+                bId: ''//品牌id
             };
         },
         created() {
@@ -161,7 +166,7 @@
             this.height = winHeight;
             this.getList();
             this.pControl();
-            this.showPhone=localStorage.getItem('ms_userPhone').substring(0,3)+'****'+localStorage.getItem('ms_userPhone').substring(7);
+            this.showPhone = localStorage.getItem('ms_userPhone').substring(0, 3) + '****' + localStorage.getItem('ms_userPhone').substring(7);
         },
         methods: {
             // 权限控制
@@ -169,7 +174,7 @@
                 for (const k in this.p) {
                     this.p[k] = utils.pc(pApi[k]);
                 }
-                if (!this.p.productAllCode &&!this.p.loseCategoryBrandCode) {
+                if (!this.p.productAllCode && !this.p.loseCategoryBrandCode) {
                     this.isShowOperate = false;
                 }
             },
@@ -210,32 +215,38 @@
             addCodeParams() {
                 this.isShowDialog = true;
                 this.getFirst();
-                this.secondList=[];
-                this.brandList=[];
-                this.firstIndex=-1;
-                this.secondIndex=-1;
-                this.thirdIndex=-1;
-                this.setParams='';
+                this.secondList = [];
+                this.brandList = [];
+                this.firstIndex = -1;
+                this.secondIndex = -1;
+                this.thirdIndex = -1;
+                this.setParams = '';
             },
-            confirmAdd(){
-                let that=this;
-                if(!that.cId){
+            confirmAdd() {
+                let that = this;
+                if (!that.cId) {
                     that.$message.warning('请选择品类!');
                     return
                 }
-                if(!that.bId){
+                if (!that.bId) {
                     that.$message.warning('请选择品牌!');
                     return
                 }
-                if(!that.setParams){
+                if (!that.setParams) {
                     that.$message.warning('请设置参数!');
                     return
+                }else{
+                    let reg = /^\d{4}$/;
+                    if (!reg.test(that.setParams)) {
+                        that.$message.warning('请输入正确的参数!');
+                        return
+                    }
                 }
-                let params={};
-                params.cId=that.cId;
-                params.bId=that.bId;
-                params.code=that.setParams;
-                params.url=pApi.addCategoryBrandCode;
+                let params = {};
+                params.cId = that.cId;
+                params.bId = that.bId;
+                params.code = that.setParams;
+                params.url = pApi.addCategoryBrandCode;
                 that.$axios
                     .post(api.addCategoryBrandCode, params)
                     .then(res => {
@@ -251,19 +262,27 @@
                     });
                 that.isShowDialog = false;
             },
+            paramsReg() {
+                let that = this;
+                let reg = /^\d{4}$/;
+                if (!reg.test(that.setParams)) {
+                    that.$message.warning('请输入正确的参数!');
+                    return
+                }
+            },
             // 选择品牌
-            chooseItem(index,id) {
+            chooseItem(index, id) {
                 this.thirdIndex = index;
-                this.bId=id;
+                this.bId = id;
             },
 
             // 生成备码
             createCode(row) {
                 this.isShowCreateCode = true;
-                this.productCode=row.code;
-                this.sended=false;
-                this.codeTime=0;
-                this.telephoneCode='';
+                this.productCode = row.code;
+                this.sended = false;
+                this.codeTime = 0;
+                this.telephoneCode = '';
                 this.phone = localStorage.getItem('ms_userPhone')
             },
             confirmCreateCode() {
@@ -272,10 +291,10 @@
                     that.$message.warning('手机验证码为空!');
                     return
                 }
-                let param={};
-                param.telephoneCode=that.telephoneCode;
-                param.url=pApi.productAllCode;
-                param.productCode=that.productCode;
+                let param = {};
+                param.telephoneCode = that.telephoneCode;
+                param.url = pApi.productAllCode;
+                param.productCode = that.productCode;
                 that.$axios.post(api.productAllCode, param)
                     .then(res => {
                         if (res.data.code == 200) {
@@ -294,10 +313,10 @@
             // 失效
             lostFunc(row) {
                 this.isShowlostFunc = true;
-                this.id=row.id;
-                this.sended1=false;
-                this.codeTime1=0;
-                this.telephoneCode1='';
+                this.id = row.id;
+                this.sended1 = false;
+                this.codeTime1 = 0;
+                this.telephoneCode1 = '';
                 this.phone = localStorage.getItem('ms_userPhone')
             },
             confirmlostFunc() {
@@ -306,10 +325,10 @@
                     that.$message.warning('手机验证码为空!');
                     return
                 }
-                let param={};
-                param.telephoneCode=that.telephoneCode1;
-                param.url=pApi.loseCategoryBrandCode;
-                param.id=that.id;
+                let param = {};
+                param.telephoneCode = that.telephoneCode1;
+                param.url = pApi.loseCategoryBrandCode;
+                param.id = that.id;
                 that.$axios.post(api.loseCategoryBrandCode, param)
                     .then(res => {
                         if (res.data.code == 200) {
@@ -328,7 +347,7 @@
             // 获取验证码
             getCode(type) {
                 let that = this;
-                if(type=='create'){
+                if (type == 'create') {
                     that.code = false;
                     that.codeTime = 60;
                     let timer = setInterval(function () {
@@ -338,7 +357,7 @@
                             clearInterval(timer);
                         }
                     }, 1000);
-                }else{
+                } else {
                     this.code1 = false;
                     that.codeTime1 = 60;
                     let timer1 = setInterval(function () {
@@ -355,10 +374,10 @@
                     .then(res => {
                         if (res.data.code == 200) {
                             this.$message.success('已发送验证码');
-                            if(type=='create'){
-                                that.sended=true;
-                            }else{
-                                that.sended1=true;
+                            if (type == 'create') {
+                                that.sended = true;
+                            } else {
+                                that.sended1 = true;
                             }
                         } else {
                             this.$message.warning(res.data.msg);
@@ -388,10 +407,10 @@
             //二级类目
             getSecond(index, id) {
                 let that = this;
-                that.firstIndex=index;
-                that.secondIndex=-1;
-                that.thirdIndex=-1;
-                that.brandList=[];
+                that.firstIndex = index;
+                that.secondIndex = -1;
+                that.thirdIndex = -1;
+                that.brandList = [];
                 let data = {
                     fatherid: id,
                 };
@@ -415,9 +434,9 @@
             //品牌
             getBrand(index, id) {
                 let that = this;
-                that.secondIndex=index;
-                that.cId=id;
-                that.bId='';
+                that.secondIndex = index;
+                that.cId = id;
+                that.bId = '';
                 let data = {
                     cId: id,
                 };

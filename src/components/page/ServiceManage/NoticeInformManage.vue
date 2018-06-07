@@ -237,6 +237,7 @@
                     that.nav = ['服务管理', '通知'];
                     that.form.nType = 2;
                 }
+                that.page.currentPage=1;
                 that.getList(that.page.currentPage)
             },
             //获取列表
