@@ -52,6 +52,7 @@ export default {
       nav: ["岗位管理", "岗位权限管理"],
       tableLoading: false,
       isShowDelToast: false,
+      departmentId:'',
       delId: 66,
       delUrl: "http://api",
       delUri:'',
@@ -68,6 +69,7 @@ export default {
     this.pControl();
   },
   activated(){
+    this.departmentId = this.$route.params.id || sessionStorage.getItem('jobsPermissionMangeId');
     this.pControl();
     this.getList(this.page.currentPage);
   },

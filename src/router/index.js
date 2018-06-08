@@ -179,6 +179,12 @@ export default new Router({
                     component: resolve => require(['../components/page/MemberManage/AccountRecharge.vue'], resolve),
                     meta: { title: '账户充值' }
                 },
+                {
+                    name:'realNameInfo',
+                    path: '/realNameInfo',
+                    component: resolve => require(['../components/page/MemberManage/RealNameInfo.vue'], resolve),
+                    meta: { title: '实名信息' }
+                },
                 //服务管理
                 {
                     name:'noticeInformManage',
@@ -289,7 +295,13 @@ export default new Router({
                     path: '/editMangerMsg',
                     component: resolve => require(['../components/page/Permission/EditMangerMsg.vue'], resolve),
                     meta: { title: '管理员基础信息修改',url:'/editMangerMsg' }
-                }
+                },
+                {
+                    name:'organizeMange',
+                    path: '/organizeMange',
+                    component: resolve => require(['../components/page/Permission/OrganizeMange/OrganizeMange.vue'], resolve),
+                    meta: { title: '组织结构管理',url:'/admin/role/queryDepartmentList' }
+                },
             ]
         },
         {

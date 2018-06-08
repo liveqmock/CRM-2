@@ -140,12 +140,12 @@ export default {
           title: "权限管理",
           subs: [
             {
-              index: "manageList",
-              title: "管理员账号管理"
+              index: "organizeMange",
+              title: "组织结构管理"
             },
             {
-              index: "jobsPermissionMange",
-              title: "岗位权限管理"
+              index: "manageList",
+              title: "管理员账号管理"
             },
             {
               index: "setPermission",

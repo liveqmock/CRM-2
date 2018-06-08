@@ -28,7 +28,6 @@
         export const updateCodeStatus = '/securityCode/securityCodeRecord/updateStatus';
     // 防伪码查询
         // 防伪码查询列表
-        // export const aa = ''
     // 防伪码模板
         // 查看防伪码模板列表
         export const securityCodeTemplate = '/admin/securityCodeTemplate/getAll'
@@ -50,6 +49,13 @@
         // 失效编码
         export const loseCategoryBrandCode = '/admin/categoryBrand/loseCategoryBrandCode';
 // 权限管理
+    // 组织结构管理
+        // 获取部门列表
+        export const queryDepartmentList = '/admin/role/queryDepartmentList';
+        // 添加部门
+        export const addDepartment = '/admin/department/addDepartment';
+        // 编辑部门
+        export const updateDepartment = '/admin/department/updateDepartment';
     // 管理员账号管理
         // 管理员账号管理列表
         export const manageList = '/manageList';

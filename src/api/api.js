@@ -79,6 +79,12 @@ export const getManageList='/mock/5aeac1c6c186102e067af3f3/test/getManageList';
 // 权限管理
     // 查询部门列表
     export const queryDepartmentList = '/admin/role/queryDepartmentList';
+    // 添加部门
+    export const addDepartment = '/admin/department/addDepartment';
+    // 根据id查询部门
+    export const findDepartmentById = '/admin/department/findDepartmentById'
+    // 编辑部门
+    export const updateDepartment = '/admin/department/updateDepartment';
     // 查询岗位列表
     export const queryJobList = '/admin/role/queryJobList';
     // 获取管理员列表
