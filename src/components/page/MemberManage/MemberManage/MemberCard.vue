@@ -3,24 +3,24 @@
         <v-breadcrumb :nav="['会员管理','经销商会员管理','会员详情','TA的账户']"></v-breadcrumb>
         <div class="accountInfod">
             <ul class="card-box">
-                <li :style="{backgroundImage: 'url('+  (test || defaultCard) +')'}">
+                <li v-for="(item,index) in card" :style="{backgroundImage: 'url('+  (test || defaultCard) +')'}" >
                     <div class="userCard">
                         <div class="cardName">
-                            中国工商银行
+                           {{item.bank_name}}
                         </div>
                         <div class="cardType">
-                            储蓄卡
+                            {{item.cardType}}
                         </div>
                     </div>
                     <div class="card-num">
                         <span>****</span>
                         <span>****</span>
                         <span>****</span>
-                        <span>889</span>
+                        <span>{{item.Num }}</span>
                     </div>
                     <div class="delete">
-                        <div>持卡人：杨*萌</div>
-                        <div class="spanBtn">删除</div>
+                        <div>持卡人：{{item.name}}</div>
+                        <div class="spanBtn" @click="dismiss(item.id,index)">删除</div>
                     </div>
                 </li>
             </ul>
@@ -33,24 +33,70 @@
 <script>
     import vBreadcrumb from '../../../common/Breadcrumb.vue';
     import icon from '../../../common/ico.vue';
-
+    import { findBindBankInfoBydealerId, deleteBindBankInfo } from '../../../../api/api.js';
     export default {
         components: {
             icon, vBreadcrumb
+        },
+        activated() {
+            this.id = this.$route.query.memberId || JSON.parse(sessionStorage.getItem("memberId"));
+            this.getFindBindBankInfoBydealerId(this.id)
         },
         data: function () {
             return {
                 // 权限控制
                 test:'',
-                defaultCard:require('../../../../assets/images/userCard-default.png')
+                defaultCard:require('../../../../assets/images/userCard-default.png'),
+                card:[]
             }
         },
-        activated() {
-
-        },
         methods: {
-
-
+            getFindBindBankInfoBydealerId(id){
+                this.$axios.post(findBindBankInfoBydealerId, {dealerId:id,status:1})
+                    .then(res => {
+                    if (res.data.code == 200) {
+                        let datas = res.data.data
+                        datas.forEach((item) =>{
+                            item.cardType =  item.card_type == 1 ? '储蓄卡':'信用卡'
+                            let length = item.card_no.length
+                            item.Num = item.card_no.substring(length-3,length)
+                            item.name = item.account.length>1? item.account.slice(0,1)+'*'+ item.account.slice(2) : item.account
+                        })
+                        this.card = datas
+                    } else {
+                        this.$message.warning(res.data.msg);
+                    }
+                }).catch(err => {
+                    console.log(err);
+                })
+            },
+            dismiss(id,index){
+                this.$confirm('是否继续删除银行卡?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.deleteCard(id,index)
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            },
+            deleteCard(id,index){
+                this.$axios.post(deleteBindBankInfo, {id:id})
+                    .then(res => {
+                    if (res.data.code == 200) {
+                        this.card.splice(index,1)
+                        this.getFindBindBankInfoBydealerId(this.id)
+                    } else {
+                        this.$message.warning(res.data.msg);
+                    }
+                }).catch(err => {
+                    console.log(err);
+                })
+            }
         }
     }
 </script>
@@ -107,6 +153,7 @@
                     text-align: center;
                     border: 1px solid;
                     border-radius: 5px;
+                    cursor: pointer;
                 }
             }
         }

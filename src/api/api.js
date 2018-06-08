@@ -217,6 +217,12 @@ export const getManageList='/mock/5aeac1c6c186102e067af3f3/test/getManageList';
         export const queryDetailTokencoinList='/admin/detailTokencoin/queryDetailTokencoinList';
         //分红点
         export const queryDetailBonuspointList='/admin/detailBonuspoint/queryDetailBonuspointList';
+        // TA的账户
+        export const queryDealerAccount='/admin/dealer/queryDealerAccount';
+        // 用户银行卡
+        export const findBindBankInfoBydealerId='/admin/bindBankInfo/findBindBankInfoBydealerId';
+        // 删除用户银行卡
+        export const deleteBindBankInfo='/admin/bindBankInfo/deleteBindBankInfo';
 // 公告通知
     // 公告列表
     export const getNoticeList='/admin/notice/queryNoticeList';

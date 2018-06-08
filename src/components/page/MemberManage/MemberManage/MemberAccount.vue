@@ -10,10 +10,10 @@
                     </div>
                     <div class="card-content">
                         <div class="card-amout">
-                            可提现：600.00
+                            可提现：{{accountInfo.available_balance}}
                         </div>
                         <div class="frozen">
-                            冻结中：850.00
+                            冻结中：{{accountInfo.blocked_balances}}
                         </div>
                     </div>
                     <span class="spanBtn" @click="btnClicked(1)">收支明细</span>
@@ -25,7 +25,10 @@
                     </div>
                     <div class="card-content">
                         <div class="card-amout">
-                            积分数：1582
+                            代币数：{{accountInfo.token_coin}}
+                        </div>
+                        <div class="frozen">
+                            冻结中：{{accountInfo.blocked_coin}}
                         </div>
                     </div>
                     <span class="spanBtn" @click="btnClicked(2)">收支明细</span>
@@ -37,7 +40,7 @@
                     </div>
                     <div class="card-content">
                         <div class="card-amout">
-                            分红点数：1574
+                            分红点数：{{accountInfo.bonus_point}}
                         </div>
                     </div>
                     <span class="spanBtn"  @click="btnClicked(3)">收支明细</span>
@@ -49,7 +52,7 @@
                     </div>
                     <div class="card-content">
                         <div class="card-amout">
-                            积分数：1582
+                            积分数：{{accountInfo.user_score}}
                         </div>
                     </div>
                     <span class="spanBtn" @click="btnClicked(4)">收支明细</span>
@@ -61,7 +64,7 @@
                     </div>
                     <div class="card-content">
                         <div class="card-amout">
-                            已绑定银行卡：6
+                            已绑定银行卡：{{accountInfo.count}}
                         </div>
                     </div>
                     <span class="spanBtn"  @click="btnClicked(5)">查看详情</span>
@@ -76,6 +79,7 @@
 <script>
     import vBreadcrumb from '../../../common/Breadcrumb.vue';
     import icon from '../../../common/ico.vue';
+    import * as api from '../../../../api/api.js';
 
     export default {
         components: {
@@ -83,14 +87,15 @@
         },
         data: function () {
             return {
-                id:''
-                // 权限控制
+                id:'',
+                accountInfo:''
             }
         },
         activated() {
             this.id =
                 this.$route.query.memberId ||
                 JSON.parse(sessionStorage.getItem("memberId"));
+            this.getQueryDealerAccount(this.id)
         },
         methods: {
             btnClicked(id) {
@@ -115,6 +120,19 @@
                     default:
                 }
             },
+            getQueryDealerAccount(id){
+                this.$axios.post(api.queryDealerAccount, {id:id})
+                    .then(res => {
+                      console.log(res)
+//                        if (res.data.code == 200) {
+//                         this.accountInfo = res.data.data
+//                        } else {
+//                            this.$message.warning(res.data.msg);
+//                        }
+                }).catch(err => {
+                    console.log(err);
+                })
+            }
         }
     }
 </script>
