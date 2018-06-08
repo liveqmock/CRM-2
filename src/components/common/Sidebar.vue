@@ -114,6 +114,9 @@ export default {
                   },{
                       index: "memberManage",
                       title: "经销商会员管理"
+                  },{
+                      index: "accountRecharge",
+                      title: "账户充值"
                   }
               ]
           },

@@ -4,11 +4,31 @@
         <el-card>
             <p class="title">{{name}}的代币账户明细</p>
             <el-table border :data="tableData">
-                <el-table-column prop="date" label="流水号" align="center" min-width="180"></el-table-column>
-                <el-table-column prop="date" label="状态" align="center" width="200"></el-table-column>
-                <el-table-column prop="date" label="金额（元）" align="center" width="200"></el-table-column>
-                <el-table-column prop="date" label="类型" align="center" width="200"></el-table-column>
-                <el-table-column prop="date" label="时间" align="center" min-width="180"></el-table-column>
+                <el-table-column prop="order_no" label="编号" align="center" min-width="180"></el-table-column>
+                <el-table-column label="状态" align="center" width="200">
+                    <template slot-scope="scope">
+                        <template v-if="scope.row.ti_type==1">收入</template>
+                        <template v-if="scope.row.ti_type==2">支出</template>
+                    </template>
+                </el-table-column>
+                <el-table-column label="代币（元）" align="center" width="200">
+                    <template slot-scope="scope">
+                        <template v-if="scope.row.ti_type==1">+{{scope.row.token_coin}}</template>
+                        <template v-if="scope.row.ti_type==2">-{{scope.row.token_coin}}</template>
+                    </template>
+                </el-table-column>
+                <el-table-column label="类型" align="center" width="200">
+                    <template slot-scope="scope">
+                        <template v-if="scope.row.use_type==1">购买</template>
+                        <template v-if="scope.row.use_type==2">交易提成</template>
+                        <template v-if="scope.row.use_type==3">消费</template>
+                    </template>
+                </el-table-column>
+                <el-table-column label="时间" align="center" min-width="180">
+                    <template slot-scope="scope">
+                        {{scope.row.create_time|formatDate}}
+                    </template>
+                </el-table-column>
             </el-table>
             <div class="block">
                 <el-pagination
@@ -33,23 +53,49 @@ export default {
     },
     data () {
         return {
-            name:'杨二盟',
             nav: ["会员管理", "经销商会员管理", "会员详情","TA的账户","的代币账户详情"],
-           tableData:[{date:123}],
-           page: {
+            tableData: [],
+            page: {
                 currentPage: 1,
-                totalPage: 1
+                totalPage: 0
             },
+            name: '杨二盟',
+            tableLoading: false,
         }
     },
     activated(){
+        this.id =
+            this.$route.query.memberId ||
+            JSON.parse(sessionStorage.getItem("memberId"));
         this.nav[this.nav.length-1] = this.name+"的代币账户详情";
         this.getList(this.page.currentPage);
     },
     methods:{
         // 获取数据
-        getList(val){
-
+        getList(val) {
+            let that = this;
+            let data = {
+                page: val,
+                dealerId: that.id,
+                url:pApi.queryDetailTokencoinList
+            };
+            that.tableLoading = true;
+            that.$axios
+                .post(api.queryDetailTokencoinList, data)
+                .then(res => {
+                    if (res.data.code == 200) {
+                        that.tableLoading = false;
+                        that.tableData = res.data.data.data;
+                        that.page.totalPage = res.data.data.resultCount;
+                    } else {
+                        that.$message.warning(res.data.msg);
+                        that.tableLoading = false;
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                    that.tableLoading = false;
+                })
         },
         //分页
         handleSizeChange(val) {

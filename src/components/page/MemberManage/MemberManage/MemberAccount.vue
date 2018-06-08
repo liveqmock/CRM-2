@@ -83,29 +83,34 @@
         },
         data: function () {
             return {
+                id:''
                 // 权限控制
             }
         },
         activated() {
-
+            this.id =
+                this.$route.query.memberId ||
+                JSON.parse(sessionStorage.getItem("memberId"));
         },
         methods: {
             btnClicked(id) {
+                let that=this;
+                // sessionStorage.setItem('memberId', that.id);
                 switch(id) {
                     case 1:
-                        this.$router.push({path:'/cashAccountBalance'});
+                        this.$router.push({path:'/cashAccountBalance',query:{'memberId':that.id}});
                         break;
                     case 2:
-                        this.$router.push({path:'/tokenAccountBalance'});
+                        this.$router.push({path:'/tokenAccountBalance',query:{'memberId':that.id}});
                         break;
                     case 3:
-                        this.$router.push({path:'/shareAccountBalance'});
+                        this.$router.push({path:'/shareAccountBalance',query:{'memberId':that.id}});
                         break;
                     case 4:
-                        this.$router.push({path:'/integralAccountBalance'});
+                        this.$router.push({path:'/integralAccountBalance',query:{'memberId':that.id}});
                         break;
                     case 5:
-                        this.$router.push({path:'/MemberCard'});
+                        this.$router.push({path:'/MemberCard',query:{'memberId':that.id}});
                         break;
                     default:
                 }

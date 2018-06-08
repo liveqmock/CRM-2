@@ -173,6 +173,12 @@ export default new Router({
                     component: resolve => require(['../components/page/MemberManage/UserAccount/IntegralAccountBalance.vue'], resolve),
                     meta: { title: '积分账户收支明细' }
                 },
+                {
+                    name:'accountRecharge',
+                    path: '/accountRecharge',
+                    component: resolve => require(['../components/page/MemberManage/AccountRecharge.vue'], resolve),
+                    meta: { title: '账户充值' }
+                },
                 //服务管理
                 {
                     name:'noticeInformManage',

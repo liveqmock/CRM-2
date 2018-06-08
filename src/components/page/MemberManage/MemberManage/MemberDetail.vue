@@ -220,7 +220,7 @@
         activated() {
             this.id =
                 this.$route.query.id ||
-                JSON.parse(sessionStorage.getItem("memberDetail").id);
+                JSON.parse(sessionStorage.getItem("memberDetail"));
             this.getDetail();
             this.pControl();
         },
@@ -316,14 +316,14 @@
             //跳到用户日志
             toOperateLog(){
                 let id=this.id;
-                sessionStorage.setItem('userId',id);
-                this.$router.push({path:'/operateLog',userId:id})
+                sessionStorage.setItem('memberId',id);
+                this.$router.push({path:'/operateLog',query: {'memberId': id}})
             },
             //跳到他的账户
             toAccount(){
                 let id=this.id;
-                sessionStorage.setItem('userId',id);
-                this.$router.push({path:'/memberAccount',userId:id})
+                sessionStorage.setItem('memberId',id);
+                this.$router.push({path:'/memberAccount',query: {'memberId': id}})
             }
         }
     }

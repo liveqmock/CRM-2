@@ -149,6 +149,14 @@
     //用户的树状结构
     export const findDealerTreeById='/admin/dealer/findDealerTreeById';
 
+//经销商账户信息
+    //现金
+    export const queryDetailBalanceList='/admin/detailBalance/queryDetailBalanceList';
+    //代币
+    export const queryDetailTokencoinList='/admin/detailTokencoin/queryDetailTokencoinList';
+    //分红点
+    export const queryDetailBonuspointList='/admin/detailBonuspoint/queryDetailBonuspointList';
+
 // 公告通知
     // 公告列表
     export const getNoticeList='/admin/notice/queryNoticeList';
@@ -173,7 +181,6 @@
     //回复
     export const updateFeedback_2='/admin/feedback/updateFeedback_2';
 
-    
-    
-    
-    
+
+
+

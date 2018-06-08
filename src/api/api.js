@@ -14,7 +14,7 @@ export const getManageList='/mock/5aeac1c6c186102e067af3f3/test/getManageList';
 
 // -----------------------------------------------------正式接口--------------------------------------
 // 登陆相关
-    // 密码登陆 
+    // 密码登陆
     export const loginByPwd ='/admin/adminLogin/pswLogin';
     // 获取验证码
     export const getCode = '/commonAPI/phoneCode/sendLoginCode';
@@ -210,8 +210,13 @@ export const getManageList='/mock/5aeac1c6c186102e067af3f3/test/getManageList';
         export const openDealerById='/admin/dealer/openDealerById';
         //导出
         export const exportDealerListExcel='/admin/dealer/exportDealerListExcel';
-
-
+//经销商账户信息
+        //现金
+        export const queryDetailBalanceList='/admin/detailBalance/queryDetailBalanceList';
+        //代币
+        export const queryDetailTokencoinList='/admin/detailTokencoin/queryDetailTokencoinList';
+        //分红点
+        export const queryDetailBonuspointList='/admin/detailBonuspoint/queryDetailBonuspointList';
 // 公告通知
     // 公告列表
     export const getNoticeList='/admin/notice/queryNoticeList';

@@ -46,21 +46,21 @@
 
         <!--添加/编辑层级弹窗-->
         <el-dialog :title="title" :visible.sync="addMask">
-            <el-form v-model="addForm">
-                <el-form-item prop="name" label="名称" :label-width="formLabelWidth">
+            <el-form v-model="addForm" label-width="100px">
+                <el-form-item prop="name" label="名称">
                     <el-input v-model="addForm.name" auto-complete="off" placeholder="请输入名称"></el-input>
                 </el-form-item>
-                <el-form-item prop="level" label="层级" :label-width="formLabelWidth">
+                <el-form-item prop="level" label="层级">
                     <el-input v-model="addForm.level" auto-complete="off" placeholder="请输入数值"></el-input>
                     <span>级</span>
                 </el-form-item>
-                <el-form-item label="是否晋级" :label-width="formLabelWidth">
+                <el-form-item label="是否晋级">
                     <el-radio-group v-model="addForm.autoUp">
                         <el-radio label="1">是</el-radio>
                         <el-radio label="2">否</el-radio>
                     </el-radio-group>
                 </el-form-item>
-                <el-form-item label="备注说明" :label-width="formLabelWidth" class="remark-area">
+                <el-form-item label="备注说明" class="remark-area">
                     <el-input v-model="addForm.remark" auto-complete="off" placeholder="请输入说明文字"></el-input>
                 </el-form-item>
             </el-form>
@@ -70,21 +70,21 @@
             </div>
         </el-dialog>
         <el-dialog :title="title" :visible.sync="editMask">
-            <el-form v-model="form">
-                <el-form-item prop="name" label="名称" :label-width="formLabelWidth">
+            <el-form v-model="form" label-width="100px">
+                <el-form-item prop="name" label="名称">
                     <el-input v-model="form.name" auto-complete="off" placeholder="请输入名称"></el-input>
                 </el-form-item>
-                <el-form-item prop="level" label="层级" :label-width="formLabelWidth">
+                <el-form-item prop="level" label="层级">
                     <el-input v-model="form.level" auto-complete="off" placeholder="请输入数值"></el-input>
                     <span>级</span>
                 </el-form-item>
-                <el-form-item label="是否晋级" :label-width="formLabelWidth">
+                <el-form-item label="是否晋级">
                     <el-radio-group v-model="form.autoUp">
                         <el-radio label="1">是</el-radio>
                         <el-radio label="2">否</el-radio>
                     </el-radio-group>
                 </el-form-item>
-                <el-form-item label="备注说明" :label-width="formLabelWidth" class="remark-area">
+                <el-form-item label="备注说明" class="remark-area">
                     <el-input v-model="form.remark" auto-complete="off" placeholder="请输入说明文字"></el-input>
                 </el-form-item>
             </el-form>
@@ -154,7 +154,6 @@
                 addMask: false,
                 editMask: false,
                 // priceLevelMask:false,//价格层级弹窗
-                formLabelWidth: '100px',
                 form: {//添加修改表单
                     name: '',
                     level: '',

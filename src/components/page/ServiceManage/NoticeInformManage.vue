@@ -1,13 +1,5 @@
 <template>
     <div class="notice">
-        <!--<div class="breadcrumb">-->
-            <!--<el-breadcrumb separator="/">-->
-                <!--<el-breadcrumb-item class="bread-item" v-for="(item,index) in nav" :key="index">-->
-                    <!--<icon class="ico" v-if="index == 0" ico="icon-dingwei1"/>-->
-                    <!--{{item}}-->
-                <!--</el-breadcrumb-item>-->
-            <!--</el-breadcrumb>-->
-        <!--</div>-->
         <v-breadcrumb :nav="['服务管理','公告通知管理']"></v-breadcrumb>
         <transition name="move" appear>
             <el-card style="margin:10px 0 20px">
