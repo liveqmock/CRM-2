@@ -93,13 +93,21 @@
             btnClicked(id) {
                 switch(id) {
                     case 1:
-
+                        this.$router.push({path:'/cashAccountBalance'});
+                        break;
+                    case 2:
+                        this.$router.push({path:'/tokenAccountBalance'});
+                        break;
+                    case 3:
+                        this.$router.push({path:'/shareAccountBalance'});
+                        break;
+                    case 4:
+                        this.$router.push({path:'/integralAccountBalance'});
                         break;
                     case 5:
-                        this.$router.push({path:'/MemberCard'})
+                        this.$router.push({path:'/MemberCard'});
                         break;
                     default:
-
                 }
             },
         }

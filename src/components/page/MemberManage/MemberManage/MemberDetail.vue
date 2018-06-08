@@ -61,7 +61,7 @@
                         <el-button type="primary" @click="toOperateLog" style="margin-left: 0">用户操作日志</el-button>
                     </div>
                     <div>
-                        <el-button type="primary" @click="toMemberTree" style="margin-left: 0">他的账户</el-button>
+                        <el-button type="primary" @click="toAccount" style="margin-left: 0">他的账户</el-button>
                     </div>
                 </div>
                 <div class="clearfix"></div>
@@ -318,8 +318,13 @@
                 let id=this.id;
                 sessionStorage.setItem('userId',id);
                 this.$router.push({path:'/operateLog',userId:id})
+            },
+            //跳到他的账户
+            toAccount(){
+                let id=this.id;
+                sessionStorage.setItem('userId',id);
+                this.$router.push({path:'/memberAccount',userId:id})
             }
-
         }
     }
 </script>
