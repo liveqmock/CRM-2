@@ -3,9 +3,9 @@
         <v-breadcrumb :nav="['会员管理','经销商会员管理','会员详情','TA的账户']"></v-breadcrumb>
         <div class="accountInfod">
             <ul class="card-box">
-                <li>
+                <li class="Account">
                     <div class="card-title">
-                        <icon class="ico" ico='icon-jinggao'/>
+                        <icon class="ico" ico='icon-ffffff'/>
                         现金账户 （元）
                     </div>
                     <div class="card-content">
@@ -18,9 +18,9 @@
                     </div>
                     <span class="spanBtn" @click="btnClicked(1)">收支明细</span>
                 </li>
-                <li>
+                <li class="userToken">
                     <div class="card-title">
-                        <icon class="ico" ico='icon-jinggao'/>
+                        <icon class="ico" ico='icon-jinbiqian'/>
                         代币账户（币）
                     </div>
                     <div class="card-content">
@@ -30,9 +30,9 @@
                     </div>
                     <span class="spanBtn" @click="btnClicked(2)">收支明细</span>
                 </li>
-                <li>
+                <li class="UserBonus">
                     <div class="card-title">
-                        <icon class="ico" ico='icon-jinggao'/>
+                        <icon class="ico" ico='icon-xianjindai'/>
                         分红账户（点）
                     </div>
                     <div class="card-content">
@@ -42,9 +42,9 @@
                     </div>
                     <span class="spanBtn"  @click="btnClicked(3)">收支明细</span>
                 </li>
-                <li>
+                <li class="userIntegral">
                     <div class="card-title">
-                        <icon class="ico" ico='icon-jinggao'/>
+                        <icon class="ico" ico='icon-youhuiquan'/>
                         积分账户（分）
                     </div>
                     <div class="card-content">
@@ -54,9 +54,9 @@
                     </div>
                     <span class="spanBtn" @click="btnClicked(4)">收支明细</span>
                 </li>
-                <li>
+                <li class="userCard">
                     <div class="card-title">
-                        <icon class="ico" ico='icon-jinggao'/>
+                        <icon class="ico" ico='icon-tubiaolunkuo-'/>
                         银行卡（张）
                     </div>
                     <div class="card-content">
@@ -122,31 +122,53 @@
         height: 25px;
         margin-right: 13px;
     }
+    #bgImg ( @url){
+        background:url(@url) no-repeat;
+    }
+    #displayFlex(){
+        display: flex;
+        align-items: center;
+    }
     .card-box{
         overflow: hidden;
-        display: flex;
+        #displayFlex;
         flex-wrap:wrap;
-        padding:40px 0 40px 40px;
+        padding:40px 0 40px 60px;
         color:#fff;
+        background:#fff;
+        box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+        .userToken{
+            #bgImg('../../../../assets/images/userToken.png');
+        }
+
+        .Account{
+            #bgImg('../../../../assets/images/userAccount.png');
+        }
+        .UserBonus{
+            #bgImg('../../../../assets/images/userFH.png');
+        }
+        .userCard{
+            #bgImg('../../../../assets/images/userCard.png');
+        }
+        .userIntegral{
+            #bgImg('../../../../assets/images/userJF.png');
+        }
         li{
-            margin:0 10px 20px 10px;
-            border:1px solid #ddd;
-            box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
-            width: 420px;
-            height: 240px;
+            /*margin:0 10px 20px 10px;*/
+            /*box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);*/
+            width: 460px;
+            height:272px;
             border-radius: 20px;
             box-sizing: border-box;
-            padding:29px 22px 30px 30px;
-            background: orange;
+            padding:44px 32px 40px 45px;
             .card-title{
                 font-size: 18px;
                 margin-bottom: 20px;
                 display: flex;
             }
             .card-content{
-                display: flex;
+                #displayFlex;
                 flex-direction:column;
-                align-items: center;
                 height:70px;
                 justify-content: center;
                 .card-amout{
