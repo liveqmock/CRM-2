@@ -3,9 +3,9 @@
 // see http://vuejs-templates.github.io/webpack for documentation.
 
 const path = require("path");
-// let baseURL = "http://172.16.10.252";
+let baseURL = "http://172.16.10.252";
 // let baseURL = "http://172.16.10.44";
-let baseURL = "http://172.16.10.56";
+// let baseURL = "http://172.16.10.56";
 
 let url_1 = baseURL+':8101';
 let url_2 = baseURL+':8100';

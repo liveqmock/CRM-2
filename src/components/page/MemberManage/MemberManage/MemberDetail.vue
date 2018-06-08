@@ -51,17 +51,35 @@
                         <img class="img" v-if="dealer.head_img" :src="dealer.head_img" alt="">
                         <img class="img" v-else src="../../../../assets/images/logo.png" alt="">
                     </div>
+                    <!--<div>-->
+                    <!--<el-button type="primary" @click="toLowerAgent">下级代理({{dealer.sub_level_num}})</el-button>-->
+                    <!--</div>-->
+                    <!--<div>-->
+                    <!--<el-button type="primary" @click="toMemberTree" style="margin-left: 0">查看会员树状图</el-button>-->
+                    <!--</div>-->
+                    <!--<div>-->
+                    <!--<el-button type="primary" @click="toOperateLog" style="margin-left: 0">用户操作日志</el-button>-->
+                    <!--</div>-->
+                    <!--<div>-->
+                    <!--<el-button type="primary" @click="toAccount" style="margin-left: 0">他的账户</el-button>-->
+                    <!--</div>-->
+                    <!--<div>-->
+                    <!--<el-button type="primary" style="margin-left: 0">实名信息</el-button>-->
+                    <!--</div>-->
                     <div>
-                        <el-button type="primary" @click="toLowerAgent">下级代理({{dealer.sub_level_num}})</el-button>
+                        <el-button type="primary" @click="btnClicked('/lowerMemberManage')">下级代理({{dealer.sub_level_num}})</el-button>
                     </div>
                     <div>
-                        <el-button type="primary" @click="toMemberTree" style="margin-left: 0">查看会员树状图</el-button>
+                        <el-button type="primary" @click="btnClicked('/memberTree')" style="margin-left: 0">查看会员树状图</el-button>
                     </div>
                     <div>
-                        <el-button type="primary" @click="toOperateLog" style="margin-left: 0">用户操作日志</el-button>
+                        <el-button type="primary" @click="btnClicked('/operateLog')" style="margin-left: 0">用户操作日志</el-button>
                     </div>
                     <div>
-                        <el-button type="primary" @click="toAccount" style="margin-left: 0">他的账户</el-button>
+                        <el-button type="primary" @click="btnClicked('/memberAccount')" style="margin-left: 0">他的账户</el-button>
+                    </div>
+                    <div>
+                        <el-button type="primary" @click="btnClicked('/realNameInfo')" style="margin-left: 0">实名信息</el-button>
                     </div>
                 </div>
                 <div class="clearfix"></div>
@@ -166,7 +184,7 @@
                             @keyup.enter.native="handleInputConfirm"
                             @blur="handleInputConfirm"
                             placeholder="请输入标签文字"
-                        >
+                            >
                         </el-input>
                         <el-button type="primary" class="button-new-tag" @click="showInput">添加标签</el-button>
                     </div>
@@ -218,114 +236,118 @@
             }
         },
         activated() {
-            this.id =
-                this.$route.query.id ||
-                JSON.parse(sessionStorage.getItem("memberDetail"));
-            this.getDetail();
-            this.pControl();
-        },
-        methods: {
-            // 权限控制
-            pControl() {
-                for (const k in this.p) {
-                    this.p[k] = utils.pc(pApi[k]);
-                }
-            },
-            basicToast(msg) {
-                let that = this;
-                that.isShowEditBasic = msg;
-                setTimeout(function () {
-                    that.getDetail()
-                }, 1000)
-            },
-            authorToast(msg) {
-                let that = this;
-                that.isShowEditAuthor = msg;
-                setTimeout(function () {
-                    that.getDetail()
-                }, 1000)
-            },
-            //获取详情
-            getDetail() {
-                let that = this;
-                let data = {
-                    id: that.id,
-                    url: pApi.findDealerById
-                };
-                that.loading = true;
-                that.$axios
-                    .post(api.findDealerById, data)
-                    .then(res => {
-                        if (res.data.code == 200) {
-                            that.loading = false;
-                            that.dealer = res.data.data.dealer;
-                            that.permit = res.data.data.permit;
-                        } else {
-                            that.$message.warning(res.data.msg);
-                            that.loading = false;
-                        }
-                    })
-                    .catch(err => {
-                        that.loading = false;
-                        console.log(err)
-                    })
-            },
-            handleClose(tag) {
-                this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1);
-            },
-
-            showInput() {
-                this.inputVisible = true;
-                this.$nextTick(_ => {
-                    this.$refs.saveTagInput.$refs.input.focus();
-                });
-            },
-
-            handleInputConfirm() {
-                let inputValue = this.inputValue;
-                if (inputValue) {
-                    this.dynamicTags.push(inputValue);
-                }
-                this.inputVisible = false;
-                this.inputValue = '';
-            },
-            //返回列表
-            backToList() {
-                this.$router.push('/memberManage')
-            },
-            //跳到下级代理页面
-            toLowerAgent() {
-                let that = this;
-                sessionStorage.setItem('memberId', that.id);
-                that.$router.push({path: '/lowerMemberManage'})
-            },
-            //跳到会员树状图页面
-            toMemberTree() {
-                let that = this;
-                sessionStorage.setItem('memberId', that.id);
-                this.$router.push({path: '/memberTree', query: {'memberId': that.id}})
-            },
-            //修改基础信息
-            updateBasicInf() {
-                this.isShowEditBasic = true;
-            },
-            //修改授权信息
-            updateAuthorInf() {
-                this.isShowEditAuthor = true;
-            },
-            //跳到用户日志
-            toOperateLog(){
-                let id=this.id;
-                sessionStorage.setItem('memberId',id);
-                this.$router.push({path:'/operateLog',query: {'memberId': id}})
-            },
-            //跳到他的账户
-            toAccount(){
-                let id=this.id;
-                sessionStorage.setItem('memberId',id);
-                this.$router.push({path:'/memberAccount',query: {'memberId': id}})
+        this.id =
+            this.$route.query.id ||
+            JSON.parse(sessionStorage.getItem("memberDetail"));
+        this.getDetail();
+        this.pControl();
+    },
+    methods: {
+        // 权限控制
+        pControl() {
+            for (const k in this.p) {
+                this.p[k] = utils.pc(pApi[k]);
             }
+        },
+        basicToast(msg) {
+            let that = this;
+            that.isShowEditBasic = msg;
+            setTimeout(function () {
+                that.getDetail()
+            }, 1000)
+        },
+        authorToast(msg) {
+            let that = this;
+            that.isShowEditAuthor = msg;
+            setTimeout(function () {
+                that.getDetail()
+            }, 1000)
+        },
+        //获取详情
+        getDetail() {
+            let that = this;
+            let data = {
+                id: that.id,
+                url: pApi.findDealerById
+            };
+            that.loading = true;
+            that.$axios
+                .post(api.findDealerById, data)
+                .then(res => {
+                if (res.data.code == 200) {
+                    that.loading = false;
+                    that.dealer = res.data.data.dealer;
+                    that.permit = res.data.data.permit;
+                } else {
+                    that.$message.warning(res.data.msg);
+                    that.loading = false;
+                }
+            })
+        .catch(err => {
+                that.loading = false;
+                console.log(err)
+            })
+        },
+        handleClose(tag) {
+            this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1);
+        },
+
+        showInput() {
+            this.inputVisible = true;
+            this.$nextTick(_ => {
+                this.$refs.saveTagInput.$refs.input.focus();
+            });
+        },
+
+        handleInputConfirm() {
+            let inputValue = this.inputValue;
+            if (inputValue) {
+                this.dynamicTags.push(inputValue);
+            }
+            this.inputVisible = false;
+            this.inputValue = '';
+        },
+        //返回列表
+        backToList() {
+            this.$router.push('/memberManage')
+        },
+        //跳到下级代理页面
+//            toLowerAgent() {
+//                sessionStorage.setItem('memberId', that.id);
+//                this.$router.push({path: '/lowerMemberManage'})
+//            },
+        //跳到会员树状图页面
+//            toMemberTree() {
+//                let that = this;
+//                sessionStorage.setItem('memberId', that.id);
+//                this.$router.push({path: '/memberTree', query: {'memberId': that.id}})
+//            },
+        //修改基础信息
+        updateBasicInf() {
+            this.isShowEditBasic = true;
+        },
+        //修改授权信息
+        updateAuthorInf() {
+            this.isShowEditAuthor = true;
+        },
+        //跳到用户日志
+//            toOperateLog(){
+//                let id=this.id;
+//                sessionStorage.setItem('memberId',id);
+//                this.$router.push({path:'/operateLog',query: {'memberId': id}})
+//            },
+        //跳到他的账户
+//            toAccount(){
+//                let id=this.id;
+//                sessionStorage.setItem('memberId',id);
+//                this.$router.push({path:'/memberAccount',query: {'memberId': id}})
+//            },
+        btnClicked(page){
+            let id=this.id;
+            sessionStorage.setItem('memberId',id);
+            this.$router.push({path:page,query: {'memberId': id}})
         }
+    }
     }
 </script>
 <style scoped>
