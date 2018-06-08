@@ -86,10 +86,10 @@ export default {
     //获取列表
     getList(val) {
       let that = this;
-      let data = {
-        page: val,
-        url:pApi.jobsPermissionMange
-      };
+      let data = {};
+      data.id = this.departmentId;
+      data.page = val;
+      data.url = pApi.jobsPermissionMange;
       this.tableLoading = true;
       this.$axios
         .post(api.queryRolePageList, data)

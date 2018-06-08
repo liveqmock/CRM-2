@@ -9,9 +9,7 @@
                         <el-input style="width:220px" v-model="form.name" placeholder="请选择"></el-input>
                     </el-form-item>
                     <el-form-item prop="department" label="所属部门">
-                      <el-select v-model="form.department" multiple placeholder="请选择">
-                        <el-option v-for="item in department" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                      </el-select>
+                      {{departmentName}}
                     </el-form-item>
                     <hr width='90%' size='1' color='#ccc' class='add-box-sep'>
                     <span class="add-box-title">权限设置</span>
@@ -78,8 +76,8 @@ export default {
       checkedUser: [[], [], [], [], [], [], [], [], [], [], [], [], [], [], []],
       userManList: [],
       getUserPriList: [],
-      department: [],
       id: "",
+      departmentName:'aa',
       form: {
         department: [],
         name: ""
@@ -199,28 +197,8 @@ export default {
           console.log(err);
         });
     },
-
-    // 获取部门列表
-    getDepartmentList() {
-      this.department = [];
-      this.$axios
-        .post(api.queryDepartmentList, {})
-        .then(res => {
-          if (res.data.code == 200) {
-            res.data.data.forEach((v, k) => {
-              this.department.push({ label: v.name, value: v.id });
-            });
-          } else {
-            this.$message.warning(res.data.msg);
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    },
     // created
     getCreatedMsg() {
-      this.getDepartmentList();
       this.getRoleList();
       (this.checkAllUser = [
         false,
