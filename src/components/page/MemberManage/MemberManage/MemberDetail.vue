@@ -73,7 +73,7 @@
                         <el-button type="primary" v-if="p.findDealerTreeById"  @click="btnClicked('/memberTree')" style="margin-left: 0">查看会员树状图</el-button>
                     </div>
                     <div>
-                        <el-button type="primary" @click="btnClicked('/operateLog')" style="margin-left: 0">用户操作日志</el-button>
+                        <!--<el-button type="primary" @click="btnClicked('/operateLog')" style="margin-left: 0">用户操作日志</el-button>-->
                     </div>
                     <div>
                         <el-button type="primary" v-if="p.queryDealerAccount" @click="btnClicked('/memberAccount')" style="margin-left: 0">他的账户</el-button>

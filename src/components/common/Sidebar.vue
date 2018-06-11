@@ -97,6 +97,9 @@ export default {
                   }, {
                       index: "brandManage",
                       title: "品牌管理"
+                  }, {
+                      index: "shippingTemplate",
+                      title: "运费模板"
                   }
               ]
           },

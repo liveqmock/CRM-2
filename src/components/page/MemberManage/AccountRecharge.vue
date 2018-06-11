@@ -340,11 +340,7 @@
             oprSure(){
                 let that=this;
                 let data=that.opr;
-                if(that.info=='确定通过？'){
-                    data.url=pApi.updateRechargeRecord_1;
-                }else{
-                    data.url=pApi.updateRechargeRecord_2;
-                }
+                data.url=pApi.updateRechargeRecord;
                 this.$axios
                     .post(api.updateRechargeRecord, data)
                     .then(res => {
