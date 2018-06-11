@@ -77,18 +77,13 @@ export default {
       userManList: [],
       getUserPriList: [],
       id: "",
-      departmentName:'aa',
+      departmentName:'',
       form: {
         department: [],
         name: ""
       },
       rules: {
         name: { required: true, message: "请选择所在岗位", trigger: "blur" },
-        department: {
-          required: true,
-          message: "请选择所属部门",
-          trigger: "blur"
-        }
       }
     };
   },
@@ -113,7 +108,6 @@ export default {
           data.role = role.join(",");
           data.id = this.id;
           data.name = this.form.name;
-          data.department = this.form.department.join(",");
           data.url = pApi.updateRole;
           this.$axios
             .post(api.updateRole, data)
@@ -232,9 +226,7 @@ export default {
             this.form.department = [];
             this.getUserPriList = [];
             this.form.name = res.data.data.name;
-            res.data.data.deptmentRoleList.forEach((v, k) => {
-              this.form.department.push(v.deptmentId);
-            });
+            this.departmentName = res.data.data.deptmentName;
             res.data.data.rolePrivilegeList.forEach((v, k) => {
               this.getUserPriList.push(v.privilegeId);
             });

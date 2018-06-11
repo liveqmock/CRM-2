@@ -72,6 +72,9 @@ export default {
     };
   },
   activated() {
+    this.form.department =[];
+    this.form.name = ''; 
+    this.checkAllUser = [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false];
     this.getDepartmentList();
     this.getRoleList();
   },
