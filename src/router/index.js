@@ -76,6 +76,24 @@ export default new Router({
                     component: resolve => require(['../components/page/BrandProduct/BrandManage/EditBrand.vue'], resolve),
                     meta: { title: '编辑品牌',url:'/admin/brand/updateBrand' }
                 },
+                {
+                    name:'shippingTemplate',
+                    path: '/shippingTemplate',
+                    component: resolve => require(['../components/page/BrandProduct/ShippingTemplate.vue'], resolve),
+                    meta: { title: '运费模板'}
+                },
+                {
+                    name:'addTemplate',
+                    path: '/addTemplate',
+                    component: resolve => require(['../components/page/BrandProduct/ShippingTemplate/AddTemplate.vue'], resolve),
+                    meta: { title: '添加模板'}
+                },
+                {
+                    name:'editTemplate',
+                    path: '/editTemplate',
+                    component: resolve => require(['../components/page/BrandProduct/ShippingTemplate/EditTemplate.vue'], resolve),
+                    meta: { title: '编辑模板'}
+                },
                 // 会员管理
                 {
                     name:'levelManage',
@@ -215,6 +233,7 @@ export default new Router({
                     component: resolve => require(['../components/page/BrandProduct/ProductManage/ReleaseProduct.vue'], resolve),
                     meta: { title: '发布产品' }
                 },
+
                 //服务管理
                 {
                     name:'noticeInformManage',

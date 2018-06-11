@@ -241,6 +241,13 @@ export const getManageList='/mock/5aeac1c6c186102e067af3f3/test/getManageList';
         export const addRechargeRecord='/admin/rechargeRecord/addRechargeRecord';
         //通过驳回
         export const updateRechargeRecord='/admin/rechargeRecord/updateRechargeRecord';
+
+// 实名认证审核
+    //实名审核列表
+    export const queryDealerRealnamePageList='/admin/dealerRealname/queryDealerRealnamePageList';
+   //查询详情
+    export const findDealerRealnameInfo='/admin/dealerRealname/findDealerRealnameInfo';
+
 // 公告通知
     // 公告列表
     export const getNoticeList='/admin/notice/queryNoticeList';

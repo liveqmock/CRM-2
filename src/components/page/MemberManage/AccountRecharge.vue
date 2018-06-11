@@ -30,7 +30,7 @@
                         <el-button @click="resetForm('form')">重置</el-button>
                     </el-form-item>
                     <el-form-item>
-                        <el-button @click="recharge" type="primary">账户充值</el-button>
+                        <el-button @click="recharge" type="primary" v-if="p.addRechargeRecord">账户充值</el-button>
                     </el-form-item>
                 </el-form>
             </el-card>
@@ -62,7 +62,7 @@
                             <template v-if="scope.row.status==2">驳回</template>
                         </template>
                     </el-table-column>
-                    <el-table-column v-if="isShowOperate" label="操作" align="center">
+                    <el-table-column v-if="p.updateRechargeRecord" label="操作" align="center">
                         <template slot-scope="scope" v-if="scope.row.status==0">
                             <el-button type="primary" size="small"
                                        @click="updateStatus(1,scope.row)">通过
@@ -163,15 +163,10 @@
             return {
                 // 权限控制
                 p: {
-                    addNotice: false,
-                    updateNoticeStatus_1: false,
-                    updateNoticeStatus_2: false,
-                    updateNoticeStatus_3: false,
-                    getNoticeDetailById: false,
+                    addRechargeRecord: false,
+                    updateRechargeRecord: false,
                 },
-                isShowOperate: true,
 
-                checked: [true, false],
                 tableData: [],
                 page: {
                     currentPage: 1,
@@ -186,17 +181,8 @@
                     nickname: '',
                     date: ''
                 },
-                exportForm: {
-                    level: '',
-                },
-                selected: '',
-                nav: ['服务管理', '公告'],
-                isShowDelToast: false,
-                status: '',
                 id: '',
                 btnLoading: false,
-                levels: [],
-                levelIds: [],
                 addMask: false,
                 addForm: {
                     phone: '',
@@ -227,9 +213,6 @@
             pControl() {
                 for (const k in this.p) {
                     this.p[k] = utils.pc(pApi[k]);
-                }
-                if (!this.p.updateNoticeStatus_1 && !this.p.updateNoticeStatus_2 && !this.p.updateNoticeStatus_3 && !this.p.getNoticeDetailById) {
-                    this.isShowOperate = false;
                 }
             },
             //获取列表

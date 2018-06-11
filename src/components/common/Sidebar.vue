@@ -103,6 +103,10 @@ export default {
                       index: "productList",
                       title: "产品管理"
                   },
+                  {
+                      index: "shippingTemplate",
+                      title: "运费模板"
+                  }
               ]
           },
           {

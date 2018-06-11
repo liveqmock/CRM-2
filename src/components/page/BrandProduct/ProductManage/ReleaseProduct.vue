@@ -3,7 +3,7 @@
       <v-breadcrumb :nav='nav'></v-breadcrumb>
       <el-card :body-style="{ padding: '20px 45px' }">
           <div class="pro-title">基本信息</div>
-          <el-form :model="form" ref="form">
+          <el-form :model="form" ref="form" label-width="100px">
             <el-form-item label="产品名称">
                 <el-input style="width:300px" v-model="form.name" placeholder="请输入产品名称"></el-input>
             </el-form-item>
@@ -20,6 +20,31 @@
                     <i class="el-icon-plus avatar-uploader-icon"></i>
                 </el-upload>
                 <div class="upload-tip">建议尺寸：800*800,拖拽图片可以改变顺序，第一张为默认头图</div>
+            </el-form-item>
+            <el-form-item label="产品分类">
+                <el-select v-model="form.proCategory" placeholder="请选择">
+                  <el-option v-for="(v,k) in proCategoryArr" :key="k" :label="v.label" :value="v.value"></el-option>
+                </el-select> 
+                <span style="margin-left:30px">产品品牌</span>
+                <el-select v-model="form.proBrand" placeholder="请选择">
+                  <el-option v-for="(v,k) in proCategoryArr" :key="k" :label="v.label" :value="v.value"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="供应商">
+                <el-select v-model="form.supplier" placeholder="下拉搜索供应商">
+                  <el-option v-for="(v,k) in proCategoryArr" :key="k" :label="v.label" :value="v.value"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="发货地">
+                <el-select v-model="form.supplier" placeholder="下拉搜索供应商">
+                  <el-option v-for="(v,k) in proCategoryArr" :key="k" :label="v.label" :value="v.value"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="产品重量">
+                <el-input class="pro-weight" v-model="form.weight"></el-input>kg
+            </el-form-item>
+            <el-form-item label="产品体积">
+                <el-input class="pro-weight" v-model="form.volume"></el-input>m³
             </el-form-item>
           </el-form>
       </el-card>
@@ -45,7 +70,15 @@ export default {
       isUseUpload: false,
       uploadImg: "",
       imgArr: [],
-      form: {}
+      proCategoryArr:[{label:'电子数码',value:1}],
+      form: {
+          name:'',
+          proCategory:'',
+          proBrand:'',
+          supplier:'',
+          weight:'',
+          volume:''
+      }
     };
   },
 
@@ -131,7 +164,7 @@ export default {
   .upload-tip{
       color: #999;
       font-size: 12px;
-      margin:-10px 0 0 70px;
+      margin:-10px 0 0 10px;
   }
   .img-uploader {
     display: inline-block;
@@ -140,6 +173,10 @@ export default {
     width: 100px;
     height: 100px;
     line-height: 100px;
+  }
+  .pro-weight{
+      width: 80px;
+      margin-right: 10px;
   }
 }
 </style>
