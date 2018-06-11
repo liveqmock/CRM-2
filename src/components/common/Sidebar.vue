@@ -117,6 +117,12 @@ export default {
                   },{
                       index: "accountRecharge",
                       title: "账户充值"
+                  },{
+                      index: "realNameAuthentication",
+                      title: "实名制认证审核"
+                  },{
+                      index: "activityParams",
+                      title: "活跃度参数设置"
                   }
               ]
           },

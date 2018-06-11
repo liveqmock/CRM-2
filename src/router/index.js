@@ -185,6 +185,18 @@ export default new Router({
                     component: resolve => require(['../components/page/MemberManage/RealNameInfo.vue'], resolve),
                     meta: { title: '实名信息' }
                 },
+                {
+                    name:'realNameAuthentication',
+                    path: '/realNameAuthentication',
+                    component: resolve => require(['../components/page/MemberManage/realNameAuthentication.vue'], resolve),
+                    meta: { title: '实名认证审核' }
+                },
+                {
+                    name:'activityParams',
+                    path: '/activityParams',
+                    component: resolve => require(['../components/page/MemberManage/activityParams.vue'], resolve),
+                    meta: { title: '活跃度参数设置' }
+                },
                 //服务管理
                 {
                     name:'noticeInformManage',
