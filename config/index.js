@@ -5,11 +5,7 @@
 const path = require("path");
 let baseURL = "http://172.16.10.253";
 // let baseURL = "http://172.16.10.44";
-<<<<<<< HEAD
 // let baseURL = "http://172.16.10.56";
-=======
-// let baseURL = "http://172.16.10.51";
->>>>>>> 821691a2714aa195cb2546ea9c0c08758070c27c
 
 let url_1 = baseURL+':8101';
 let url_2 = baseURL+':8100';
