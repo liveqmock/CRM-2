@@ -203,6 +203,18 @@ export default new Router({
                     component: resolve => require(['../components/page/MemberManage/PromotionManage.vue/PromotionManage.vue'], resolve),
                     meta: { title: '晋升设置' }
                 },
+                {
+                    name:'productList',
+                    path: '/productList',
+                    component: resolve => require(['../components/page/BrandProduct/ProductManage/ProductList.vue'], resolve),
+                    meta: { title: '产品管理' }
+                },
+                {
+                    name:'releaseProduct',
+                    path: '/releaseProduct',
+                    component: resolve => require(['../components/page/BrandProduct/ProductManage/ReleaseProduct.vue'], resolve),
+                    meta: { title: '发布产品' }
+                },
                 //服务管理
                 {
                     name:'noticeInformManage',

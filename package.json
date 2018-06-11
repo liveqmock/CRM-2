@@ -22,6 +22,7 @@
     "mavon-editor": "^2.5.4",
     "moment": "^2.22.1",
     "peer": "^0.2.8",
+    "sortable": "^2.0.0",
     "stylus": "^0.54.5",
     "vue": "^2.5.16",
     "vue-area-linkage": "^5.0.0",

@@ -5,11 +5,7 @@
 const path = require("path");
 let baseURL = "http://172.16.10.252";
 // let baseURL = "http://172.16.10.44";
-<<<<<<< Updated upstream
 // let baseURL = "http://172.16.10.56";
-=======
-let baseURL = "http://172.16.10.51";
->>>>>>> Stashed changes
 
 let url_1 = baseURL+':8101';
 let url_2 = baseURL+':8100';
