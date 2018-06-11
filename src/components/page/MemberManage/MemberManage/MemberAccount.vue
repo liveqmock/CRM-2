@@ -80,7 +80,7 @@
     import vBreadcrumb from '../../../common/Breadcrumb.vue';
     import icon from '../../../common/ico.vue';
     import * as api from '../../../../api/api.js';
-
+    import * as pApi from '../../../../privilegeList/index.js';
     export default {
         components: {
             icon, vBreadcrumb
@@ -121,7 +121,11 @@
                 }
             },
             getQueryDealerAccount(id){
-                this.$axios.post(api.queryDealerAccount, {id:id})
+                let data={
+                    url:pApi.queryDealerAccount,
+                    id:id
+                }
+                this.$axios.post(api.queryDealerAccount, data)
                     .then(res => {
                       console.log(res)
 //                        if (res.data.code == 200) {

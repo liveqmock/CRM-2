@@ -33,7 +33,7 @@
                             <template v-if="scope.row.status==2">未通过</template>
                         </template>
                     </el-table-column>
-                    <el-table-column  label="操作" align="center">
+                    <el-table-column  label="操作" v-if="p.findDealerRealnameInfo_1" align="center">
                         <template slot-scope="scope">
                             <el-button type="warning" size="small" @click="goPage(scope.row.id)">详情信息</el-button>
                         </template>
@@ -68,6 +68,9 @@
         mixins: [getUserId, myMixinTable],
         data () {
             return {
+                p:{
+                    findDealerRealnameInfo_1:false
+                },
                form:{
                    code:'',
                    nickname:'',
@@ -77,18 +80,26 @@
                     currentPage:1,
                     totalPage:0
                 },
+
                 id:'',
                 height:'',
                 tableData:[],
             }
         },
         activated() {
+            this.getList(this.page.currentPage);
+            this.pControl();
         },
         created(){
             this.getTbaleHeight();
-            this.getList(this.page.currentPage)
         },
         methods: {
+            // 权限控制
+            pControl() {
+                for (const k in this.p) {
+                    this.p[k] = utils.pc(pApi[k]);
+                }
+            },
             // 获取数据
             getList(val) {
                 let that = this;

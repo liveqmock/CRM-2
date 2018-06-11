@@ -70,16 +70,16 @@
                         <el-button type="primary" @click="btnClicked('/lowerMemberManage')">下级代理({{dealer.sub_level_num}})</el-button>
                     </div>
                     <div>
-                        <el-button type="primary" @click="btnClicked('/memberTree')" style="margin-left: 0">查看会员树状图</el-button>
+                        <el-button type="primary" v-if="p.findDealerTreeById"  @click="btnClicked('/memberTree')" style="margin-left: 0">查看会员树状图</el-button>
                     </div>
                     <div>
                         <el-button type="primary" @click="btnClicked('/operateLog')" style="margin-left: 0">用户操作日志</el-button>
                     </div>
                     <div>
-                        <el-button type="primary" @click="btnClicked('/memberAccount')" style="margin-left: 0">他的账户</el-button>
+                        <el-button type="primary" v-if="p.queryDealerAccount" @click="btnClicked('/memberAccount')" style="margin-left: 0">他的账户</el-button>
                     </div>
                     <div>
-                        <el-button type="primary" @click="btnClicked('/realNameInfo')" style="margin-left: 0">实名信息</el-button>
+                        <el-button type="primary" v-if="p.findDealerRealnameInfo" @click="btnClicked('/realNameInfo')" style="margin-left: 0">实名信息</el-button>
                     </div>
                 </div>
                 <div class="clearfix"></div>
@@ -221,6 +221,9 @@
                 p: {
                     updateDealerById: false,
                     updateDealerPermitById: false,
+                    findDealerTreeById:false,
+                    queryDealerAccount:false,
+                    findDealerRealnameInfo:false,
                 },
 
                 dealer: {},

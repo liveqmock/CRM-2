@@ -164,6 +164,8 @@
     export const queryDetailBonuspointList='/admin/detailBonuspoint/queryDetailBonuspointList';
     //积分
     export const queryDetailUserscorePageList='/admin/detailUserscore/queryDetailUserscorePageList';
+    // TA的账户
+    export const queryDealerAccount='/admin/dealer/queryDealerAccount';
 
 //账户充值
     //列表
@@ -180,6 +182,7 @@
     export const queryDealerRealnamePageList='/admin/dealerRealname/queryDealerRealnamePageList';
     //查询详情
     export const findDealerRealnameInfo='/admin/dealerRealname/findDealerRealnameInfo';
+    export const findDealerRealnameInfo_1='/admin/dealerRealname/findDealerRealnameInfo_1';
 
 // 公告通知
     // 公告列表
