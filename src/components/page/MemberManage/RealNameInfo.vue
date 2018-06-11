@@ -43,6 +43,7 @@ export default {
     methods:{
         getDetail(){
             let that=this;
+            that.img=[];
             let data={
                 id:that.id,
                 url:pApi.findDealerRealnameInfo
