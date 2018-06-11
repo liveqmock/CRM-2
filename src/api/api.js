@@ -216,6 +216,7 @@ export const getManageList='/mock/5aeac1c6c186102e067af3f3/test/getManageList';
         export const openDealerById='/admin/dealer/openDealerById';
         //导出
         export const exportDealerListExcel='/admin/dealer/exportDealerListExcel';
+
 //经销商账户信息
         //现金
         export const queryDetailBalanceList='/admin/detailBalance/queryDetailBalanceList';
@@ -223,12 +224,23 @@ export const getManageList='/mock/5aeac1c6c186102e067af3f3/test/getManageList';
         export const queryDetailTokencoinList='/admin/detailTokencoin/queryDetailTokencoinList';
         //分红点
         export const queryDetailBonuspointList='/admin/detailBonuspoint/queryDetailBonuspointList';
+        //积分
+        export const queryDetailUserscorePageList='/admin/detailUserscore/queryDetailUserscorePageList';
         // TA的账户
         export const queryDealerAccount='/admin/dealer/queryDealerAccount';
         // 用户银行卡
         export const findBindBankInfoBydealerId='/admin/bindBankInfo/findBindBankInfoBydealerId';
         // 删除用户银行卡
         export const deleteBindBankInfo='/admin/bindBankInfo/deleteBindBankInfo';
+//账户充值
+        //列表
+        export const queryRechargeRecordPageList='/admin/rechargeRecord/queryRechargeRecordPageList';
+        //通过手机号查询
+        export const findDealerByPhone='/admin/rechargeRecord/findDealerByPhone';
+        //账户充值
+        export const addRechargeRecord='/admin/rechargeRecord/addRechargeRecord';
+        //通过驳回
+        export const updateRechargeRecord='/admin/rechargeRecord/updateRechargeRecord';
 // 公告通知
     // 公告列表
     export const getNoticeList='/admin/notice/queryNoticeList';

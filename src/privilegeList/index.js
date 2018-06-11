@@ -162,7 +162,18 @@
     export const queryDetailTokencoinList='/admin/detailTokencoin/queryDetailTokencoinList';
     //分红点
     export const queryDetailBonuspointList='/admin/detailBonuspoint/queryDetailBonuspointList';
+    //积分
+    export const queryDetailUserscorePageList='/admin/detailUserscore/queryDetailUserscorePageList';
 
+//账户充值
+    //列表
+    export const queryRechargeRecordPageList='/admin/rechargeRecord/queryRechargeRecordPageList';
+    //通过手机号查询
+    export const findDealerByPhone='/admin/rechargeRecord/findDealerByPhone';
+    //账户充值
+    export const addRechargeRecord='/admin/rechargeRecord/addRechargeRecord';
+    //通过驳回
+    export const updateRechargeRecord='/admin/rechargeRecord/updateRechargeRecord';
 // 公告通知
     // 公告列表
     export const getNoticeList='/admin/notice/queryNoticeList';
