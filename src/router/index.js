@@ -197,6 +197,12 @@ export default new Router({
                     component: resolve => require(['../components/page/MemberManage/activityParams.vue'], resolve),
                     meta: { title: '活跃度参数设置' }
                 },
+                {
+                    name:'promotionManage',
+                    path: '/promotionManage',
+                    component: resolve => require(['../components/page/MemberManage/PromotionManage.vue/PromotionManage.vue'], resolve),
+                    meta: { title: '晋升设置' }
+                },
                 //服务管理
                 {
                     name:'noticeInformManage',
