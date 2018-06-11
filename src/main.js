@@ -11,7 +11,7 @@ import 'quill/dist/quill.bubble.css'
 Vue.use(vueQuillEditor)
 import 'element-ui/lib/theme-chalk/index.css';    // 默认主题
 // import '../static/css/theme-green/index.css';       // 浅绿色主题
-
+import '../src/assets/css/commom.css';    // 公用css 样式
 Vue.use(ElementUI, { size: 'small' });
 Vue.use(Vue=>{
     Vue.prototype.$axios = axios;
