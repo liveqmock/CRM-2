@@ -32,12 +32,22 @@ export default {
   data() {
     return {
       nav: ["品牌产品管理", "产品管理", "产品详情"],
-      name:'Apple',
-      productImg:['src/assets/images/avatar.jpg','src/assets/images/avatar.jpg'],
-      productItem:'数码家电 - 手机',
-      productBrand:'64GB 全网通 苹果8',
-      productDetail:['src/assets/images/avatar.jpg','src/assets/images/avatar.jpg']
+      name: "Apple",
+      productImg: [
+        "src/assets/images/avatar.jpg",
+        "src/assets/images/avatar.jpg"
+      ],
+      productItem: "数码家电 - 手机",
+      productBrand: "64GB 全网通 苹果8",
+      productDetail: [
+        "src/assets/images/avatar.jpg",
+        "src/assets/images/avatar.jpg"
+      ]
     };
+  },
+
+  activated() {
+    
   },
 
   methods: {}
@@ -45,29 +55,29 @@ export default {
 </script>
 <style lang='less'>
 .product-info {
-    .el-form-item__label,
-    .el-form-item__content{
-        font-size: 18px;
-        color: #666;
+  .el-form-item__label,
+  .el-form-item__content {
+    font-size: 18px;
+    color: #666;
+  }
+  .img-wrap {
+    display: inline-block;
+    width: 188px;
+    height: 188px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-right: 5px;
+    img {
+      width: 100%;
+      height: 100%;
     }
-    .img-wrap{
-        display: inline-block;
-        width: 188px;
-        height: 188px;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        overflow: hidden;
-        margin-right: 5px;
-        img{
-            width: 100%;
-            height: 100%;
-        }
+  }
+  .product-detail {
+    img {
+      border: 1px solid #ddd;
+      border-radius: 5px;
     }
-    .product-detail{
-        img{
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-    }
+  }
 }
 </style>
