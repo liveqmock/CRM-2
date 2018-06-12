@@ -110,12 +110,13 @@ export default {
 
   data() {
     return {
-      nav: ["品牌产品管理", "产品管理", "发布产品"],
+      nav: ["品牌产品管理", "产品管理", "编辑产品"],
       isUseUpload: false,
       showSaleTime: false,
       uploadImg: "",
       imgArr: [],
       proCategoryArr: [{ label: "电子数码", value: 1 }],
+      productId:'',
       form: {
         name: "",
         proCategory: "",
@@ -166,6 +167,8 @@ export default {
   },
 
   activated() {
+    this.productId = this.$route.query.releaseProductId || sessionStorage.getItem('releaseProduct');
+    this.getProductInfo();
     this.uploadImg = api.addImg;
     this.imgArr = [];
     utils.cleanFormData(this.form);
@@ -179,6 +182,18 @@ export default {
   },
 
   methods: {
+    // 获取产品信息
+    getProductInfo(){
+      // let data = {};
+      // data.id = this.productId;
+      // this.$axios.post()
+      // .then(res=>{
+      //   console.log(res);
+      // })
+      // .catch(err=>{
+      //   console.log(err)
+      // })
+    },
     //  图片上传/拖拽
     getdata(evt) {
       //   console.log(evt.draggedContext.element.url);

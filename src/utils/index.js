@@ -22,12 +22,15 @@ let encryptData = function (data) {
 }
 
 // 清除数据
-let cleanData = function (status, form) {
-    for (var k in form) {
-        if (status != 1 && k == 'cbid') {
-            continue;
+let cleanFormData = function (form) {
+    for (const key in form) {
+        if(form[key] instanceof Array){
+            form[key] = [];
+        }else if(form[key] instanceof Object){
+            form[key] = {};
+        }else{
+            form[key] = '';
         }
-        delete form[k];
     }
 }
 //  三级联动
@@ -105,7 +108,7 @@ let permissionControl = function (per) {
 }
 
 module.exports.encryptData = encryptData;
-module.exports.cleanData = cleanData;
+module.exports.cleanFormData = cleanFormData;
 module.exports.handleCity = handleCity;
 module.exports.handleCityIndex = handleCityIndex;
 module.exports.pc = permissionControl;

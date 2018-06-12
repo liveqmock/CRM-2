@@ -233,6 +233,12 @@ export default new Router({
                     component: resolve => require(['../components/page/BrandProduct/ProductManage/ReleaseProduct.vue'], resolve),
                     meta: { title: '发布产品' }
                 },
+                {
+                    name:'editProduct',
+                    path: '/editProduct',
+                    component: resolve => require(['../components/page/BrandProduct/ProductManage/EditProduct.vue'], resolve),
+                    meta: { title: '编辑产品' }
+                },
 
                 //服务管理
                 {

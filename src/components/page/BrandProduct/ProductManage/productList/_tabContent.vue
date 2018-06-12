@@ -143,7 +143,8 @@ export default {
     },
     // 编辑产品
     editProduct(row){
-        console.log(row);
+        sessionStorage.setItem('releaseProduct',row.id);
+        this.$router.push({name:'editProduct',query:{releaseProductId:row.id}});
     },
     // 规格管理
     specificationsManage(row){

@@ -17,28 +17,30 @@
 </template>
 
 <script>
-    import vHead from './Header.vue';
-    import vSidebar from './Sidebar.vue';
-    import vTags from './Tags.vue';
-    import bus from '../common/bus';
-    import vFooter from './Footer.vue';
-    export default {
-        data(){
-            return {
-                collapse: false
-            }
-        },
-        components:{
-            vHead, vSidebar, vTags,vFooter
-        },
-        created(){
-            bus.$on('collapse', msg => {
-                this.collapse = msg;
-            })
-        }
-    }
+import vHead from "./Header.vue";
+import vSidebar from "./Sidebar.vue";
+import vTags from "./Tags.vue";
+import bus from "../common/bus";
+import vFooter from "./Footer.vue";
+export default {
+  data() {
+    return {
+      collapse: false
+    };
+  },
+  components: {
+    vHead,
+    vSidebar,
+    vTags,
+    vFooter
+  },
+  created() {
+    bus.$on("collapse", msg => {
+      this.collapse = msg;
+    });
+  }
+};
 </script>
 <style scoped>
-
 </style>
 
