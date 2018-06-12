@@ -76,11 +76,15 @@
             </el-upload>
             <div class="selected-tag">
               <span v-if="form.selectedTagArr.length == 0" class="tag-tip">请选择标签</span>
-              <el-tag class="tag" type="info" closable v-for="(v,k) in form.selectedTagArr" :key="k" @close="handleClose(k)" >{{v.label}}</el-tag>
+              <el-tag class="tag" type="info" closable v-for="(v,k) in form.selectedTagArr" :key="k" @close="handleClose(k,v)" >{{v.label}}</el-tag>
             </div>
             <div class="add-tag">
-              <el-input style="width:215px;margin-right:20px" v-model="addTag" placeholder="请输入标签/至多可添加20个"></el-input>
+              <el-input style="width:215px;margin-right:20px" v-model="tagName" placeholder="请输入标签/至多可添加20个"></el-input>
               <el-button type="primary" @click="addTag">添加标签</el-button>
+            </div>
+            <div class="tag-list">
+              <span v-if="tagArr.length == 0" class="tag-tip">请添加标签</span>
+              <el-button v-for="(v,k) in tagArr" :key="k" @click="insertTag(v)" :disabled="v.selected" :class="{'selected-btn':v.selected}">{{v.label}}</el-button>
             </div>
           </el-form>
       </el-card>
@@ -123,7 +127,7 @@ export default {
         freightTpl: "",
         saleTime: "",
         editorContent: "",
-        selectedTagArr:[{label:'化妆品',value:'1'},{label:'数码相机',value:'2'}]
+        selectedTagArr:[]
       },
       editorOption: {
         placeholder: "请输入内容",
@@ -146,8 +150,8 @@ export default {
       },
       uploadData: {},
       uploadType: "", // 上传的文件类型（图片、视频）,
-      tagArr:[],
-      addTag:''
+      tagArr:[{label:'化妆品',value:'1',selected:false},{label:'数码相机',value:'2',selected:false}],
+      tagName:''
     };
   },
 
@@ -269,12 +273,42 @@ export default {
       this.uploadType = "image";
     },
     // 关闭标签
-    handleClose(index) {
+    handleClose(index,value) {
       this.form.selectedTagArr.splice(index,1);
+      this.tagArr.forEach((v,k)=>{
+        if(value.value == v.value){
+          this.tagArr[k].selected = false;
+        }
+      })
     },
     // 加入新的标签
     addTag(){
-      
+      if(this.tagName == ''){
+        this.$message.warning('请输入正确的标签');
+        return;
+      }
+      this.tagArr.push({label:this.tagName,value:new Date().getTime(),selected:false});
+      // let data = {};
+      // this.$axios.post()
+      // .then(res=>{
+      //   console.log(res);
+      // })
+      // .catch(err=>{
+      //   console.log(err)
+      // })
+    },
+    // 添加标签
+    insertTag(v){
+      v.selected = true;
+      this.form.selectedTagArr.push({label:v.label,value:v.value});
+      // let data = {};
+      // this.$axios.post()
+      // .then(res=>{
+      //   console.log(res);
+      // })
+      // .catch(err=>{
+      //   console.log(err)
+      // })
     }
   }
 };
@@ -365,6 +399,23 @@ export default {
   .add-tag{
     width: 100%;
     margin-top: 20px;
+  }
+  .tag-list{
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    border: 1px solid #e8edf0;
+    border-radius: 5px;
+    margin-top: 10px;
+    .tag-tip{
+      font-size: 14px;
+      color: #9a9a9a;
+    }
+    .selected-btn{
+      background-color: #409EFF;
+      border-color: #409EFF;
+      color: #fff;
+    }
   }
 }
 </style>
