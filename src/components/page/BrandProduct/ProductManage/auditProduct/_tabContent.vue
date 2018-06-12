@@ -51,12 +51,12 @@
         <el-table-column label="操作" align="center" min-width="220">
             <template slot-scope="scope">
                 <div class="operate">
-                    <el-button @click="editProduct(scope.row)" type="success">编辑产品</el-button>
-                    <el-button @click="specificationsManage(scope.row)" type="primary">规格管理</el-button>
-                    <el-button @click="priceManage(scope.row)" type="primary">价格管理</el-button>
-                    <el-button @click="inventoryManage(scope.row)" type="primary">库存管理</el-button>
-                    <el-button @click="productStatus(scope.row)" type="warning">产品上架</el-button>
-                    <el-button @click="productInfo(scope.row)" type="primary">查看详情</el-button>
+                    <el-button @click="showSpeci(scope.row)" type="primary">查看规格</el-button>
+                    <el-button @click="showPrice(scope.row)" type="primary">查看价格</el-button>
+                    <el-button @click="showInventory(scope.row)" type="primary">查看库存</el-button>
+                    <el-button @click="auditProduct(scope.row,1)" type="primary">通过审核</el-button>
+                    <el-button @click="auditProduct(scope.row,0)" type="danger">驳回审核</el-button>
+                    <el-button @click="productInfo(scope.row)" type="primary">产品详情</el-button>
                 </div>
             </template>
         </el-table-column>
@@ -141,31 +141,26 @@ export default {
     releaseProduct(){
         this.$router.push({name:'releaseProduct'});
     },
-    // 编辑产品
-    editProduct(row){
-        sessionStorage.setItem('releaseProduct',row.id);
-        this.$router.push({name:'editProduct',query:{releaseProductId:row.id}});
-    },
-    // 规格管理
-    specificationsManage(row){
-        sessionStorage.setItem('productSpecifications',row.id);
-        this.$router.push({name:'productSpecifications',query:{productSpecificationsId:row.id}});
-    },
-    // 价格管理
-    priceManage(row){
+    // 查看规格
+    showSpeci(row){
         console.log(row);
     },
-    // 库存管理
-    inventoryManage(row){
+    // 查看价格
+    showPrice(row){
         console.log(row);
     },
-    // 产品上架/下架
-    productStatus(row,status){
+    // 查看库存
+    showInventory(row){
+        console.log(row);
+    },      
+    // 通过/不通过审核
+    auditProduct(row,status){
         console.log(row);
     },
-    // 查看详情
+    // 产品详情
     productInfo(row){
         console.log(row);
+        this.$router.push({name:'productInfo'})
     },
   },
   filters:{
