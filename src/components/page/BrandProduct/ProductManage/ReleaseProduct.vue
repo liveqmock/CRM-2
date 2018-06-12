@@ -1,7 +1,7 @@
 <template>
   <div class="release-product">
       <v-breadcrumb :nav='nav'></v-breadcrumb>
-      <el-card :body-style="{ padding: '20px 45px' }">
+      <el-card :body-style="{ padding: '20px 45px',color:'#666' }">
           <div class="pro-title">基本信息</div>
           <el-form :model="form" ref="form" label-width="100px">
             <el-form-item label="产品名称">
@@ -46,6 +46,42 @@
             <el-form-item label="产品体积">
                 <el-input class="pro-weight" v-model="form.volume"></el-input>m³
             </el-form-item>
+            <el-form-item label="产品参数">
+              <div class="product-param">
+                <span>产品颜色</span><el-input class="inp-param" v-model="form.proColor"></el-input>
+                <span>产品尺寸</span><el-input class="inp-param" v-model="form.proSize"></el-input>
+                <span>产品款式</span><el-input class="inp-param" v-model="form.proStyle"></el-input>
+                <span>产品种类</span><el-input class="inp-param" v-model="form.proClass"></el-input>
+              </div>
+            </el-form-item>
+            <div class="pro-title">基本信息</div>
+            <el-form-item label="选择运费模板">
+                <el-select v-model="form.freightTpl" placeholder="请选择模板">
+                  <el-option v-for="(v,k) in proCategoryArr" :key="k" :label="v.label" :value="v.value"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="售后周期">
+              <transition name="fade">
+                <el-select v-if="!showSaleTime" v-model="form.saleTime" placeholder="请选择售后周期">
+                  <el-option v-for="(v,k) in proCategoryArr" :key="k" :label="v.label" :value="v.value"></el-option>
+                </el-select>
+                <el-input v-if='showSaleTime' v-model="form.saleTime" style="width:215px" placeholder="请输入售后周期"></el-input>
+              </transition>
+                <el-button @click="defSaleTime">自定义</el-button>
+            </el-form-item>
+            <div class="pro-title">产品信息</div>
+            <quill-editor v-model="form.editorContent" ref="myQuillEditor" :options="editorOption" @change="onEditorChange($event)"></quill-editor>
+            <el-upload :action="qnLocation" :before-upload='beforeUpload' :data="uploadData" :on-success='upScuccess' ref="upload" style="display:none">
+              <el-button size="small" type="primary" id="imgInput" element-loading-text="插入中,请稍候">点击上传</el-button>
+            </el-upload>
+            <div class="selected-tag">
+              <span v-if="form.selectedTagArr.length == 0" class="tag-tip">请选择标签</span>
+              <el-tag class="tag" type="info" closable v-for="(v,k) in form.selectedTagArr" :key="k" @close="handleClose(k)" >{{v.label}}</el-tag>
+            </div>
+            <div class="add-tag">
+              <el-input style="width:215px;margin-right:20px" v-model="addTag" placeholder="请输入标签/至多可添加20个"></el-input>
+              <el-button type="primary" @click="addTag">添加标签</el-button>
+            </div>
           </el-form>
       </el-card>
   </div>
@@ -54,7 +90,8 @@
 <script>
 import vBreadcrumb from "@/components/common/Breadcrumb.vue";
 import draggable from "vuedraggable";
-import icon from '@/components/common/ico';
+import Quill from "quill";
+import icon from "@/components/common/ico";
 import * as api from "@/api/api.js";
 import * as pApi from "@/privilegeList/index.js";
 export default {
@@ -68,38 +105,82 @@ export default {
     return {
       nav: ["品牌产品管理", "产品管理", "发布产品"],
       isUseUpload: false,
+      showSaleTime: false,
       uploadImg: "",
       imgArr: [],
-      proCategoryArr:[{label:'电子数码',value:1}],
+      proCategoryArr: [{ label: "电子数码", value: 1 }],
       form: {
-          name:'',
-          proCategory:'',
-          proBrand:'',
-          supplier:'',
-          weight:'',
-          volume:''
-      }
+        name: "",
+        proCategory: "",
+        proBrand: "",
+        supplier: "",
+        weight: "",
+        volume: "",
+        proColor: "",
+        proSize: "",
+        proStyle: "",
+        proClass: "",
+        freightTpl: "",
+        saleTime: "",
+        editorContent: "",
+        selectedTagArr:[{label:'化妆品',value:'1'},{label:'数码相机',value:'2'}]
+      },
+      editorOption: {
+        placeholder: "请输入内容",
+        modules: {
+          // 配置富文本
+          toolbar: [
+            ["bold", "italic", "underline", "strike"],
+            ["blockquote", "code-block"],
+            [{ header: 1 }, { header: 2 }],
+            [{ direction: "rtl" }],
+            [{ size: ["small", false, "large", "huge"] }],
+            [{ header: [1, 2, 3, 4, 5, 6, false] }],
+            [{ color: [] }, { background: [] }],
+            [{ font: [] }],
+            [{ align: [] }],
+            ["clean"],
+            ["link", "image"]
+          ]
+        }
+      },
+      uploadData: {},
+      uploadType: "", // 上传的文件类型（图片、视频）,
+      tagArr:[],
+      addTag:''
     };
+  },
+
+  computed: {
+    qnLocation() {
+      return location.protocol === "http:" ? api.addImg : api.addImg;
+    }
   },
 
   activated() {
     this.uploadImg = api.addImg;
   },
+  mounted() {
+      // 为图片ICON绑定事件 getModule 为编辑器的内部属性
+      this.$refs.myQuillEditor.quill
+          .getModule("toolbar")
+          .addHandler("image", this.imgHandler);
+  },
 
   methods: {
     //  图片上传/拖拽
     getdata(evt) {
-    //   console.log(evt.draggedContext.element.url);
+      //   console.log(evt.draggedContext.element.url);
     },
     datadragEnd(evt) {
-    //   console.log(this.imgArr);
+      //   console.log(this.imgArr);
     },
     successUpload(res) {
       this.$message.warning("上传中...");
       if (res.code == 200) {
         if (this.imgArr.length >= 5) {
           this.isUseUpload = true;
-          this.$message.warning('最多只能上传五张图片');
+          this.$message.warning("最多只能上传五张图片");
           return;
         }
         this.imgArr.push(res.data.imageUrl);
@@ -109,21 +190,98 @@ export default {
       }
     },
     // 删除图片
-    deleteImg(img){
-        let index = this.imgArr.indexOf(img);
-        if(index == -1){
-            return;
-        }
-        this.imgArr.splice(index,1);
-        if(this.imgArr.length < 5){
-            this.isUseUpload = false;
-        }
+    deleteImg(img) {
+      let index = this.imgArr.indexOf(img);
+      if (index == -1) {
+        return;
+      }
+      this.imgArr.splice(index, 1);
+      if (this.imgArr.length < 5) {
+        this.isUseUpload = false;
+      }
+    },
+    // 自定义售后周期
+    defSaleTime() {
+      this.form.saleTime = "";
+      this.showSaleTime = !this.showSaleTime;
+    },
+    // 富文本编辑器
+    onEditorChange({ editor, html, text }) {
+      console.log("editor change!", html);
+      this.form.editorContent = html;
+    },
+    beforeUpload(file) {
+      return this.qnUpload(file);
+    },
+    qnUpload(file) {
+      this.fullscreenLoading = true;
+      const suffix = file.name.split(".");
+      const ext = suffix.splice(suffix.length - 1, 1)[0];
+      console.log(this.uploadType);
+      if (this.uploadType === "image") {
+        this.$message.warning("正在上传");
+        return this.$axios(api.addImg).then(res => {
+          this.uploadData = {
+            key: `image/${suffix.join(".")}_${new Date().getTime()}.${ext}`,
+            token: res.data
+          };
+        });
+      }
+    },
+    // 图片上传成功回调 插入到编辑器中
+    upScuccess(e, file, fileList) {
+      this.fullscreenLoading = false;
+      let vm = this;
+      let url = "";
+      if (this.uploadType === "image") {
+        // 获得文件上传后的URL地址
+        url = e.data.imageUrl;
+        this.form.original_img = e.data.imageUrl;
+        this.form.small_img = e.data.imageThumbUrl;
+        console.log(e);
+      }
+      if (url != null && url.length > 0) {
+        // 将文件上传后的URL地址插入到编辑器文本中
+        let value = url;
+        // this.$refs.myTextEditor.quillEditor.getSelection();
+        // 获取光标位置对象，里面有两个属性，一个是index 还有 一个length，这里要用range.index，即当前光标之前的内容长度，然后再利用 insertEmbed(length, 'image', imageUrl)，插入图片即可。
+        vm.addRange = vm.$refs.myQuillEditor.quill.getSelection();
+        value = value.indexOf("http") !== -1 ? value : "http:" + value;
+        vm.$refs.myQuillEditor.quill.insertEmbed(
+          vm.addRange !== null ? vm.addRange.index : 0,
+          vm.uploadType,
+          value,
+          Quill.sources.USER
+        ); // 调用编辑器的 insertEmbed 方法，插入URL
+        this.$message.success("插入成功");
+      } else {
+        this.$message.error(`${vm.uploadType}插入失败`);
+      }
+      this.$refs["upload"].clearFiles(); // 插入成功后清除input的内容
+    },
+    // 点击图片ICON触发事件
+    imgHandler(state) {
+      this.addRange = this.$refs.myQuillEditor.quill.getSelection();
+      if (state) {
+        let fileInput = document.getElementById("imgInput");
+        fileInput.click(); // 加一个触发事件
+      }
+      this.uploadType = "image";
+    },
+    // 关闭标签
+    handleClose(index) {
+      this.form.selectedTagArr.splice(index,1);
+    },
+    // 加入新的标签
+    addTag(){
+      
     }
   }
 };
 </script>
 <style lang='less'>
 .release-product {
+  color: #666;
   .pro-title {
     width: 100%;
     height: 60px;
@@ -134,7 +292,7 @@ export default {
     margin-bottom: 20px;
   }
   .img-wrap {
-      display: inline-block;
+    display: inline-block;
     position: relative;
     width: 100px;
     height: 100px;
@@ -161,10 +319,10 @@ export default {
       cursor: pointer;
     }
   }
-  .upload-tip{
-      color: #999;
-      font-size: 12px;
-      margin:-10px 0 0 10px;
+  .upload-tip {
+    color: #999;
+    font-size: 12px;
+    margin: -10px 0 0 10px;
   }
   .img-uploader {
     display: inline-block;
@@ -174,9 +332,39 @@ export default {
     height: 100px;
     line-height: 100px;
   }
-  .pro-weight{
-      width: 80px;
-      margin-right: 10px;
+  .pro-weight {
+    width: 80px;
+    margin-right: 10px;
+  }
+  .product-param {
+    width: 95%;
+    height: 58px;
+    border: 1px solid #e8edf0;
+    line-height: 58px;
+    padding: 0 15px;
+    .inp-param {
+      width: 90px;
+      margin: 0 50px 0 10px;
+    }
+  }
+  .selected-tag{
+    width: 100%;
+    padding: 6px 22px;
+    box-sizing: border-box;
+    border: 1px solid #e8edf0;
+    border-radius: 5px;
+    margin-top: 20px;
+    .tag{
+      margin-right: 5px;
+    }
+    .tag-tip{
+      font-size: 14px;
+      color: #9a9a9a;
+    }
+  }
+  .add-tag{
+    width: 100%;
+    margin-top: 20px;
   }
 }
 </style>
