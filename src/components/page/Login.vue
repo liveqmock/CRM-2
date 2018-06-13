@@ -11,7 +11,7 @@
                             </el-input>
                         </el-form-item>
                         <el-form-item prop="password" style="margin-top:-40px">
-                            <el-input class="login-inp" type="password" size="large" placeholder="请输入登录密码" v-model="form1.password">
+                            <el-input @keyup.enter.native='submitForm("form1")' class="login-inp" type="password" size="large" placeholder="请输入登录密码" v-model="form1.password">
                                 <icon slot="prefix" class="login-ico" ico="icon-3denglumima"></icon>
                             </el-input>
                         </el-form-item>
@@ -28,7 +28,7 @@
                             </el-input>
                         </el-form-item>
                         <el-form-item prop="code" style="margin-top:-40px">
-                            <el-input class="login-inp" size="large" placeholder="请输入验证码" v-model="form2.code">
+                            <el-input  @keyup.enter.native='submitForm("form2")' class="login-inp" size="large" placeholder="请输入验证码" v-model="form2.code">
                                 <icon slot="prefix" class="login-ico" ico="icon-yanzhengma"></icon>
                             </el-input>
                             <el-button @click="getCode" class="code-btn" type="primary" v-if="code">获取验证码</el-button>

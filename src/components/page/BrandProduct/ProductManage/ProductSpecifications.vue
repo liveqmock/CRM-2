@@ -28,8 +28,36 @@
         </div>
         <el-button type="primary" style="margin:10px 0 50px 0">生成列表</el-button>
         <p style="margin:0 0 18px 10px">规格表</p>
-        <el-table :data="tableData" border :span-method='mergeRow'>
-          <el-table-column v-for="(v,k) in Object.keys(tableData[0])" :prop="v" :key="k" :label="v" align="center"></el-table-column>
+        <el-table :data="tableData" border>
+          <el-table-column prop="spec" label="规格" align="center"></el-table-column>
+          <el-table-column label="条形码" align="center" width="180">
+            <template slot-scope="scoped">
+                <el-input v-model="scoped.row.code"></el-input>
+            </template>
+          </el-table-column>
+          <el-table-column label="图片" align="center" width="180">
+              <template slot-scope="scoped">
+                    <template v-if='scoped.row.imgUrl != ""' >
+                        <div class="product-img"><img :src="scoped.row.imgUrl" alt=""></div>
+                        <el-button type="danger" @click="deleteImg(scoped.$index)">删除</el-button>
+                    </template>
+                    <template v-else>
+                        <el-upload
+                        :action="imgUpload"
+                        :show-file-list = "false"
+                        :on-success = "uploadSuccess"
+                        >
+                        <el-button size="small" type="primary" @click="beforeUpload(scoped.$index)">选择图片</el-button>
+                        </el-upload>
+                    </template>
+              </template>
+          </el-table-column>
+          <el-table-column label="操作" align="center" width="220">
+            <template slot-scope="scoped">
+                <el-button type="warning" @click="operateProduct(scoped.row,1)">启用</el-button>
+                <el-button type="danger" @click="operateProduct(scoped.row,0)">停用</el-button>
+            </template>
+          </el-table-column>
         </el-table>
       </el-card>
       
@@ -38,155 +66,186 @@
 
 <script>
 import vBreadcrumb from "@/components/common/Breadcrumb.vue";
+import * as api from "@/api/api.js";
 export default {
   components: {
-      vBreadcrumb
+    vBreadcrumb
   },
 
-  data () {
+  data() {
     return {
-        nav:['品牌产品管理','产品管理','发布产品'],
-        deleteFirstItem:'',
-        deleteItem:'',
-        specificationArr:[
-            {type:'颜色',speArr:['红色','金色','白色']},
-            {type:'版本',speArr:['全网通','联通']},
-            {type:'规格',speArr:['32GB','64GB','128GB','256GB']},
-        ],
-        tableData:[
-            {color:'红色',guige:'128GB',address:'中国'},
-            {color:'红色',guige:'256GB',address:'中国'},
-            {color:'红色',guige:'64GB',address:'中国'},
-            {color:'红色',guige:'32GB',address:'中国'},
-            {color:'金色',guige:'128GB',address:'中国'},
-            {color:'金色',guige:'256GB',address:'中国'},
-            {color:'金色',guige:'64GB',address:'中国'},
-            {color:'金色',guige:'32GB',address:'中国'},
-        ],
+      nav: ["品牌产品管理", "产品管理", "发布产品"],
+      imgUpload: "",
+      rowId:'',
+      deleteFirstItem: "",
+      deleteItem: "",
+      specificationArr: [
+        { type: "颜色", id: "1", speArr: ["红色", "金色", "白色"] },
+        { type: "版本", id: "2", speArr: ["全网通", "联通"] },
+        { type: "规格", id: "3", speArr: ["32GB", "64GB", "128GB", "256GB"] }
+      ],
+      tableData: [
+        { spec: "红色-128GB-中国", imgUrl: "src/assets/images/avatar.jpg" },
+        { spec: "红色-256GB-中国", imgUrl: "" },
+        { spec: "红色-64GB-中国", imgUrl: "" },
+        { spec: "红色-32GB-中国", imgUrl: "" },
+        { spec: "金色-128GB-中国", imgUrl: "" },
+        { spec: "金色-256GB-中国", imgUrl: "" },
+        { spec: "金色-64GB-中国", imgUrl: "" },
+        { spec: "金色-32GB-中国", imgUrl: "" }
+      ]
     };
   },
 
-  activated(){
-    
+  activated() {
+    this.imgUpload = api.addImg;
   },
 
   methods: {
     //  添加规格
-    addSpe(index){
-        this.specificationArr[index].speArr.push("");
+    addSpe(index) {
+      this.specificationArr[index].speArr.push("");
     },
     // 删除规格
-    deleteSpe(index,k){
-        this.specificationArr[index].speArr.splice(k,1);
+    deleteSpe(index, k) {
+      this.specificationArr[index].speArr.splice(k, 1);
     },
     // 删除类型
-    deleteType(index){
-        this.specificationArr.splice(index,1);
+    deleteType(index) {
+      this.specificationArr.splice(index, 1);
     },
     // 删除一级按钮
-    showFirstDelBtn(v){
-        this.deleteFirstItem = v;
+    showFirstDelBtn(v) {
+      this.deleteFirstItem = v;
     },
     //删除二级按钮
-    showDeleteBtn(v){
-        this.deleteItem = v;
+    showDeleteBtn(v) {
+      this.deleteItem = v;
     },
     // 添加类型
-    addType(){
-        this.specificationArr.push({type:'',speArr:[]})
+    addType() {
+      this.specificationArr.push({ type: "", speArr: [] });
     },
-    // 合并行(第几行开始合并，合并几行)
-    mergeRow({ row, column, rowIndex, columnIndex }) {
-      if (columnIndex === 0) {
-          if (rowIndex % 4 === 0) {
-            return [4,1];
-          } else {
-            return [0,0];
-          }
-        }
+    // 上传之前
+    beforeUpload(index) {
+        this.rowId = index;
+    },
+    // 上传成功的钩子
+    uploadSuccess(res) {
+      if (res.code == 200) {
+          this.tableData[this.rowId].imgUrl = res.data.imageUrl;
+      } else {
+        this.$message.warning(res.data.msg);
+      }
+    },
+    // 删除图片
+    deleteImg(index){
+        this.tableData[index].imgUrl = '';
+    },
+    // 禁用/启用
+    operateProduct(row,status){
+
     }
   }
-}
-
+};
 </script>
-<style lang='less' scoped>
-.product-specification{
-    .spe-title{
-        width: 100%;
-        height: 60px;
-        line-height: 60px;
-        padding: 0 20px;
-        background-color: #f7f7f7;
-        box-sizing: border-box;
+<style lang='less'>
+.product-specification {
+  .el-upload--text {
+    width: 80px;
+    height: 32px;
+    overflow: hidden;
+    border: none;
+  }
+  .product-img {
+    display: inline-block;
+    width: 45px;
+    height: 45px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    vertical-align: middle;
+    margin-right: 5px;
+    img {
+      width: 100%;
+      height: 100%;
     }
-    .spe-wrap{
-        width: 100%;
-        border: 1px solid #ddd;
-        margin-top: 20px;
-        padding: 10px;
-        box-sizing: border-box;
-        font-size: 14px;
-        color: #666;
-        .small-spe-title{
-            width: 100%;
-            height: 60px;
-            line-height: 60px;
-            background-color: #f7f7f7;
-            padding: 0 30px;
-            box-sizing: border-box;
-            .delete-big-tit{
-                display: inline-block;
-                position: relative;
-                .del-big-btn{
-                    position: absolute;
-                    top: 8px;
-                    right: -5px;
-                    width: 15px;
-                    height: 15px;
-                    border-radius: 50%;
-                    border: 1px solid #ccc;
-                    background-color: #fff;
-                    cursor: pointer;
-                    z-index: 1000;
-                    line-height: 15px;
-                    text-align: center;
-                    color: #ccc;
-                }
-            }
+  }
+  .spe-title {
+    width: 100%;
+    height: 60px;
+    line-height: 60px;
+    padding: 0 20px;
+    background-color: #f7f7f7;
+    box-sizing: border-box;
+  }
+  .spe-wrap {
+    width: 100%;
+    border: 1px solid #ddd;
+    margin-top: 20px;
+    padding: 10px;
+    box-sizing: border-box;
+    font-size: 14px;
+    color: #666;
+    .small-spe-title {
+      width: 100%;
+      height: 60px;
+      line-height: 60px;
+      background-color: #f7f7f7;
+      padding: 0 30px;
+      box-sizing: border-box;
+      .delete-big-tit {
+        display: inline-block;
+        position: relative;
+        .del-big-btn {
+          position: absolute;
+          top: 8px;
+          right: -5px;
+          width: 15px;
+          height: 15px;
+          border-radius: 50%;
+          border: 1px solid #ccc;
+          background-color: #fff;
+          cursor: pointer;
+          z-index: 1000;
+          line-height: 15px;
+          text-align: center;
+          color: #ccc;
         }
-        .small-spe-content{
-            width: 100%;
-            padding: 20px 0 10px 70px;
-            box-sizing: border-box;
-            overflow: hidden;
-            .des-wrap{
-                position: relative;
-                display: inline-block;
-                .delete-btn{
-                    position: absolute;
-                    top: -6px;
-                    right: 5px;
-                    width: 15px;
-                    height: 15px;
-                    border-radius: 50%;
-                    border: 1px solid #ccc;
-                    background-color: #fff;
-                    cursor: pointer;
-                    z-index: 1000;
-                    line-height: 15px;
-                    text-align: center;
-                    color: #ccc;
-                }
-                .des-inp{
-                    width: 160px;
-                    margin:0 10px 10px 0;
-                }
-            }
-            .add-spe{
-                color: #33b4ff;
-                cursor: pointer;
-            }
-        }
+      }
     }
+    .small-spe-content {
+      width: 100%;
+      padding: 20px 0 10px 70px;
+      box-sizing: border-box;
+      overflow: hidden;
+      .des-wrap {
+        position: relative;
+        display: inline-block;
+        .delete-btn {
+          position: absolute;
+          top: -6px;
+          right: 5px;
+          width: 15px;
+          height: 15px;
+          border-radius: 50%;
+          border: 1px solid #ccc;
+          background-color: #fff;
+          cursor: pointer;
+          z-index: 1000;
+          line-height: 15px;
+          text-align: center;
+          color: #ccc;
+        }
+        .des-inp {
+          width: 160px;
+          margin: 0 10px 10px 0;
+        }
+      }
+      .add-spe {
+        color: #33b4ff;
+        cursor: pointer;
+      }
+    }
+  }
 }
 </style>

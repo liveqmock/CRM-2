@@ -153,11 +153,13 @@ export default {
     },
     // 价格管理
     priceManage(row){
-        console.log(row);
+        sessionStorage.setItem('priceManage',row.id);
+        this.$router.push({name:'priceManage',query:{priceManageId:row.id}});
     },
     // 库存管理
     inventoryManage(row){
-        console.log(row);
+        sessionStorage.setItem('productInventory',row.id);
+        this.$router.push({name:'productInventory',query:{productInventoryId:row.id}});
     },
     // 产品上架/下架
     productStatus(row,status){
@@ -165,7 +167,8 @@ export default {
     },
     // 查看详情
     productInfo(row){
-        console.log(row);
+        sessionStorage.setItem('productInfo',row.id);
+        this.$router.push({name:'productInfo',query:{productInfoId:row.id}});
     },
   },
   filters:{

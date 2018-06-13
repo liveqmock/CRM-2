@@ -275,6 +275,18 @@ export default new Router({
                     component: resolve => require(['../components/page/BrandProduct/ProductManage/ProductInfo.vue'], resolve),
                     meta: { title: '产品详情' }
                 },
+                {
+                    name:'priceManage',
+                    path: '/priceManage',
+                    component: resolve => require(['../components/page/BrandProduct/ProductManage/PriceManage.vue'], resolve),
+                    meta: { title: '产品价格管理' }
+                },
+                {
+                    name:'productInventory',
+                    path: '/productInventory',
+                    component: resolve => require(['../components/page/BrandProduct/ProductManage/ProductInventory.vue'], resolve),
+                    meta: { title: '产品库存管理' }
+                },
 
                 //服务管理
                 {
