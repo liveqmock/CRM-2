@@ -94,6 +94,24 @@ export default new Router({
                     component: resolve => require(['../components/page/BrandProduct/ShippingTemplate/EditTemplate.vue'], resolve),
                     meta: { title: '编辑模板'}
                 },
+                {
+                    name:'giftManage',
+                    path: '/giftManage',
+                    component: resolve => require(['../components/page/BrandProduct/GiftManage.vue'], resolve),
+                    meta: { title: '礼包管理'}
+                },
+                {
+                    name:'addGift',
+                    path: '/addGift',
+                    component: resolve => require(['../components/page/BrandProduct/GiftManage/AddGift.vue'], resolve),
+                    meta: { title: '发布礼包'}
+                },
+                {
+                    name:'editGift',
+                    path: '/editGift',
+                    component: resolve => require(['../components/page/BrandProduct/GiftManage/EditGift.vue'], resolve),
+                    meta: { title: '编辑礼包'}
+                },
                 // 会员管理
                 {
                     name:'levelManage',

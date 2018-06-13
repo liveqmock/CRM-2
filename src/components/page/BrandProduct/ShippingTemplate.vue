@@ -27,16 +27,6 @@
                     </el-table-column>
                 </el-table>
             </template>
-            <div class="block">
-                <el-pagination
-                        background
-                        @size-change="handleSizeChange"
-                        @current-change="handleCurrentChange"
-                        :current-page="page.currentPage"
-                        layout="total, prev, pager, next, jumper"
-                        :total="page.totalPage">
-                </el-pagination>
-            </div>
         </div>
         <!--删除弹窗-->
         <delete-toast :id='delId' :url='delUrl' :uri='delUri' @msg='deleteToast' v-if="isShowDelToast"></delete-toast>
@@ -67,10 +57,6 @@
 
                 tableData: [{data:111}],
                 tableLoading: false,
-                page: {
-                    currentPage: 1,
-                    totalPage: 1
-                },
                 height: '',
                 addOrEditMask: false,
                 isShowDelToast: false,
@@ -120,7 +106,6 @@
                         if (res.data.code == 200) {
                             that.tableLoading = false;
                             that.tableData = res.data.data.data;
-                            that.page.totalPage = res.data.data.resultCount;
                         } else {
                             that.$message.warning(res.data.msg);
                             that.tableLoading = false;
@@ -132,15 +117,7 @@
                         that.tableLoading = false;
                     })
             },
-            //分页
-            handleSizeChange(val) {
-                console.log(`每页 ${val} 条`);
-            },
-            handleCurrentChange(val) {
-                console.log(`当前页: ${val}`);
-                this.page.currentPage = val;
-                this.getList(val)
-            },
+
             // 添加品牌
             addTemplate() {
                 this.$router.push({path: '/addTemplate'})

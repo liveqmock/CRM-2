@@ -94,7 +94,7 @@ export default {
                   {
                       index: "brandProductClassify",
                       title: "产品分类管理"
-                  }, 
+                  },
                   {
                       index: "brandManage",
                       title: "品牌管理"
@@ -106,6 +106,10 @@ export default {
                   {
                       index: "shippingTemplate",
                       title: "运费模板"
+                  },
+                  {
+                      index: "giftManage",
+                      title: "产品礼包设置"
                   }
               ]
           },
