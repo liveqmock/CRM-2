@@ -135,6 +135,8 @@
                     </el-checkbox-group>
                     <div class="tips">选择层级之后，根据用户的等级，购买受到限制</div>
                 </el-form-item>
+                <div class="pro-title">规格/售价/库存</div>
+
                 <div class="selected-tag">
                     <span v-if="form.selectedTagArr.length == 0" class="tag-tip">请选择标签</span>
                     <el-tag class="tag" type="info" closable v-for="(v,k) in form.selectedTagArr" :key="k"
@@ -468,7 +470,7 @@
                 width: 120px !important;
             }
         }
-        .checkbox-group{
+        .el-checkbox-group{
             margin-left: 20px;
         }
         .tips{

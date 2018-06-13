@@ -327,11 +327,11 @@
                     width: 100%;
                     height: 248px;
                     overflow: hidden;
-                    padding: 30px 45px 0 45px;
+                    padding: 10px 45px 0 45px;
                     box-sizing: border-box;
                     .del-btn-group {
                       text-align: right;
-                        margin-top: 100px;
+                      margin-top: 50px;
                     }
                 }
             }

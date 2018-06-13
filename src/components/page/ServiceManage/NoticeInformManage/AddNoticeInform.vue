@@ -173,7 +173,7 @@
             };
         },
         activated() {
-            utils.cleanData(1,this.form);
+            utils.cleanFormData(1,this.form);
             // console.log(this.form)
             this.form.nType='1';
             this.title='';
