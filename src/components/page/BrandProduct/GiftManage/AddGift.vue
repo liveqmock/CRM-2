@@ -1,5 +1,5 @@
 <template>
-    <div class="release-product">
+    <div class="add-gift">
         <v-breadcrumb :nav='nav'></v-breadcrumb>
         <el-card :body-style="{ padding: '20px 45px',color:'#666' }">
             <div class="pro-title">基本信息</div>
@@ -136,7 +136,27 @@
                     <div class="tips">选择层级之后，根据用户的等级，购买受到限制</div>
                 </el-form-item>
                 <div class="pro-title">规格/售价/库存</div>
-
+                <div class="gift-info-wrap">
+                    <div v-for="(v,k) in giftInfoArr" :key="k" class="gift-info-item">
+                        <div class="gift-info-title">
+                            <span class="delete-btn" @click="deleteGiftType()">×</span>
+                            <span style="font-weight:600;font-size:14px;margin-right:10px">礼包类型</span>
+                            <el-input style="width:210px" v-model="v.giftType"></el-input>
+                        </div>
+                        <div class="gift-info-content">
+                            <span style="font-size:12px;margin-right:10px;vertical:top">售价</span>
+                            <el-input style="width:210px;margin-right:20px" v-model="v.giftPrice"><template slot="prepend">￥</template></el-input>
+                            <span style="font-size:12px;margin-right:10px;vertical:top">库存</span>
+                            <el-input style="width:210px" v-model="v.inventory"></el-input>
+                            <el-select style="width:80px" v-model="v.unit">
+                              <el-option v-for="(value,key) in unitArr" :key="key" :label="value.label" :value="value.value"></el-option>
+                            </el-select>
+                        </div>
+                    </div>
+                    <div class="gift-info-footer">
+                        <span>添加礼包类型</span>
+                    </div>
+                </div>
                 <div class="selected-tag">
                     <span v-if="form.selectedTagArr.length == 0" class="tag-tip">请选择标签</span>
                     <el-tag class="tag" type="info" closable v-for="(v,k) in form.selectedTagArr" :key="k"
@@ -147,12 +167,6 @@
                     <el-input style="width:215px;margin-right:20px" v-model="tagName"
                               placeholder="请输入标签/至多可添加20个"></el-input>
                     <el-button type="primary" @click="addTag">添加标签</el-button>
-                </div>
-                <div class="tag-list">
-                    <span v-if="tagArr.length == 0" class="tag-tip">请添加标签</span>
-                    <el-button v-for="(v,k) in tagArr" :key="k" @click="insertTag(v)" :disabled="v.selected"
-                               :class="{'selected-btn':v.selected}">{{v.label}}
-                    </el-button>
                 </div>
                 <el-button type="primary">确认发布</el-button>
                 <el-button>取消</el-button>
@@ -183,7 +197,9 @@
                 isUseUpload: false,
                 showSaleTime: false,
                 uploadImg: "",
+                unitArr:[{label:'件',value:'1'}],
                 imgArr: [],
+                giftInfoArr:[{giftType:'',giftPrice:'',inventory:'',unit:'1'}],
                 proCategoryArr: [{label: "电子数码", value: 1}],
                 times: [{label: '7', id: 0},
                     {label: '10', id: 1},
@@ -365,11 +381,6 @@
             // 关闭标签
             handleClose(index, value) {
                 this.form.selectedTagArr.splice(index, 1);
-                this.tagArr.forEach((v, k) => {
-                    if (value.value == v.value) {
-                        this.tagArr[k].selected = false;
-                    }
-                })
             },
             // 加入新的标签
             addTag() {
@@ -378,19 +389,6 @@
                     return;
                 }
                 this.tagArr.push({label: this.tagName, value: new Date().getTime(), selected: false});
-                // let data = {};
-                // this.$axios.post()
-                // .then(res=>{
-                //   console.log(res);
-                // })
-                // .catch(err=>{
-                //   console.log(err)
-                // })
-            },
-            // 添加标签
-            insertTag(v) {
-                v.selected = true;
-                this.form.selectedTagArr.push({label: v.label, value: v.value});
                 // let data = {};
                 // this.$axios.post()
                 // .then(res=>{
@@ -447,6 +445,10 @@
                 that.checkAll = checkedCount === that.users.length;
                 that.isIndeterminate = checkedCount > 0 && checkedCount < that.users.length;
             },
+            // 删除礼包类型
+            deleteGiftType(){
+                
+            },
             // 提交表单
             submitForm() {
                 console.log(this.form);
@@ -455,7 +457,7 @@
     };
 </script>
 <style lang='less'>
-    .release-product {
+    .add-gift {
         color: #666;
         .address-item {
             .el-form-item__label {
@@ -577,6 +579,62 @@
                 background-color: #409EFF;
                 border-color: #409EFF;
                 color: #fff;
+            }
+        }
+        .gift-info-wrap{
+            width: 100%;
+            border: 1px solid  #eee;
+            padding: 10px;
+            box-sizing: border-box;
+            .gift-info-item{
+                width: 100%;
+                .gift-info-title{
+                    position: relative;
+                    width: 100%;
+                    height: 60px;
+                    line-height: 40px;
+                    padding: 10px 30px;
+                    box-sizing: border-box;
+                    background-color: #f7f7f7;
+                    .delete-btn{
+                        position: absolute;
+                        top: 16px;
+                        right: 30px;
+                        width: 24px;
+                        height: 24px;
+                        border-radius: 50%;
+                        border: 2px solid #a5a5a5;
+                        cursor: pointer;
+                        text-align: center;
+                        line-height: 24px;
+                        color: #a5a5a5;
+                        font-size: 18px;
+                        font-weight: 700;
+                    }
+                }
+                .gift-info-content{
+                    position: relative;
+                    overflow: hidden;
+                    width: 100%;
+                    height: 40px;
+                    line-height:40px;
+                    padding-left: 60px;
+                    margin: 20px 0;
+                    box-sizing: border-box;
+                    .el-input--small .el-input__inner{
+                        line-height: 30px;
+                    }
+                    .el-input-group__append, .el-input-group__prepend{
+                        padding: 0 5px;
+                    }
+                }
+            }
+            .gift-info-footer{
+                display: inline-block;
+                color: #22aeff;
+                font-size: 14px;
+                margin-left: 30px;
+                cursor: pointer;
             }
         }
     }

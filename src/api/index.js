@@ -44,8 +44,9 @@ axios.interceptors.response.use(
             sessionStorage.clear();
             localStorage.clear();
             Message.warning({duration: 1000, message: '登陆超时，请重新登陆'})
+            return Promise.reject(res);
         }
-        if (res.status != '200') {
+        if (res.data.code != '200') {
             Message.error({duration: 1000, message: '响应失败'})
             setTimeout(() => {
                 Message.closeAll();

@@ -4,50 +4,61 @@
       <div class="search-pane">
           <el-form :model="form" ref='form' inline label-width="100px">
             <el-form-item prop="name" label="产品名称">
-                <el-input v-model="form.name" placeholder="请输入产品名称"></el-input>
+                <el-input v-model.trim="form.name" placeholder="请输入产品名称"></el-input>
             </el-form-item>
-            <el-form-item prop="id" label="产品ID号">
-                <el-input v-model="form.id" placeholder="请输入产品ID"></el-input>
+            <el-form-item prop="brandId" label="产品ID号">
+                <el-input v-model.trim="form.brandId" placeholder="请输入产品ID"></el-input>
             </el-form-item>
-            <el-form-item prop="code" label="条形码">
-                <el-input v-model="form.code" placeholder="请输入条形码"></el-input>
+            <el-form-item prop="barCode" label="条形码">
+                <el-input v-model.trim="form.barCode" placeholder="请输入条形码"></el-input>
             </el-form-item>
             <el-form-item prop="item" label="产品类目">
-                <el-select style="width:200px" v-model="form.item">
-                  <el-option v-for="(v,k) in itemList" :key="k" :label="v.label" :value="v.value"></el-option>
-                </el-select>
+                <el-cascader @change='getProItemId' :options="itemList" @active-item-change="handleItemChange" :props="itemProps"></el-cascader>
             </el-form-item>
-            <el-form-item prop="sellMin" label="总销量">
-                <el-input style="width:95px" v-model="form.sellMin"></el-input> -
-                <el-input style="width:95px" v-model="form.sellMax"></el-input>
+            <el-form-item prop="saleMin" label="总销量">
+                <el-input style="width:95px" v-model.trim="form.saleMin"></el-input> -
+                <el-input style="width:95px" v-model.trim="form.saleMax"></el-input>
             </el-form-item>
             <el-form-item prop="priceMin" label="价格">
-                <el-input style="width:95px" v-model="form.priceMin">
+                <el-input style="width:95px" v-model.trim="form.priceMin">
                     <template slot="prepend">￥</template>
                 </el-input> -
-                <el-input style="width:95px" v-model="form.priceMax">
+                <el-input style="width:95px" v-model.trim="form.priceMax">
                     <template slot="prepend">￥</template>
                 </el-input>
             </el-form-item>
             <el-form-item label=" ">
-                <el-button type="primary">搜索</el-button>
-                <el-button @click="resetForm('form')" >重置</el-button>
+                <el-button type="primary" @click="submitForm(1)">搜索</el-button>
+                <!-- <el-button @click="resetForm('form')" >重置</el-button> -->
             </el-form-item>
           </el-form>
       </div>
-      <el-table border :data="tableData" @selection-change="handleSelectionChange">
+      <el-table v-loading="tableLoading" border :data="tableData" @selection-change="handleSelectionChange">
         <el-table-column type="selection" align="center"></el-table-column>
         <el-table-column prop="name" label="产品名称" align="center" min-width="300"></el-table-column>
         <el-table-column prop="" label="产品类目" align="center" min-width="120"></el-table-column>
         <el-table-column label="产品售价" align="center" min-width="50">
             <template slot-scope="scope">
-                {{scope.row.price | formatPrice}}
+                {{scope.row.original_price | formatPrice}}
             </template>
         </el-table-column>
         <el-table-column prop="" label="库存" align="center" min-width="50"></el-table-column>
-        <el-table-column prop="" label="销售" align="center" min-width="50"></el-table-column>
-        <el-table-column prop="" label="发布时间/发布人" align="center" min-width="120"></el-table-column>
-        <el-table-column prop="" label="状态" align="center" min-width="50"></el-table-column>
+        <el-table-column prop="saleNum" label="销售" align="center" min-width="50"></el-table-column>
+        <el-table-column label="发布时间/发布人" align="center" min-width="120">
+            <template slot-scope="scope">
+                {{scope.row.create_time | formatDate}}<br/>{{`产品编辑:${scope.row.create_admin}`}}
+            </template>
+        </el-table-column>
+        <el-table-column prop="" label="状态" align="center" min-width="50">
+            <template slot-scope="scope">
+                <template v-if='scope.row.status == 1'>待审核</template>
+                <template v-else-if='scope.row.status == 2'>已通过</template>
+                <template v-else-if='scope.row.status == 3'>未通过</template>
+                <template v-else-if='scope.row.status == 4'>已上架</template>
+                <template v-else-if='scope.row.status == 5'>停用</template>
+                <template v-else-if='scope.row.status == 6'>删除</template>
+            </template>
+        </el-table-column>
         <el-table-column label="操作" align="center" min-width="220">
             <template slot-scope="scope">
                 <div class="operate">
@@ -55,7 +66,8 @@
                     <el-button @click="specificationsManage(scope.row)" type="primary">规格管理</el-button>
                     <el-button @click="priceManage(scope.row)" type="primary">价格管理</el-button>
                     <el-button @click="inventoryManage(scope.row)" type="primary">库存管理</el-button>
-                    <el-button @click="productStatus(scope.row)" type="warning">产品上架</el-button>
+                    <el-button v-if='scope.row.status == 4' @click="productStatus(scope.row)" type="warning">产品下架</el-button>
+                    <el-button v-else @click="productStatus(scope.row)" type="warning">产品上架</el-button>
                     <el-button @click="productInfo(scope.row)" type="primary">查看详情</el-button>
                 </div>
             </template>
@@ -79,102 +91,200 @@
 </template>
 
 <script>
+import * as api from "@/api/BrandProduct/ProductMange/index.js";
 export default {
   props: ["name"],
   components: {},
 
-  created() {
-    this.id = this.name;
-  },
-
   data() {
     return {
-      id: "",
-      itemList: [{ label: "数码家电", value: "1" }],
+      itemList: [],
+      itemProps: {
+        value: "value",
+        children: "children",
+      },
+      status:'',
       form: {
         name: "",
-        id: "",
-        code: "",
-        item: "",
-        sellMin: "",
-        sellMax: "",
+        brandId: "",
+        barCode: "",
+        firstCategoryId: "",
+        secondCategoryId:"",
+        saleMin: "",
+        saleMax: "",
         priceMin: "",
         priceMax: ""
       },
-      tableData: [
-        {id:'1', name: "数码家电", price: 200 },
-        {id:'2', name: "零食", price: 300 }
-      ],
-      multipleSelection:[],
+      tableData: [],
+      tableLoading:false,
+      multipleSelection: [],
       page: {
         currentPage: 1,
-        totalPage: 1
+        totalPage: 0
       }
     };
   },
 
+  activated() {
+      this.submitForm(1);
+    this.getFirstItem();
+    this.submitForm(this.page.currentPage);
+  },
+
+  mounted(){
+      let n = this.name;
+    if(n == 'allProduct'){
+        this.status = ''
+    }else if(n== 'upProduct'){
+        this.status = '4'
+    }else if(n== 'downProduct'){
+        this.status = '5'
+    }else if(n == 'auditProduct'){
+        this.status = '1'
+    }else if(n == 'modifyProduct'){
+        this.status = '3'
+    }
+    this.getFirstItem();
+    this.submitForm(1);
+  },
+
   methods: {
+    //   提交表单
+    submitForm(val){
+        let data = {};
+        data = this.form;
+        data.page = val;
+        data.status = this.status;
+        this.tableLoading = true;
+        this.$axios
+        .post(api.queryProductPageList, data)
+        .then(res => {
+            this.tableData = [];
+            this.tableData = res.data.data.data;
+            this.page.totalPage = res.data.data.resultCount;
+            this.tableLoading = false;
+        })
+        .catch(err => {
+          console.log(err);
+          this.tableLoading = false;
+        });
+    },
     //   重置表单
     resetForm(formName) {
-      this.form.sellMax = "";
+      this.form.saleMax = "";
       this.form.priceMax = "";
       this.$refs[formName].resetFields();
     },
     // 全选
     handleSelectionChange(val) {
-        let that = this;
-        this.multipleSelection = [];
-        val.forEach((v,k)=>{
-            that.multipleSelection.push(v.id);
-        })
+      let that = this;
+      this.multipleSelection = [];
+      val.forEach((v, k) => {
+        that.multipleSelection.push(v.id);
+      });
     },
     //分页
     handleSizeChange(val) {
-        console.log(`每页 ${val} 条`);
+      console.log(`每页 ${val} 条`);
     },
     handleCurrentChange(val) {
-        console.log(`当前页: ${val}`);
-        this.page.currentPage = val;
-        this.getList(val)
+      console.log(`当前页: ${val}`);
+      this.page.currentPage = val;
+      this.submitForm(val);
     },
     // 发布产品
-    releaseProduct(){
-        this.$router.push({name:'releaseProduct'});
+    releaseProduct() {
+      this.$router.push({ name: "releaseProduct" });
     },
     // 编辑产品
-    editProduct(row){
-        sessionStorage.setItem('releaseProduct',row.id);
-        this.$router.push({name:'editProduct',query:{releaseProductId:row.id}});
+    editProduct(row) {
+      sessionStorage.setItem("releaseProduct", row.id);
+      this.$router.push({
+        name: "editProduct",
+        query: { releaseProductId: row.id }
+      });
     },
     // 规格管理
-    specificationsManage(row){
-        sessionStorage.setItem('productSpecifications',row.id);
-        this.$router.push({name:'productSpecifications',query:{productSpecificationsId:row.id}});
+    specificationsManage(row) {
+      sessionStorage.setItem("productSpecifications", row.id);
+      this.$router.push({
+        name: "productSpecifications",
+        query: { productSpecificationsId: row.id }
+      });
     },
     // 价格管理
-    priceManage(row){
-        sessionStorage.setItem('priceManage',row.id);
-        this.$router.push({name:'priceManage',query:{priceManageId:row.id}});
+    priceManage(row) {
+      sessionStorage.setItem("priceManage", row.id);
+      this.$router.push({
+        name: "priceManage",
+        query: { priceManageId: row.id }
+      });
     },
     // 库存管理
-    inventoryManage(row){
-        sessionStorage.setItem('productInventory',row.id);
-        this.$router.push({name:'productInventory',query:{productInventoryId:row.id}});
+    inventoryManage(row) {
+      sessionStorage.setItem("productInventory", row.id);
+      this.$router.push({
+        name: "productInventory",
+        query: { productInventoryId: row.id }
+      });
     },
     // 产品上架/下架
-    productStatus(row,status){
-        console.log(row);
+    productStatus(row, status) {
+      console.log(row);
     },
     // 查看详情
-    productInfo(row){
-        sessionStorage.setItem('productInfo',row.id);
-        this.$router.push({name:'productInfo',query:{productInfoId:row.id}});
+    productInfo(row) {
+      sessionStorage.setItem("productInfo", row.id);
+      this.$router.push({
+        name: "productInfo",
+        query: { productInfoId: row.id }
+      });
     },
+    // 获取一级类目
+    getFirstItem() {
+        this.itemList = [];
+      this.$axios
+        .post(api.getCategoryList, { fatherid: 0 })
+        .then(res => {
+            res.data.data.data.forEach((v,k)=>{
+                this.itemList.push({label:v.name,value:v.id,children:[]})
+            })
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    // 获取二级类目
+    handleItemChange(val){
+        let index = 0;
+        this.itemList.forEach((v,k)=>{
+            if(v.value == val[0]){
+                index = k;
+            }
+        })
+        let data ={};
+        data.fatherid = val[0];
+        this.$axios
+        .post(api.getCategoryList, data)
+        .then(res => {
+            res.data.data.data.forEach((v,k)=>{
+                this.itemList[index].children.push({label:v.name,value:v.id});
+            })
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    // 获取一二级类目id
+    getProItemId(val){
+        this.form.firstCategoryId = val[0];
+        this.form.secondCategoryId = val[1];
+    }
   },
-  filters:{
-      formatPrice(val){
-          return `￥${val}`;
-      }
+  filters: {
+    formatPrice(val) {
+      return `￥${val}`;
+    }
   }
 };
 </script>
@@ -203,12 +313,12 @@ export default {
       margin-right: 0px;
     }
   }
-  .operate-table{
-      margin-top: 10px;
+  .operate-table {
+    margin-top: 10px;
   }
   .block {
-        float: right;
-        margin-top: 10px
-    }
+    float: right;
+    margin-top: 10px;
+  }
 }
 </style>
