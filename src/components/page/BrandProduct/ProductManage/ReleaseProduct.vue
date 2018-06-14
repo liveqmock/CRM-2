@@ -310,7 +310,7 @@ export default {
     handleClose(index,value) {
       this.form.selectedTagArr.splice(index,1);
       this.tagArr.forEach((v,k)=>{
-        if(value.value == v.value){
+        if(value.label == v.label){
           this.tagArr[k].selected = false;
         }
       })
@@ -321,28 +321,37 @@ export default {
         this.$message.warning('请输入正确的标签');
         return;
       }
-      this.tagArr.push({label:this.tagName,value:new Date().getTime(),selected:false});
-      // let data = {};
-      // this.$axios.post()
-      // .then(res=>{
-      //   console.log(res);
-      // })
-      // .catch(err=>{
-      //   console.log(err)
-      // })
+      if(this.tagArr.length >19){
+        this.$message.warning('最多添加20个标签');
+        return;
+      }
+      let tmp = false;
+      this.tagArr.forEach((v,k)=>{
+        if(this.tagName == v.label){
+          tmp = true;
+        }
+      })
+      if(!tmp){
+        let data = {};
+        data.name = this.tagName;
+        this.$axios.post(api.addTagLibrary,data)
+        .then(res=>{
+          this.$message.success('添加成功!');
+          this.tagName = '';
+          this.getAllTags();
+        })
+        .catch(err=>{
+          console.log(err)
+        })
+        
+      }else{
+        this.$message.warning('标签已经添加，请不要重复添加!');
+      }
     },
     // 添加标签
     insertTag(v){
       v.selected = true;
       this.form.selectedTagArr.push({label:v.label,value:v.value});
-      // let data = {};
-      // this.$axios.post()
-      // .then(res=>{
-      //   console.log(res);
-      // })
-      // .catch(err=>{
-      //   console.log(err)
-      // })
     },
     // 获取一级类目
     getFirstItem() {
@@ -431,13 +440,13 @@ export default {
     },
     // 获取所有标签
     getAllTags(){
+      this.tagArr = [];
        this.$axios
         .post(api.queryTagLibraryList, {})
         .then(res => {
-          console.log(res.data);
-            // res.data.data.forEach((v,k)=>{
-            //   this.freightTemplateArr.push({label:v.name,value:v.id})
-            // })
+            res.data.data.forEach((v,k)=>{
+              this.tagArr.push({label:v.name,value:v.id})
+            })
         })
         .catch(err => {
           console.log(err);

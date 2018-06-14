@@ -14,3 +14,5 @@ export const querySupplierBrandPageList = '/admin/supplierBrand/querySupplierBra
 export const getFreightTemplateList = '/admin/freightTemplate/getFreightTemplateList';
 // 获取所有标签
 export const queryTagLibraryList = '/admin/tagLibrary/queryTagLibraryList';
+// 添加新标签
+export const addTagLibrary = '/admin/tagLibrary/addTagLibrary';
