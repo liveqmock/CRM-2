@@ -36,7 +36,11 @@
       <el-table v-loading="tableLoading" border :data="tableData" @selection-change="handleSelectionChange">
         <el-table-column type="selection" align="center"></el-table-column>
         <el-table-column prop="name" label="产品名称" align="center" min-width="300"></el-table-column>
-        <el-table-column prop="" label="产品类目" align="center" min-width="120"></el-table-column>
+        <el-table-column label="产品类目" align="center" min-width="120">
+          <template slot-scope="scope">
+            {{scope.row.firstName}}<br/>{{scope.row.secondName}}
+          </template>
+        </el-table-column>
         <el-table-column label="产品售价" align="center" min-width="50">
             <template slot-scope="scope">
                 {{scope.row.original_price | formatPrice}}

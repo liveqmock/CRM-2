@@ -22,22 +22,20 @@
                 <div class="upload-tip">建议尺寸：800*800,拖拽图片可以改变顺序，第一张为默认头图</div>
             </el-form-item>
             <el-form-item label="产品分类">
-                <el-select v-model="form.proCategory" placeholder="请选择">
-                  <el-option v-for="(v,k) in proCategoryArr" :key="k" :label="v.label" :value="v.value"></el-option>
-                </el-select> 
+                <el-cascader @change='getProItemId' :options="itemList" @active-item-change="handleItemChange" :props="itemProps"></el-cascader>
                 <span style="margin-left:30px">产品品牌</span>
-                <el-select v-model="form.proBrand" placeholder="请选择">
-                  <el-option v-for="(v,k) in proCategoryArr" :key="k" :label="v.label" :value="v.value"></el-option>
+                <el-select @change="getSupplyList" v-model="form.brandId" placeholder="请选择">
+                  <el-option v-for="(v,k) in brandArr" :key="k" :label="v.label" :value="v.value"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="供应商">
                 <el-select v-model="form.supplier" placeholder="下拉搜索供应商">
-                  <el-option v-for="(v,k) in proCategoryArr" :key="k" :label="v.label" :value="v.value"></el-option>
+                  <el-option v-for="(v,k) in supplierArr" :key="k" :label="v.label" :value="v.value"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="发货地">
-                <el-select v-model="form.originAddress" placeholder="选择发货地">
-                  <el-option v-for="(v,k) in proCategoryArr" :key="k" :label="v.label" :value="v.value"></el-option>
+            <el-form-item label="发货方">
+                <el-select v-model="form.sendFrom" placeholder="选择发货方">
+                  <el-option v-for="(v,k) in shipperArr" :key="k" :label="v.label" :value="v.value"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="产品重量">
@@ -48,29 +46,29 @@
             </el-form-item>
             <el-form-item label="产品参数">
               <div class="product-param">
-                <span>产品颜色</span><el-input class="inp-param" v-model="form.proColor"></el-input>
-                <span>产品尺寸</span><el-input class="inp-param" v-model="form.proSize"></el-input>
-                <span>产品款式</span><el-input class="inp-param" v-model="form.proStyle"></el-input>
-                <span>产品种类</span><el-input class="inp-param" v-model="form.proClass"></el-input>
+                <span>产品颜色</span><el-input class="inp-param" v-model="form.color"></el-input>
+                <span>产品尺寸</span><el-input class="inp-param" v-model="form.size"></el-input>
+                <span>产品款式</span><el-input class="inp-param" v-model="form.style"></el-input>
+                <span>产品种类</span><el-input class="inp-param" v-model="form.species"></el-input>
               </div>
             </el-form-item>
             <div class="pro-title">基本信息</div>
             <el-form-item label="选择运费模板">
-                <el-select v-model="form.freightTpl" placeholder="请选择模板">
-                  <el-option v-for="(v,k) in proCategoryArr" :key="k" :label="v.label" :value="v.value"></el-option>
+                <el-select v-model="form.freightTemplateId" placeholder="请选择模板">
+                  <el-option v-for="(v,k) in freightTemplateArr" :key="k" :label="v.label" :value="v.value"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="售后周期">
               <transition name="fade">
-                <el-select v-if="!showSaleTime" v-model="form.saleTime" placeholder="请选择售后周期">
-                  <el-option v-for="(v,k) in proCategoryArr" :key="k" :label="v.label" :value="v.value"></el-option>
+                <el-select v-if="!showSaleTime" v-model="form.aferServiceDays" placeholder="请选择售后周期">
+                  <el-option v-for="(v,k) in aferServiceDays" :key="k" :label="v.label" :value="v.value"></el-option>
                 </el-select>
-                <el-input v-if='showSaleTime' v-model="form.saleTime" style="width:215px" placeholder="请输入售后周期"></el-input>
+                <el-input v-if='showSaleTime' v-model="form.aferServiceDays" style="width:215px" placeholder="请输入售后周期"></el-input>
               </transition>
                 <el-button @click="defSaleTime">自定义</el-button>
             </el-form-item>
             <div class="pro-title">产品信息</div>
-            <quill-editor v-model="form.editorContent" ref="myQuillEditor" :options="editorOption" @change="onEditorChange($event)"></quill-editor>
+            <quill-editor v-model="form.content" ref="myQuillEditor" :options="editorOption" @change="onEditorChange($event)"></quill-editor>
             <el-upload :action="qnLocation" :before-upload='beforeUpload' :data="uploadData" :on-success='upScuccess' ref="upload" style="display:none">
               <el-button size="small" type="primary" id="imgInput" element-loading-text="插入中,请稍候">点击上传</el-button>
             </el-upload>
@@ -86,7 +84,7 @@
               <span v-if="tagArr.length == 0" class="tag-tip">请添加标签</span>
               <el-button v-for="(v,k) in tagArr" :key="k" @click="insertTag(v)" :disabled="v.selected" :class="{'selected-btn':v.selected}">{{v.label}}</el-button>
             </div>
-            <el-button type="primary">确认发布</el-button>
+            <el-button type="primary" @click="submitForm">确认发布</el-button>
             <el-button >取消</el-button>
           </el-form>
       </el-card>
@@ -98,7 +96,7 @@ import vBreadcrumb from "@/components/common/Breadcrumb.vue";
 import draggable from "vuedraggable";
 import Quill from "quill";
 import icon from "@/components/common/ico";
-import * as api from "@/api/api.js";
+import * as api from "@/api/BrandProduct/ProductMange/index.js";
 import * as pApi from "@/privilegeList/index.js";
 import utils from "@/utils/index.js";
 export default {
@@ -114,23 +112,43 @@ export default {
       isUseUpload: false,
       showSaleTime: false,
       uploadImg: "",
-      imgArr: [],
-      proCategoryArr: [{ label: "电子数码", value: 1 }],
+      imgArr:[],
+      itemList: [],
+      brandArr:[],
+      freightTemplateArr:[],
+      supplierArr:[],
+      shipperArr:[{label:'平台发货',value:'1'},{label:'供应商发货',value:'2'}],
+      aferServiceDays:[
+        {label:'无售后服务',value:'0'},
+        {label:'到货后7天',value:'7'},
+        {label:'到货后15天',value:'15'},
+        {label:'到货后30天',value:'30'},
+        {label:'到货后6个月',value:'180'},
+        {label:'到货后1年',value:'365'},
+        {label:'到货后2年',value:'730'},
+        {label:'到货后3年',value:'1095'},
+      ],
+      itemProps: {
+        value: "value",
+        children: "children",
+      },
+      proCategoryArr: [],
       form: {
         name: "",
-        proCategory: "",
-        proBrand: "",
+        firstCategoryId: "",
+        secondCategoryId:"",
+        brandId: "",
         supplier: "",
-        originAddress:"",
+        sendFrom:"",
         weight: "",
         volume: "",
-        proColor: "",
-        proSize: "",
-        proStyle: "",
-        proClass: "",
-        freightTpl: "",
-        saleTime: "",
-        editorContent: "",
+        color: "",
+        size: "",
+        style: "",
+        species: "",
+        freightTemplateId: "",
+        aferServiceDays: "",
+        content: "",
         selectedTagArr:[]
       },
       editorOption: {
@@ -168,6 +186,12 @@ export default {
   activated() {
     this.uploadImg = api.addImg;
     this.imgArr = [];
+    // 获取一级类目
+    this.getFirstItem();
+    // 获取运费模板
+    this.getFreightTemplate();
+    // 获取所有标签
+    this.getAllTags();
     utils.cleanFormData(this.form);
   },
 
@@ -179,6 +203,10 @@ export default {
   },
 
   methods: {
+    // 提交表单
+    submitForm(){
+      console.log(this.form);
+    },
     //  图片上传/拖拽
     getdata(evt) {
       //   console.log(evt.draggedContext.element.url);
@@ -213,13 +241,12 @@ export default {
     },
     // 自定义售后周期
     defSaleTime() {
-      this.form.saleTime = "";
+      this.form.aferServiceDays = "";
       this.showSaleTime = !this.showSaleTime;
     },
     // 富文本编辑器
     onEditorChange({ editor, html, text }) {
-      console.log("editor change!", html);
-      this.form.editorContent = html;
+      this.form.content = html;
     },
     beforeUpload(file) {
       return this.qnUpload(file);
@@ -317,9 +344,104 @@ export default {
       //   console.log(err)
       // })
     },
-    // 提交表单
-    submitForm(){
-      console.log(this.form);
+    // 获取一级类目
+    getFirstItem() {
+        this.itemList = [];
+      this.$axios
+        .post(api.getCategoryList, { fatherid: 0 })
+        .then(res => {
+            res.data.data.data.forEach((v,k)=>{
+                this.itemList.push({label:v.name,value:v.id,children:[]})
+            })
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    // 获取二级类目
+    handleItemChange(val){
+        let index = 0;
+        this.itemList.forEach((v,k)=>{
+            if(v.value == val[0]){
+                index = k;
+            }
+        })
+        let data ={};
+        data.fatherid = val[0];
+        this.itemList[index].children = [];
+        this.$axios
+        .post(api.getCategoryList, data)
+        .then(res => {
+            res.data.data.data.forEach((v,k)=>{
+                this.itemList[index].children.push({label:v.name,value:v.id});
+            })
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    // 获取品牌列表
+    getProItemId(val){
+      let id = this.form.secondCategoryId = val[1];
+      this.form.firstCategoryId = val[0];
+      this.form.secondCategoryId = val[1];
+      this.brandArr = [];
+      this.$axios
+        .post(api.queryCategoryBrandCid, {cId:id})
+        .then(res => {
+            res.data.data.forEach((v,k)=>{
+              this.brandArr.push({label:v.name,value:v.id})
+            })
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    // 获取供应商列表
+    getSupplyList(){
+      let data = {};
+      this.supplierArr = [];
+      data.firstCategoryId = this.form.firstCategoryId;
+      data.secCategoryId = this.form.secondCategoryId;
+      data.brandId = this.form.brandId;
+      this.$axios
+        .post(api.querySupplierBrandPageList, data)
+        .then(res => {
+            res.data.data.forEach((v,k)=>{
+              this.supplierArr.push({label:v.name,value:v.id})
+            })
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    // 获取运费模板列表
+    getFreightTemplate(){
+      this.freightTemplateArr = [];
+      this.$axios
+        .post(api.getFreightTemplateList, {})
+        .then(res => {
+            res.data.data.forEach((v,k)=>{
+              this.freightTemplateArr.push({label:v.name,value:v.id})
+            })
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    // 获取所有标签
+    getAllTags(){
+       this.$axios
+        .post(api.queryTagLibraryList, {})
+        .then(res => {
+          console.log(res.data);
+            // res.data.data.forEach((v,k)=>{
+            //   this.freightTemplateArr.push({label:v.name,value:v.id})
+            // })
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   }
 };

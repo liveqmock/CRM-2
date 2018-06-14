@@ -244,9 +244,9 @@ export const getManageList='/mock/5aeac1c6c186102e067af3f3/test/getManageList';
 
 // 实名认证审核
     //实名审核列表
-    export const queryDealerRealnamePageList='/admin/dealerRealname/queryDealerRealnamePageList';
+    export const queryDealerRealnamePageList='/admin/dealerRealName/queryDealerRealNamePageList';
    //查询详情
-    export const findDealerRealnameInfo='/admin/dealerRealname/findDealerRealnameInfo';
+    export const findDealerRealnameInfo='/admin/dealerRealName/findDealerRealNameInfo';
 
 // 公告通知
     // 公告列表
