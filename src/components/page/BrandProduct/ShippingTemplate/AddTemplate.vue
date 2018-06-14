@@ -3,22 +3,22 @@
         <v-breadcrumb :nav="['品牌产品管理','运费模板','添加模板']"></v-breadcrumb>
         <div class="container">
             <div class="shipping-box">
-                <el-form :model="form" ref="form">
+                <el-form :model="form" ref="form" :rules="rules">
                     <el-form-item prop="name" label="模板名称">
                         <el-input class="lar-inp" placeholder="请输入模板名称(模板名称最少必须由1个字组成，最多不能超过25个字)"
                                   v-model="form.name"></el-input>
                     </el-form-item>
-                    <el-form-item prop="shippingAddress" class="address-item" label="产品发货地">
-                        <el-select v-model="form.shippingAddress" class="small-inp" @change="productArea">
+                    <el-form-item prop="country" class="address-item" label="产品发货地">
+                        <el-select v-model="form.country" class="small-inp" @change="productArea">
                             <el-option label="中国" value="1">中国</el-option>
-                            <el-option label="海外" value="2">海外</el-option>
+                            <!--<el-option label="海外" value="2">海外</el-option>-->
                         </el-select>
                         <div class="address-area">
-                            <region :regionMsg='address' :isDisabled="!areaDisabled"></region>
+                            <region @regionMsg='getRegion' :regionMsg='address' :isDisabled="!areaDisabled"></region>
                         </div>
                     </el-form-item>
-                    <el-form-item prop="shippingTime" label="发货时间">
-                        <el-select v-model="form.shippingTime" class="mid-inp">
+                    <el-form-item prop="sendDays" label="发货时间">
+                        <el-select v-model="form.sendDays" class="mid-inp">
                             <el-option
                                 v-for="(item,index) in times"
                                 :key="index"
@@ -30,75 +30,81 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item prop="status" label="是否包邮">
-                        <el-radio-group v-model="form.status" @change="chooseStyle">
+                        <el-radio-group v-model="form.freightType" @change="chooseStyle">
                             <el-radio label="1">自定义运费</el-radio>
                             <el-radio label="2">平台承担运费</el-radio>
                             <el-radio label="3">满
-                                <el-input class="small-inp"></el-input>
+                                <el-input class="small-inp" v-model="freightFreePrice"></el-input>
                                 元包邮
                             </el-radio>
                         </el-radio-group>
                     </el-form-item>
-                    <el-form-item prop="status" label="计价方式">
-                        <el-radio-group v-model="form.priceStyle">
-                            <el-radio label="1">按重量</el-radio>
-                            <el-radio label="2">按体积</el-radio>
-                            <el-radio label="3">按件数量</el-radio>
-                        </el-radio-group>
-                    </el-form-item>
-                    <div class="express">
-                        <span>物流快递</span>
-                    </div>
-                    <el-form-item class="express-area">
-                        默认运费
-                        <el-input class="small-inp"></el-input>
-                        件内
-                        <el-input class="small-inp"></el-input>
-                        元，每增加
-                        <el-input class="small-inp"></el-input>
-                        件，增加运费
-                        <el-input class="small-inp"></el-input>
-                        元
-                        <div class="color-red">应输入0.00至999.99的数字，小数保留两位</div>
-                        <el-table :data="tableData" border>
-                            <el-table-column label="选择地区" align="center">
-                                <template slot-scope="scope">
-                                    <template>{{scope.row.data}}</template>
-                                    <span style="float: right">
-                                        <span class="color-blue" @click="editAddress(scope.row)">编辑</span>
-                                        <span class="color-blue" @click="delItem(scope.row,scope.$index)" style="margin-left: 10px">删除</span>
+                    <div v-if="isShowExpress">
+                        <el-form-item prop="status" label="计价方式">
+                            <el-radio-group v-model="form.calcType" @change="calcType">
+                                <el-radio label="1">按重量</el-radio>
+                                <!--<el-radio label="2">按体积</el-radio>-->
+                                <!--<el-radio label="3">按件数量</el-radio>-->
+                            </el-radio-group>
+                        </el-form-item>
+                        <div class="express">
+                            <span>物流快递</span>
+                        </div>
+                        <el-form-item class="express-area">
+                            默认运费
+                            <el-input class="small-inp" v-model="startUnit"></el-input>
+                            {{unit}}内
+                            <el-input class="small-inp" v-model="startPrice"></el-input>
+                            元，每增加
+                            <el-input class="small-inp" v-model="nextUnit"></el-input>
+                            {{unit}}，增加运费
+                            <el-input class="small-inp" v-model="nextPirce"></el-input>
+                            元
+                            <div class="color-red">{{tips}}</div>
+                            <el-table :data="tableData" border>
+                                <el-table-column label="选择地区" align="center">
+                                    <template slot-scope="scope">
+                                        <template><span
+                                            style="float: left;display: inline-block;text-align: left;width: 70%">{{scope.row.checkedName}}</span>
+                                        </template>
+                                        <span style="float: right;display: inline-block">
+                                        <span class="color-blue" @click="editAddress(scope.$index)">编辑</span>
+                                        <span class="color-blue" @click="delItem(scope.row,scope.$index)"
+                                              style="margin-left: 10px">删除</span>
                                     </span>
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="首件数(公斤)" align="center">
-                                <template slot-scope="scope">
-                                    <el-input class="mini-inp" v-model="scope.row.data"></el-input>
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="运费(元)" align="center">
-                                <template slot-scope="scope">
-                                    <el-input class="mini-inp" v-model="scope.row.data"></el-input>
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="续件数(公斤)" align="center">
-                                <template slot-scope="scope">
-                                    <el-input class="mini-inp" v-model="scope.row.data"></el-input>
-                                </template>
-                            </el-table-column>
-                            <el-table-column label="续费(元)" align="center">
-                                <template slot-scope="scope">
-                                    <el-input class="mini-inp" v-model="scope.row.data"></el-input>
-                                </template>
-                            </el-table-column>
-                        </el-table>
-                        <div class="color-blue" @click="addSetting">增加制定省市运费设置</div>
-                    </el-form-item>
-                    <el-form-item prop="status" label="是否启用">
-                        <el-radio-group v-model="form.status">
-                            <el-radio label="1">启用</el-radio>
-                            <el-radio label="2">停用</el-radio>
-                        </el-radio-group>
-                    </el-form-item>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column :label="title1" align="center" width="120">
+                                    <template slot-scope="scope">
+                                        <el-input class="mini-inp" v-model="scope.row.startUnit"></el-input>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column label="运费(元)" align="center" width="120">
+                                    <template slot-scope="scope">
+                                        <el-input class="mini-inp" v-model="scope.row.startPrice"></el-input>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column :label="title2" align="center" width="120">
+                                    <template slot-scope="scope">
+                                        <el-input class="mini-inp" v-model="scope.row.nextUnit"></el-input>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column label="续费(元)" align="center" width="120">
+                                    <template slot-scope="scope">
+                                        <el-input class="mini-inp" v-model="scope.row.nextPirce"></el-input>
+                                    </template>
+                                </el-table-column>
+                            </el-table>
+                            <div class="color-blue" @click="addSetting">增加制定省市运费设置</div>
+                        </el-form-item>
+                    </div>
+
+                    <!--<el-form-item prop="status" label="是否启用">-->
+                    <!--<el-radio-group v-model="form.defaultTrue">-->
+                    <!--<el-radio label="1">启用</el-radio>-->
+                    <!--<el-radio label="2">停用</el-radio>-->
+                    <!--</el-radio-group>-->
+                    <!--</el-form-item>-->
                     <div class="submit-btn">
                         <el-button type="primary" v-loading="btnLoading" @click="submitForm('form')">确认保存</el-button>
                         <el-button @click="cancel">取消</el-button>
@@ -107,15 +113,19 @@
             </div>
         </div>
         <!--选择区域-->
-        <choose-area  @msg='chooseAreaToast' v-if="isShowArea"></choose-area>
+        <choose-area @getArea='chooseAreaToast' :index="tableIndex" v-if="isShowArea"></choose-area>
         <!--平台承担运费弹窗-->
-        <div class="pwd-mask" v-if="showTips">
+        <div class="mask" v-if="showTips">
             <div class="box">
-                <div class="mask-title"><icon class="ico" ico='icon-jinggao'/>  温馨提示</div>
+                <div class="mask-title">
+                    <icon class="ico" ico='icon-jinggao'/>
+                    温馨提示
+                </div>
                 <div class="mask-content">
                     <span class="del-tip">选择"卖家承担运费"后，所有区域的运费将设置为0元，且原运费设置无法恢复，请保存原有运费设置。</span>
                     <div class="del-btn-group">
-                        <el-button :loading="btnLoading" @click="showTips=false" class="del-btn" type="primary">确认</el-button>
+                        <el-button :loading="btnLoading" @click="showTips=false" class="del-btn" type="primary">确认
+                        </el-button>
                     </div>
                 </div>
             </div>
@@ -129,82 +139,219 @@
     import vBreadcrumb from '../../../common/Breadcrumb.vue';
     import region from '../../../common/Region';
     import chooseArea from '../../../common/chooseArea';
-    import * as api from '../../../../api/api';
-    import * as pApi from '../../../../privilegeList/index.js';
+    import * as api from '../../../../api/BrandProduct/ShippingTemplate/index';
+    import * as pApi from '../../../../privilegeList/ShippingTemplate/index';
 
     export default {
-        components: {vBreadcrumb, icon, region,chooseArea},
+        components: {vBreadcrumb, icon, region, chooseArea},
         data() {
+            var checkName = (rule, value, callback) => {
+                if (!value) {
+                    return callback(new Error('模版名称不能为空'));
+                }
+                setTimeout(() => {
+                    if (value.length > 25) {
+                        callback(new Error('模版名称最多不能超过25个字'));
+                    } else {
+                        callback();
+                    }
+                }, 100);
+            };
             return {
-                times: [{label: '2小时发货', id: 0},
-                    {label: '4小时发货', id: 1},
-                    {label: '8小时发货', id: 2},
-                    {label: '12小时发货', id: 3},
-                    {label: '当日发货', id: 4},
-                    {label: '2天内', id: 5},
-                    {label: '3天内', id: 6},
-                    {label: '4天内', id: 7},
-                    {label: '7天内', id: 8},
-                    {label: '8天内', id: 9},
-                    {label: '10天内', id: 10},
-                    {label: '12天内', id: 11},
-                    {label: '15天内', id: 12},
-                    {label: '18天内', id: 13},
-                    {label: '20天内', id: 14},
-                    {label: '25天内', id: 15},
-                    {label: '30天内', id: 16},
-                    {label: '35天内', id: 17},
-                    {label: '45天内', id: 18},
+                rules: {
+                    name: [
+                        {validator: checkName, trigger: 'blur'}
+                    ]
+                },
+                times: [{label: '2小时发货', id: 2},
+                    {label: '4小时发货', id: 4},
+                    {label: '8小时发货', id: 8},
+                    {label: '12小时发货', id: 12},
+                    {label: '当日发货', id: 24},
+                    {label: '2天内', id: 48},
+                    {label: '3天内', id: 72},
+                    {label: '4天内', id: 96},
+                    {label: '7天内', id: 168},
                 ],
                 form: {
                     name: '',
-                    area: '',
-                    shippingTime: 4,
-                    shippingAddress: '1',
-                    priceStyle: '1'
+                    sendDays: 24,
+                    country: '1',
+                    calcType: '1',
+                    freightType: '1',
+                    provinceId: '',
+                    cityId: '',
+                    areaId: '',
                 },
-                tableData: [{data: 111}],
+                freightFreePrice: '',
+                startUnit: '',
+                startPrice: '',
+                nextUnit: '',
+                nextPirce: '',
+                tableData: [],
+                tableIndex: '0',
                 btnLoading: false,
                 address: '',
+                includeArea: '',//所有省市区zicode以英文逗号隔开存储
                 isShowArea: false,
-                areaDisabled:true,
-                showTips:false
+                areaDisabled: true,
+                showTips: false,
+                isShowExpress: true,
+                unit: '公斤',
+                title1: '首公斤数(kg)',
+                title2: '续公斤数(kg)',
+                tips: '应输入0.00至999.99的数字，小数保留两位'
             }
         },
+        activated() {
+            this.form.name = '';
+            this.form.sendDays = 24;
+            this.form.country = '1';
+            this.form.calcType = '1';
+            this.form.freightType = '1';
+            this.form.provinceId = '';
+            this.form.cityId = '';
+            this.form.areaId = '';
+            this.tableData = [];
+            this.freightFreePrice = '';
+            this.address = '';
+            this.startUnit = '';
+            this.startPrice = '';
+            this.nextUnit = '';
+            this.nextPirce = '';
+            this.isShowExpress = true;
+            this.tips = '应输入0.00至999.99的数字，小数保留两位';
+            this.unit = '公斤';
+            this.title1 = '首公斤数(kg)';
+            this.title2 = '续公斤数(kg)';
+        },
         methods: {
+
+            // 获取省市区
+            getRegion(msg) {
+                this.address = msg;
+                this.form.provinceId = this.address[0];
+                this.form.cityId = this.address[1];
+                this.form.areaId = this.address[2];
+                console.log(this.address)
+            },
             //确认保存
-            submitForm() {
+            submitForm(formName) {
+                let that = this;
+                that.$refs[formName].validate((valid) => {
+                    if (!valid) {
+                        return
+                    } else {
+                        let data = that.form;
+                        if (!that.form.provinceId || !that.form.cityId || !that.form.areaId) {
+                            that.$message.warning('请选择省市区！');
+                            return
+                        }
+                        if (that.form.freightType == 3) {
+                            if (!that.freightFreePrice) {
+                                that.$message.warning('请输入满包邮的金额！');
+                                return
+                            } else {
+                                data.freightFreePrice = that.freightFreePrice
+                            }
+                        }
+                        let list = [];
+                        let temp = {
+                            startUnit: that.startUnit,
+                            startPrice: that.startPrice,
+                            nextUnit: that.nextUnit,
+                            nextPirce: that.nextPirce,
+                            defaultTrue: 1
+                        };
+                        list.push(temp);
+                        that.tableData.forEach(function (v, k) {
+                            let tableTemp = {
+                                includeAreaName: v.checkedName,
+                                includeArea: v.checkedId,
+                                startUnit: v.startUnit,
+                                startPrice: v.startPrice,
+                                nextUnit: v.nextUnit,
+                                nextPirce: v.nextPirce,
+                                defaultTrue: 2
+                            };
+                            list.push(tableTemp);
+                        });
+                        data.list = JSON.stringify(list);
+                        data.url = pApi.addFreightTemplate;
+                        that.$axios
+                            .post(api.addFreightTemplate, data)
+                            .then(res => {
+                                if (res.data.code == 200) {
+                                    that.$message.success(res.data.msg);
+                                    that.$router.push('/shippingTemplate')
+                                } else {
+                                    that.$message.warning(res.data.msg)
+                                }
+                            })
+                            .catch(err => {
+                                console.log(err);
+                            })
+                    }
+                })
 
             },
             //产品发货地选择
-            productArea(){
-                this.areaDisabled=this.form.shippingAddress===1;
+            productArea() {
+                this.areaDisabled = this.form.country === 1;
             },
             //是否包邮
-            chooseStyle(){
-                this.showTips=this.form.status==2;
+            chooseStyle() {
+                this.showTips = this.form.freightType == 2;
+                this.isShowExpress = !(this.form.freightType == 2)
+            },
+            //计价方式
+            calcType() {
+                let that = this;
+                let num = that.form.calcType;
+                if (num == 1) {
+                    that.unit = '公斤';
+                    that.title1 = '首公斤数(kg)';
+                    that.title2 = '续公斤数(kg)';
+                    that.tips = '应输入0.00至999.99的数字，小数保留两位';
+                } else if (num == 2) {
+                    that.unit = 'm³';
+                    that.title1 = '首体积数(m³)';
+                    that.title2 = '续体积数(m³)';
+                    that.tips = '应输入0.00至999.99的数字，小数保留两位';
+                } else if (num == 3) {
+                    that.unit = '元';
+                    that.title1 = '首件数(元)';
+                    that.title2 = '续件数(元)';
+                    that.tips = '应输入正整数';
+                }
             },
             //取消
             cancel() {
                 this.$router.path('/shippingTemplate')
             },
             //编辑区域
-            editAddress() {
-                let that=this;
-                that.isShowArea=true;
+            editAddress(index) {
+                let that = this;
+                that.isShowArea = true;
+                this.tableIndex = index;
             },
             //删除制定省市运费设置
-            delItem(row,index){
-                this.tableData.splice(index,1)
+            delItem(row, index) {
+                this.tableData.splice(index, 1)
             },
             //选择区域
-            chooseAreaToast(msg){
+            chooseAreaToast(getArea) {
                 this.isShowArea = false;
-                console.log(msg)
+                let index = getArea.indexOf('IDS');
+                this.tableData[this.tableIndex].checkedName = getArea.substring(0, index);//名称
+                this.tableData[this.tableIndex].checkedId = getArea.substring(index + 4);//id
+                console.log(getArea)
+                console.log(getArea.substring(0, index))
+                console.log(getArea.substring(index + 4));//zipcode
             },
             //增加制定省市运费设置
-            addSetting(){
-                this.tableData.push({data:222})
+            addSetting() {
+                this.tableData.push({checkedName: '', startUnit: '', startPrice: '', nextUnit: '', nextPirce: ''})
             }
         }
     }
@@ -213,6 +360,9 @@
 <style lang="less">
     .shipping {
         .shipping-box {
+            .el-form-item__error {
+                margin-left: 80px;
+            }
             padding: 0 30px;
             .el-form-item__label {
                 text-align: left;
@@ -280,13 +430,13 @@
                 background-color: #eee !important;
             }
             .el-table {
-                width: 70%;
+                width: 80%;
                 td {
                     border-right: none
                 }
             }
         }
-        .pwd-mask {
+        .mask {
             display: flex;
             align-items: center;
             justify-content: center;
@@ -300,7 +450,7 @@
             .box {
                 position: relative;
                 width: 530px;
-                height: 305px;
+                /*height: 305px;*/
                 background-color: #fff;
                 border-radius: 10px;
                 overflow: hidden;
@@ -325,13 +475,13 @@
                 .mask-content {
                     position: relative;
                     width: 100%;
-                    height: 248px;
+                    height: 160px;
                     overflow: hidden;
                     padding: 10px 45px 0 45px;
                     box-sizing: border-box;
                     .del-btn-group {
-                      text-align: right;
-                      margin-top: 50px;
+                        text-align: right;
+                        margin-top: 50px;
                     }
                 }
             }
