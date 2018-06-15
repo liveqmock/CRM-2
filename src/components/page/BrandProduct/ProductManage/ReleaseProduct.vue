@@ -12,11 +12,11 @@
                     <transition-group>
                         <div class="img-wrap" v-for="(v,k) in imgArr" :key="k">
                             <div class="delImg" @click="deleteImg(v)"><icon ico='icon-shanchu'></icon></div>
-                            <img class="uImg" :src="v">
+                            <img class="uImg" :src="v.originUrl">
                         </div>
                     </transition-group> 
                 </draggable>
-                <el-upload class="img-uploader" :action="uploadImg" :show-file-list="false" :on-success="successUpload" :disabled="isUseUpload" multiple >
+                <el-upload class="img-uploader" :before-upload="beforeUploadArr" :action="uploadImg" :show-file-list="false" :on-success="successUpload" :disabled="isUseUpload" multiple >
                     <i class="el-icon-plus avatar-uploader-icon"></i>
                 </el-upload>
                 <div class="upload-tip">建议尺寸：800*800,拖拽图片可以改变顺序，第一张为默认头图</div>
@@ -73,8 +73,8 @@
               <el-button size="small" type="primary" id="imgInput" element-loading-text="插入中,请稍候">点击上传</el-button>
             </el-upload>
             <div class="selected-tag">
-              <span v-if="form.selectedTagArr.length == 0" class="tag-tip">请选择标签</span>
-              <el-tag class="tag" type="info" closable v-for="(v,k) in form.selectedTagArr" :key="k" @close="handleClose(k,v)" >{{v.label}}</el-tag>
+              <span v-if="selectedTagArr.length == 0" class="tag-tip">请选择标签</span>
+              <el-tag class="tag" type="info" closable v-for="(v,k) in selectedTagArr" :key="k" @close="handleClose(k,v)" >{{v.label}}</el-tag>
             </div>
             <div class="add-tag">
               <el-input style="width:215px;margin-right:20px" v-model="tagName" placeholder="请输入标签/至多可添加20个"></el-input>
@@ -149,7 +149,9 @@ export default {
         freightTemplateId: "",
         aferServiceDays: "",
         content: "",
-        selectedTagArr:[]
+        tagId:'',
+        originalImg:[],
+        smallImg:[]
       },
       editorOption: {
         placeholder: "请输入内容",
@@ -172,6 +174,7 @@ export default {
       },
       uploadData: {},
       uploadType: "", // 上传的文件类型（图片、视频）,
+      selectedTagArr:[],
       tagArr:[],
       tagName:''
     };
@@ -205,7 +208,15 @@ export default {
   methods: {
     // 提交表单
     submitForm(){
+      let tmp = [];
+      this.selectedTagArr.forEach((v,k)=>{
+        tmp.push(v.value)
+      })
+      this.form.tagId = tmp.join(',');
       console.log(this.form);
+    },
+    beforeUploadArr(){
+      this.$message.warning("上传中...");
     },
     //  图片上传/拖拽
     getdata(evt) {
@@ -215,14 +226,13 @@ export default {
       //   console.log(this.imgArr);
     },
     successUpload(res) {
-      this.$message.warning("上传中...");
       if (res.code == 200) {
         if (this.imgArr.length >= 5) {
           this.isUseUpload = true;
           this.$message.warning("最多只能上传五张图片");
           return;
         }
-        this.imgArr.push(res.data.imageUrl);
+        this.imgArr.push({originUrl:res.data.imageUrl,smallUrl:res.data.imageThumbUrl});
         this.$message.success("上传成功");
       } else {
         this.$message.warning(res.data.msg);
@@ -230,7 +240,12 @@ export default {
     },
     // 删除图片
     deleteImg(img) {
-      let index = this.imgArr.indexOf(img);
+      let index = -1;
+      this.imgArr.forEach((v,k) => {
+          if(v.originUrl == img.originUrl){
+            index = k;
+          }
+      });
       if (index == -1) {
         return;
       }
@@ -308,7 +323,7 @@ export default {
     },
     // 关闭标签
     handleClose(index,value) {
-      this.form.selectedTagArr.splice(index,1);
+      this.selectedTagArr.splice(index,1);
       this.tagArr.forEach((v,k)=>{
         if(value.label == v.label){
           this.tagArr[k].selected = false;
@@ -351,7 +366,7 @@ export default {
     // 添加标签
     insertTag(v){
       v.selected = true;
-      this.form.selectedTagArr.push({label:v.label,value:v.value});
+      this.selectedTagArr.push({label:v.label,value:v.value});
     },
     // 获取一级类目
     getFirstItem() {
@@ -447,6 +462,13 @@ export default {
             res.data.data.forEach((v,k)=>{
               this.tagArr.push({label:v.name,value:v.id})
             })
+            this.tagArr.forEach((v,k) => {
+              this.selectedTagArr.forEach((v1,k1)=>{
+                if(v.value == v1.value){
+                  v.selected = true;
+                }
+              })
+            });
         })
         .catch(err => {
           console.log(err);
