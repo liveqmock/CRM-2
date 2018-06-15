@@ -208,18 +208,24 @@ export default {
     },
     // 编辑产品
     editProduct(row) {
-      sessionStorage.setItem("releaseProduct", row.id);
+      let tmp = [];
+      tmp.push(row.sec_category_id);
+      tmp.push(row.id);
+      sessionStorage.setItem("releaseProduct", JSON.stringify(tmp));
       this.$router.push({
         name: "editProduct",
-        query: { releaseProductId: row.id }
+        query: { releaseProductId: JSON.stringify(tmp) }
       });
     },
     // 规格管理
     specificationsManage(row) {
-      sessionStorage.setItem("productSpecifications", row.id);
+      let tmp = [];
+      tmp.push(row.sec_category_id);
+      tmp.push(row.id);
+      sessionStorage.setItem("productSpecifications", JSON.stringify(tmp));
       this.$router.push({
         name: "productSpecifications",
-        query: { productSpecificationsId: row.id }
+        query: { releaseProductId: JSON.stringify(tmp) }
       });
     },
     // 价格管理

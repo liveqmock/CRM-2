@@ -264,12 +264,6 @@ export default new Router({
                     meta: { title: '产品规格' }
                 },
                 {
-                    name:'auditProduct',
-                    path: '/auditProduct',
-                    component: resolve => require(['../components/page/BrandProduct/ProductManage/AuditProduct.vue'], resolve),
-                    meta: { title: '产品审核' }
-                },
-                {
                     name:'productInfo',
                     path: '/productInfo',
                     component: resolve => require(['../components/page/BrandProduct/ProductManage/ProductInfo.vue'], resolve),

@@ -100,7 +100,7 @@ export const getManageList='/mock/5aeac1c6c186102e067af3f3/test/getManageList';
     // 开启/关闭管理员账号
     export const updateAdminUserStatus = '/admin/adminUser/updateAdminUserStatus';
     // 删除管理员账号
-    export const deleteAdminUser = '/admin/adminUser/deleteAdminUser';
+    export const deleteAdminUser = '/admin/adminUser/deleteUpdateAdminUser';
     // 根据ID查找管理员信息
     export const findAdminUserbyId = '/admin/adminUser/findAdminUserbyId';
     // 编辑管理员
@@ -114,7 +114,7 @@ export const getManageList='/mock/5aeac1c6c186102e067af3f3/test/getManageList';
     // 修改岗位
     export const updateRole = '/admin/role/updateRole';
     // 删除岗位
-    export const deleteRole = '/admin/role/deleteRole';
+    export const deleteRole = '/admin/role/deleteUpdateRole';
     // 查询权限三级模块列表
     export const queryPrivilegeList = '/admin/privilege/queryPrivilegeList';
     // 添加权限
@@ -134,7 +134,7 @@ export const getManageList='/mock/5aeac1c6c186102e067af3f3/test/getManageList';
     // 编辑一二级类目
     export const editCategory = '/admin/productCategory/updateProductCategory';
     // 删除一二级类目
-    export const deleteCategory = '/admin/productCategory/deleteProductCategory';
+    export const deleteCategory = 'admin/productCategory/updateProductCategoryDeleteById';
     // 获取品牌列表
     export const getBrandList='/admin/brand/queryBrandPageList';
     export const getFirstList='/admin/productCategory/queryProductCategoryName';
@@ -145,7 +145,7 @@ export const getManageList='/mock/5aeac1c6c186102e067af3f3/test/getManageList';
     //修改品牌
     export const updateBrand='/admin/brand/updateBrand';
     //删除品牌
-    export const deleteBrand='/admin/brand/deleteBrand';
+    export const deleteBrand='/admin/brand/updateBrandDeleteById';
     //根据ID查找详情
     export const findBrandById='/admin/brand/findBrandById';
     // 根据类目查询品牌列表
@@ -231,7 +231,7 @@ export const getManageList='/mock/5aeac1c6c186102e067af3f3/test/getManageList';
         // 用户银行卡
         export const findBindBankInfoBydealerId='/admin/bindBankInfo/findBindBankInfoBydealerId';
         // 删除用户银行卡
-        export const deleteBindBankInfo='/admin/bindBankInfo/deleteBindBankInfo';
+        export const deleteBindBankInfo='admin/bindBankInfo/updateBindBankInfoDeleteById';
 //账户充值
         //列表
         export const queryRechargeRecordPageList='/admin/rechargeRecord/queryRechargeRecordPageList';

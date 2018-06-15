@@ -12,32 +12,30 @@
                     <transition-group>
                         <div class="img-wrap" v-for="(v,k) in imgArr" :key="k">
                             <div class="delImg" @click="deleteImg(v)"><icon ico='icon-shanchu'></icon></div>
-                            <img class="uImg" :src="v">
+                            <img class="uImg" :src="v.originUrl">
                         </div>
                     </transition-group> 
                 </draggable>
-                <el-upload class="img-uploader" :action="uploadImg" :show-file-list="false" :on-success="successUpload" :disabled="isUseUpload" multiple >
+                <el-upload class="img-uploader" :before-upload="beforeUploadArr" :action="uploadImg" :show-file-list="false" :on-success="successUpload" :disabled="isUseUpload" multiple >
                     <i class="el-icon-plus avatar-uploader-icon"></i>
                 </el-upload>
                 <div class="upload-tip">建议尺寸：800*800,拖拽图片可以改变顺序，第一张为默认头图</div>
             </el-form-item>
             <el-form-item label="产品分类">
-                <el-select v-model="form.proCategory" placeholder="请选择">
-                  <el-option v-for="(v,k) in proCategoryArr" :key="k" :label="v.label" :value="v.value"></el-option>
-                </el-select> 
+                <el-cascader @change='getProItemId' :options="itemList" @active-item-change="handleItemChange" :props="itemProps"></el-cascader>
                 <span style="margin-left:30px">产品品牌</span>
-                <el-select v-model="form.proBrand" placeholder="请选择">
-                  <el-option v-for="(v,k) in proCategoryArr" :key="k" :label="v.label" :value="v.value"></el-option>
+                <el-select @change="getSupplyList" v-model="form.brandId" placeholder="请选择">
+                  <el-option v-for="(v,k) in brandArr" :key="k" :label="v.label" :value="v.value"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="供应商">
-                <el-select v-model="form.supplier" placeholder="下拉搜索供应商">
-                  <el-option v-for="(v,k) in proCategoryArr" :key="k" :label="v.label" :value="v.value"></el-option>
+                <el-select v-model="form.supplierId" placeholder="下拉搜索供应商">
+                  <el-option v-for="(v,k) in supplierArr" :key="k" :label="v.label" :value="v.value"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="发货地">
-                <el-select v-model="form.originAddress" placeholder="选择发货地">
-                  <el-option v-for="(v,k) in proCategoryArr" :key="k" :label="v.label" :value="v.value"></el-option>
+            <el-form-item label="发货方">
+                <el-select v-model="form.sendfrom" placeholder="选择发货方">
+                  <el-option v-for="(v,k) in shipperArr" :key="k" :label="v.label" :value="v.value"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="产品重量">
@@ -48,35 +46,35 @@
             </el-form-item>
             <el-form-item label="产品参数">
               <div class="product-param">
-                <span>产品颜色</span><el-input class="inp-param" v-model="form.proColor"></el-input>
-                <span>产品尺寸</span><el-input class="inp-param" v-model="form.proSize"></el-input>
-                <span>产品款式</span><el-input class="inp-param" v-model="form.proStyle"></el-input>
-                <span>产品种类</span><el-input class="inp-param" v-model="form.proClass"></el-input>
+                <span>产品颜色</span><el-input class="inp-param" v-model="form.color"></el-input>
+                <span>产品尺寸</span><el-input class="inp-param" v-model="form.size"></el-input>
+                <span>产品款式</span><el-input class="inp-param" v-model="form.style"></el-input>
+                <span>产品种类</span><el-input class="inp-param" v-model="form.species"></el-input>
               </div>
             </el-form-item>
             <div class="pro-title">基本信息</div>
             <el-form-item label="选择运费模板">
-                <el-select v-model="form.freightTpl" placeholder="请选择模板">
-                  <el-option v-for="(v,k) in proCategoryArr" :key="k" :label="v.label" :value="v.value"></el-option>
+                <el-select v-model="form.freightTemplateId" placeholder="请选择模板">
+                  <el-option v-for="(v,k) in freightTemplateArr" :key="k" :label="v.label" :value="v.value"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="售后周期">
               <transition name="fade">
-                <el-select v-if="!showSaleTime" v-model="form.saleTime" placeholder="请选择售后周期">
-                  <el-option v-for="(v,k) in proCategoryArr" :key="k" :label="v.label" :value="v.value"></el-option>
+                <el-select v-if="!showSaleTime" v-model="form.aferServiceDays" placeholder="请选择售后周期">
+                  <el-option v-for="(v,k) in aferServiceDays" :key="k" :label="v.label" :value="v.value"></el-option>
                 </el-select>
-                <el-input v-if='showSaleTime' v-model="form.saleTime" style="width:215px" placeholder="请输入售后周期"></el-input>
+                <el-input v-if='showSaleTime' v-model="form.aferServiceDays" style="width:215px" placeholder="请输入售后周期"></el-input>
               </transition>
                 <el-button @click="defSaleTime">自定义</el-button>
             </el-form-item>
             <div class="pro-title">产品信息</div>
-            <quill-editor v-model="form.editorContent" ref="myQuillEditor" :options="editorOption" @change="onEditorChange($event)"></quill-editor>
+            <quill-editor v-model="form.content" ref="myQuillEditor" :options="editorOption" @change="onEditorChange($event)"></quill-editor>
             <el-upload :action="qnLocation" :before-upload='beforeUpload' :data="uploadData" :on-success='upScuccess' ref="upload" style="display:none">
               <el-button size="small" type="primary" id="imgInput" element-loading-text="插入中,请稍候">点击上传</el-button>
             </el-upload>
             <div class="selected-tag">
-              <span v-if="form.selectedTagArr.length == 0" class="tag-tip">请选择标签</span>
-              <el-tag class="tag" type="info" closable v-for="(v,k) in form.selectedTagArr" :key="k" @close="handleClose(k,v)" >{{v.label}}</el-tag>
+              <span v-if="selectedTagArr.length == 0" class="tag-tip">请选择标签</span>
+              <el-tag class="tag" type="info" closable v-for="(v,k) in selectedTagArr" :key="k" @close="handleClose(k,v)" >{{v.label}}</el-tag>
             </div>
             <div class="add-tag">
               <el-input style="width:215px;margin-right:20px" v-model="tagName" placeholder="请输入标签/至多可添加20个"></el-input>
@@ -86,7 +84,7 @@
               <span v-if="tagArr.length == 0" class="tag-tip">请添加标签</span>
               <el-button v-for="(v,k) in tagArr" :key="k" @click="insertTag(v)" :disabled="v.selected" :class="{'selected-btn':v.selected}">{{v.label}}</el-button>
             </div>
-            <el-button type="primary">确认发布</el-button>
+            <el-button type="primary" @click="submitForm">确认发布</el-button>
             <el-button >取消</el-button>
           </el-form>
       </el-card>
@@ -98,7 +96,7 @@ import vBreadcrumb from "@/components/common/Breadcrumb.vue";
 import draggable from "vuedraggable";
 import Quill from "quill";
 import icon from "@/components/common/ico";
-import * as api from "@/api/api.js";
+import * as api from "@/api/BrandProduct/ProductMange/index.js";
 import * as pApi from "@/privilegeList/index.js";
 import utils from "@/utils/index.js";
 export default {
@@ -110,29 +108,52 @@ export default {
 
   data() {
     return {
-      nav: ["品牌产品管理", "产品管理", "编辑产品"],
+      nav: ["品牌产品管理", "产品管理", "发布产品"],
       isUseUpload: false,
       showSaleTime: false,
-      uploadImg: "",
-      imgArr: [],
-      proCategoryArr: [{ label: "电子数码", value: 1 }],
       productId:'',
+      secondItemId:'',
+      uploadImg: "",
+      imgArr:[],
+      itemList: [],
+      brandArr:[],
+      freightTemplateArr:[],
+      supplierArr:[],
+      shipperArr:[{label:'平台发货',value:'1'},{label:'供应商发货',value:'2'}],
+      aferServiceDays:[
+        {label:'无售后服务',value:'0'},
+        {label:'到货后7天',value:'7'},
+        {label:'到货后15天',value:'15'},
+        {label:'到货后30天',value:'30'},
+        {label:'到货后6个月',value:'180'},
+        {label:'到货后1年',value:'365'},
+        {label:'到货后2年',value:'730'},
+        {label:'到货后3年',value:'1095'},
+      ],
+      itemProps: {
+        value: "value",
+        children: "children",
+      },
+      proCategoryArr: [],
       form: {
         name: "",
-        proCategory: "",
-        proBrand: "",
-        supplier: "",
-        originAddress:"",
+        firstCategoryId: "",
+        secCategoryId:"",
+        brandId: "",
+        supplierId: "",
+        sendfrom:"",
         weight: "",
         volume: "",
-        proColor: "",
-        proSize: "",
-        proStyle: "",
-        proClass: "",
-        freightTpl: "",
-        saleTime: "",
-        editorContent: "",
-        selectedTagArr:[]
+        color: "",
+        size: "",
+        style: "",
+        species: "",
+        freightTemplateId: "",
+        aferServiceDays: "",
+        content: "",
+        tagId:'',
+        originalImg:'',
+        smallImg:''
       },
       editorOption: {
         placeholder: "请输入内容",
@@ -155,8 +176,9 @@ export default {
       },
       uploadData: {},
       uploadType: "", // 上传的文件类型（图片、视频）,
+      selectedTagArr:[],
       tagArr:[],
-      tagName:''
+      tagName:'',
     };
   },
 
@@ -167,11 +189,20 @@ export default {
   },
 
   activated() {
-    this.productId = this.$route.query.releaseProductId || sessionStorage.getItem('releaseProduct');
-    this.getProductInfo();
     this.uploadImg = api.addImg;
     this.imgArr = [];
+    this.selectedTagArr = [];
+    // 获取一级类目
+    this.getFirstItem();
+    // 获取运费模板
+    this.getFreightTemplate();
+    // 获取所有标签
+    this.getAllTags();
     utils.cleanFormData(this.form);
+    // 获取产品信息
+    this.productId = JSON.parse(this.$route.query.releaseProductId || sessionStorage.getItem('releaseProduct'))[1];
+    this.secondItemId = JSON.parse(this.$route.query.releaseProductId || sessionStorage.getItem('releaseProduct'))[0];
+    this.getProductInfo();
   },
 
   mounted() {
@@ -184,15 +215,57 @@ export default {
   methods: {
     // 获取产品信息
     getProductInfo(){
-      // let data = {};
-      // data.id = this.productId;
-      // this.$axios.post()
-      // .then(res=>{
-      //   console.log(res);
-      // })
-      // .catch(err=>{
-      //   console.log(err)
-      // })
+      let data = {};
+      data.secCategoryId = this.secondItemId;
+      data.productId = this.productId;
+      this.$axios.post(api.querySaleSpecList,data)
+      .then((res) => {
+        console.log(res)
+      }).catch((err) => {
+        console.log(err)
+      });
+    },
+    // 提交表单前进行判断
+    beforeSubmit(){
+      if(this.imgArr.length == 0){
+        this.$message.warning('请添加产品图片');
+        return false;
+      }else if(this.selectedTagArr.length == 0){
+        this.$message.warning('请添加产品标签');
+        return false;
+      }
+      return true;
+    },
+    // 提交表单
+    submitForm(){
+      let isCanSubmit = this.beforeSubmit();
+      if(!isCanSubmit){
+        return;
+      }
+      let tmp=[],tmpSmalUrll=[],tmpOriUrl = [];
+      this.selectedTagArr.forEach((v,k)=>{
+        tmp.push(v.value)
+      })
+      this.form.tagId = tmp.join(',');
+      this.imgArr.forEach((v,k)=>{
+        tmpSmalUrll.push(v.smallUrl);
+        tmpOriUrl.push(v.originUrl);
+      })
+      this.form.smallImg = JSON.stringify(tmpSmalUrll);
+      this.form.originalImg = JSON.stringify(tmpOriUrl);
+      let data = {};
+      data = this.form;
+      this.$axios.post(api.addProduct,data)
+      .then(res=>{
+        this.$message.success(res.data.data);
+        this.$router.push('/productList');
+      })
+      .catch(err=>{
+        console.log(err);
+      })
+    },
+    beforeUploadArr(){
+      this.$message.warning("上传中...");
     },
     //  图片上传/拖拽
     getdata(evt) {
@@ -202,14 +275,13 @@ export default {
       //   console.log(this.imgArr);
     },
     successUpload(res) {
-      this.$message.warning("上传中...");
       if (res.code == 200) {
         if (this.imgArr.length >= 5) {
           this.isUseUpload = true;
           this.$message.warning("最多只能上传五张图片");
           return;
         }
-        this.imgArr.push(res.data.imageUrl);
+        this.imgArr.push({originUrl:res.data.imageUrl,smallUrl:res.data.imageThumbUrl});
         this.$message.success("上传成功");
       } else {
         this.$message.warning(res.data.msg);
@@ -217,7 +289,12 @@ export default {
     },
     // 删除图片
     deleteImg(img) {
-      let index = this.imgArr.indexOf(img);
+      let index = -1;
+      this.imgArr.forEach((v,k) => {
+          if(v.originUrl == img.originUrl){
+            index = k;
+          }
+      });
       if (index == -1) {
         return;
       }
@@ -228,13 +305,12 @@ export default {
     },
     // 自定义售后周期
     defSaleTime() {
-      this.form.saleTime = "";
+      this.form.aferServiceDays = "";
       this.showSaleTime = !this.showSaleTime;
     },
     // 富文本编辑器
     onEditorChange({ editor, html, text }) {
-      console.log("editor change!", html);
-      this.form.editorContent = html;
+      this.form.content = html;
     },
     beforeUpload(file) {
       return this.qnUpload(file);
@@ -296,9 +372,9 @@ export default {
     },
     // 关闭标签
     handleClose(index,value) {
-      this.form.selectedTagArr.splice(index,1);
+      this.selectedTagArr.splice(index,1);
       this.tagArr.forEach((v,k)=>{
-        if(value.value == v.value){
+        if(value.label == v.label){
           this.tagArr[k].selected = false;
         }
       })
@@ -309,32 +385,143 @@ export default {
         this.$message.warning('请输入正确的标签');
         return;
       }
-      this.tagArr.push({label:this.tagName,value:new Date().getTime(),selected:false});
-      // let data = {};
-      // this.$axios.post()
-      // .then(res=>{
-      //   console.log(res);
-      // })
-      // .catch(err=>{
-      //   console.log(err)
-      // })
+      let tmp = false;
+      this.tagArr.forEach((v,k)=>{
+        if(this.tagName == v.label){
+          tmp = true;
+        }
+      })
+      if(!tmp){
+        let data = {};
+        data.name = this.tagName;
+        this.$axios.post(api.addTagLibrary,data)
+        .then(res=>{
+          this.$message.success('添加成功!');
+          this.tagName = '';
+          this.getAllTags();
+        })
+        .catch(err=>{
+          console.log(err)
+        })
+        
+      }else{
+        this.$message.warning('标签已经添加，请不要重复添加!');
+      }
     },
     // 添加标签
     insertTag(v){
+      if(this.selectedTagArr.length >19){
+        this.$message.warning('最多添加20个标签');
+        return;
+      }
       v.selected = true;
-      this.form.selectedTagArr.push({label:v.label,value:v.value});
-      // let data = {};
-      // this.$axios.post()
-      // .then(res=>{
-      //   console.log(res);
-      // })
-      // .catch(err=>{
-      //   console.log(err)
-      // })
+      this.selectedTagArr.push({label:v.label,value:v.value});
     },
-    // 提交表单
-    submitForm(){
-      console.log(this.form);
+    // 获取一级类目
+    getFirstItem() {
+        this.itemList = [];
+      this.$axios
+        .post(api.getCategoryList, { fatherid: 0 })
+        .then(res => {
+            res.data.data.data.forEach((v,k)=>{
+                this.itemList.push({label:v.name,value:v.id,children:[]})
+            })
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    // 获取二级类目
+    handleItemChange(val){
+        let index = 0;
+        this.itemList.forEach((v,k)=>{
+            if(v.value == val[0]){
+                index = k;
+            }
+        })
+        let data ={};
+        data.fatherid = val[0];
+        this.itemList[index].children = [];
+        this.$axios
+        .post(api.getCategoryList, data)
+        .then(res => {
+            res.data.data.data.forEach((v,k)=>{
+                this.itemList[index].children.push({label:v.name,value:v.id});
+            })
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    // 获取品牌列表
+    getProItemId(val){
+      let id = this.form.secCategoryId = val[1];
+      this.form.firstCategoryId = val[0];
+      this.form.secCategoryId = val[1];
+      this.brandArr = [];
+      this.$axios
+        .post(api.queryCategoryBrandCid, {cId:id})
+        .then(res => {
+            res.data.data.forEach((v,k)=>{
+              this.brandArr.push({label:v.name,value:v.id})
+            })
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    // 获取供应商列表
+    getSupplyList(){
+      let data = {};
+      this.supplierArr = [];
+      data.firstCategoryId = this.form.firstCategoryId;
+      data.secCategoryId = this.form.secCategoryId;
+      data.brandId = this.form.brandId;
+      this.$axios
+        .post(api.querySupplierBrandPageList, data)
+        .then(res => {
+            res.data.data.forEach((v,k)=>{
+              this.supplierArr.push({label:v.name,value:v.id})
+            })
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    // 获取运费模板列表
+    getFreightTemplate(){
+      this.freightTemplateArr = [];
+      this.$axios
+        .post(api.getFreightTemplateList, {})
+        .then(res => {
+            res.data.data.forEach((v,k)=>{
+              this.freightTemplateArr.push({label:v.name,value:v.id})
+            })
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    // 获取所有标签
+    getAllTags(){
+      this.tagArr = [];
+       this.$axios
+        .post(api.queryTagLibraryList, {})
+        .then(res => {
+            res.data.data.forEach((v,k)=>{
+              this.tagArr.push({label:v.name,value:v.id})
+            })
+            this.tagArr.forEach((v,k) => {
+              this.selectedTagArr.forEach((v1,k1)=>{
+                if(v.value == v1.value){
+                  v.selected = true;
+                }
+              })
+            });
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   }
 };

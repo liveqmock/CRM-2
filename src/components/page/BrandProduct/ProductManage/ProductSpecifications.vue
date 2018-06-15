@@ -66,7 +66,7 @@
 
 <script>
 import vBreadcrumb from "@/components/common/Breadcrumb.vue";
-import * as api from "@/api/api.js";
+import * as api from "@/api/BrandProduct/ProductMange/index.js";
 export default {
   components: {
     vBreadcrumb
@@ -83,7 +83,7 @@ export default {
         { type: "颜色", id: "1", speArr: ["红色", "金色", "白色"] },
         { type: "版本", id: "2", speArr: ["全网通", "联通"] },
         { type: "规格", id: "3", speArr: ["32GB", "64GB", "128GB", "256GB"] }
-      ],
+      ], 
       tableData: [
         { spec: "红色-128GB-中国", imgUrl: "src/assets/images/avatar.jpg" },
         { spec: "红色-256GB-中国", imgUrl: "" },
@@ -99,9 +99,24 @@ export default {
 
   activated() {
     this.imgUpload = api.addImg;
+    this.productId = JSON.parse(this.$route.query.releaseProductId || sessionStorage.getItem('productSpecifications'))[1];
+    this.secondItemId = JSON.parse(this.$route.query.releaseProductId || sessionStorage.getItem('productSpecifications'))[0];
+    this.getProductInfo();
   },
 
   methods: {
+    // 获取产品信息
+    getProductInfo(){
+      let data = {};
+      data.secCategoryId = this.secondItemId;
+      data.productId = this.productId;
+      this.$axios.post(api.querySaleSpecList,data)
+      .then((res) => {
+        console.log(res)
+      }).catch((err) => {
+        console.log(err)
+      });
+    },
     //  添加规格
     addSpe(index) {
       this.specificationArr[index].speArr.push("");
