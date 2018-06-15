@@ -24,6 +24,7 @@
 
 <script>
 import vBreadcrumb from "@/components/common/Breadcrumb.vue";
+import * as api from "@/api/BrandProduct/ProductMange/index.js";
 export default {
   components: {
     vBreadcrumb
@@ -32,25 +33,34 @@ export default {
   data() {
     return {
       nav: ["品牌产品管理", "产品管理", "产品详情"],
-      name: "Apple",
-      productImg: [
-        "src/assets/images/avatar.jpg",
-        "src/assets/images/avatar.jpg"
-      ],
-      productItem: "数码家电 - 手机",
-      productBrand: "64GB 全网通 苹果8",
-      productDetail: [
-        "src/assets/images/avatar.jpg",
-        "src/assets/images/avatar.jpg"
-      ]
+      productId:'',
+      name: "",
+      productImg: [],
+      productItem: "",
+      productBrand: "",
+      productDetail: []
     };
   },
 
   activated() {
-    
+    this.productId = this.$route.query.productInfoId || sessionStorage.getItem('productInfo');
+    this.getList();
   },
 
-  methods: {}
+  methods: {
+    getList(){
+      this.$axios.post(api.findProductById,{productId:this.productId})
+      .then((res) => {
+        this.productImg = res.data.data.ImgUrl;
+        this.productDetail = res.data.data.infoValue;
+        this.name = res.data.data.product.name;
+        this.productItem = res.data.data.product.firstName+'-'+res.data.data.product.secondName;
+        this.productBrand = res.data.data.product.brand_id;
+      }).catch((err) => {
+          console.log(err)
+      });
+    }
+  }
 };
 </script>
 <style lang='less'>

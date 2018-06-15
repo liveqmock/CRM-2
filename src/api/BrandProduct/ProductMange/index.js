@@ -16,3 +16,5 @@ export const getFreightTemplateList = '/admin/freightTemplate/getFreightTemplate
 export const queryTagLibraryList = '/admin/tagLibrary/queryTagLibraryList';
 // 添加新标签
 export const addTagLibrary = '/admin/tagLibrary/addTagLibrary';
+// 根据id获取产品详情
+export const findProductById = '/admin/product/findProductById'

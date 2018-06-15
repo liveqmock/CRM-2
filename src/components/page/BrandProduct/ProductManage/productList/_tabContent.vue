@@ -66,12 +66,18 @@
         <el-table-column label="操作" align="center" min-width="220">
             <template slot-scope="scope">
                 <div class="operate">
-                    <el-button @click="editProduct(scope.row)" type="success">编辑产品</el-button>
+                    <el-button @click="inventoryManage(scope.row)" type="primary">库存管理</el-button>
                     <el-button @click="specificationsManage(scope.row)" type="primary">规格管理</el-button>
                     <el-button @click="priceManage(scope.row)" type="primary">价格管理</el-button>
-                    <el-button @click="inventoryManage(scope.row)" type="primary">库存管理</el-button>
-                    <el-button v-if='scope.row.status == 4' @click="productStatus(scope.row)" type="warning">产品下架</el-button>
-                    <el-button v-else @click="productStatus(scope.row)" type="warning">产品上架</el-button>
+                    <template v-if='scope.row.status == 1 && name == "auditProduct"'>
+                      <el-button @click="auditProduct(scope.row,1)" type="primary">通过审核</el-button>
+                      <el-button @click="auditProduct(scope.row,0)" type="danger">驳回审核</el-button>
+                    </template>
+                    <template v-else>
+                      <el-button @click="editProduct(scope.row)" type="success">编辑产品</el-button>
+                      <el-button v-if='scope.row.status == 4' @click="productStatus(scope.row)" type="warning">产品下架</el-button>
+                      <el-button v-else-if="scope.row.status == 5" @click="productStatus(scope.row)" type="warning">产品上架</el-button>
+                    </template>
                     <el-button @click="productInfo(scope.row)" type="primary">查看详情</el-button>
                 </div>
             </template>
@@ -136,7 +142,7 @@ export default {
   },
 
   mounted(){
-      let n = this.name;
+    let n = this.name;
     if(n == 'allProduct'){
         this.status = ''
     }else if(n== 'upProduct'){
@@ -235,6 +241,10 @@ export default {
     // 产品上架/下架
     productStatus(row, status) {
       console.log(row);
+    },
+    // 通过/不通过审核
+    auditProduct(row,status){
+        console.log(row);
     },
     // 查看详情
     productInfo(row) {

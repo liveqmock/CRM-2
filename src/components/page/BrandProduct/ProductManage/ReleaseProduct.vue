@@ -29,12 +29,12 @@
                 </el-select>
             </el-form-item>
             <el-form-item label="供应商">
-                <el-select v-model="form.supplier" placeholder="下拉搜索供应商">
+                <el-select v-model="form.supplierId" placeholder="下拉搜索供应商">
                   <el-option v-for="(v,k) in supplierArr" :key="k" :label="v.label" :value="v.value"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="发货方">
-                <el-select v-model="form.sendFrom" placeholder="选择发货方">
+                <el-select v-model="form.sendfrom" placeholder="选择发货方">
                   <el-option v-for="(v,k) in shipperArr" :key="k" :label="v.label" :value="v.value"></el-option>
                 </el-select>
             </el-form-item>
@@ -136,10 +136,10 @@ export default {
       form: {
         name: "",
         firstCategoryId: "",
-        secondCategoryId:"",
+        secCategoryId:"",
         brandId: "",
-        supplier: "",
-        sendFrom:"",
+        supplierId: "",
+        sendfrom:"",
         weight: "",
         volume: "",
         color: "",
@@ -150,8 +150,8 @@ export default {
         aferServiceDays: "",
         content: "",
         tagId:'',
-        originalImg:[],
-        smallImg:[]
+        originalImg:'',
+        smallImg:''
       },
       editorOption: {
         placeholder: "请输入内容",
@@ -176,7 +176,7 @@ export default {
       uploadType: "", // 上传的文件类型（图片、视频）,
       selectedTagArr:[],
       tagArr:[],
-      tagName:''
+      tagName:'',
     };
   },
 
@@ -189,6 +189,7 @@ export default {
   activated() {
     this.uploadImg = api.addImg;
     this.imgArr = [];
+    this.selectedTagArr = [];
     // 获取一级类目
     this.getFirstItem();
     // 获取运费模板
@@ -206,14 +207,44 @@ export default {
   },
 
   methods: {
+    // 提交表单前进行判断
+    beforeSubmit(){
+      if(this.imgArr.length == 0){
+        this.$message.warning('请添加产品图片');
+        return false;
+      }else if(this.selectedTagArr.length == 0){
+        this.$message.warning('请添加产品标签');
+        return false;
+      }
+      return true;
+    },
     // 提交表单
     submitForm(){
-      let tmp = [];
+      let isCanSubmit = this.beforeSubmit();
+      if(!isCanSubmit){
+        return;
+      }
+      let tmp=[],tmpSmalUrll=[],tmpOriUrl = [];
       this.selectedTagArr.forEach((v,k)=>{
         tmp.push(v.value)
       })
       this.form.tagId = tmp.join(',');
-      console.log(this.form);
+      this.imgArr.forEach((v,k)=>{
+        tmpSmalUrll.push(v.smallUrl);
+        tmpOriUrl.push(v.originUrl);
+      })
+      this.form.smallImg = JSON.stringify(tmpSmalUrll);
+      this.form.originalImg = JSON.stringify(tmpOriUrl);
+      let data = {};
+      data = this.form;
+      this.$axios.post(api.addProduct,data)
+      .then(res=>{
+        this.$message.success(res.data.data);
+        this.$router.push('/productList');
+      })
+      .catch(err=>{
+        console.log(err);
+      })
     },
     beforeUploadArr(){
       this.$message.warning("上传中...");
@@ -336,10 +367,6 @@ export default {
         this.$message.warning('请输入正确的标签');
         return;
       }
-      if(this.tagArr.length >19){
-        this.$message.warning('最多添加20个标签');
-        return;
-      }
       let tmp = false;
       this.tagArr.forEach((v,k)=>{
         if(this.tagName == v.label){
@@ -365,6 +392,10 @@ export default {
     },
     // 添加标签
     insertTag(v){
+      if(this.selectedTagArr.length >19){
+        this.$message.warning('最多添加20个标签');
+        return;
+      }
       v.selected = true;
       this.selectedTagArr.push({label:v.label,value:v.value});
     },
@@ -406,9 +437,9 @@ export default {
     },
     // 获取品牌列表
     getProItemId(val){
-      let id = this.form.secondCategoryId = val[1];
+      let id = this.form.secCategoryId = val[1];
       this.form.firstCategoryId = val[0];
-      this.form.secondCategoryId = val[1];
+      this.form.secCategoryId = val[1];
       this.brandArr = [];
       this.$axios
         .post(api.queryCategoryBrandCid, {cId:id})
@@ -426,7 +457,7 @@ export default {
       let data = {};
       this.supplierArr = [];
       data.firstCategoryId = this.form.firstCategoryId;
-      data.secCategoryId = this.form.secondCategoryId;
+      data.secCategoryId = this.form.secCategoryId;
       data.brandId = this.form.brandId;
       this.$axios
         .post(api.querySupplierBrandPageList, data)
