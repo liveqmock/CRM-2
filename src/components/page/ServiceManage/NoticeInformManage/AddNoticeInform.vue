@@ -23,7 +23,7 @@
                                 <quill-editor v-model="form.content" ref="myQuillEditor" :options="editorOption"
                                               @change="onEditorChange($event)"></quill-editor>
                                 <!-- 文件上传input 将它隐藏-->
-                                <el-upload :action="qnLocation" :before-upload='beforeUpload' :data="uploadData"
+                                <el-upload :action="qnLocation" :data="uploadData"
                                            :on-success='upScuccess' ref="upload" style="display:none">
                                     <el-button size="small" type="primary" id="imgInput" element-loading-text="插入中,请稍候">
                                         点击上传
@@ -244,7 +244,7 @@
                 console.log(this.uploadType);
                 if (this.uploadType === "image") {
                     this.$message.warning('正在上传');
-                    return this.$axios(api.addImg).then(res => {
+                    return this.$axios.post(api.addImg).then(res => {
                         this.uploadData = {
                             key: `image/${suffix.join(".")}_${new Date().getTime()}.${ext}`,
                             token: res.data
@@ -440,9 +440,7 @@
         },
         computed: {
             qnLocation() {
-                return location.protocol === "http:"
-                    ? api.addImg
-                    : api.addImg;
+                return api.addImg;
             }
         },
         // 页面加载后执行 为编辑器的图片图标和视频图标绑定点击事件

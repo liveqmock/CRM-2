@@ -28,7 +28,7 @@
                                         <el-checkbox-group v-model="checkAll[index].provinceCheck[k].ids"
                                                            @change="handleCheckedCitiesChange(checkAll[index].provinceCheck[k].ids,k,index)">
                                             <el-checkbox :label="city.zipcode"
-                                                         :disabled="checkAll[index].provinceCheck[k].cityCheck[kk]"
+                                                         :disabled="checkAll[index].provinceCheck[k].cityDisabled[kk]"
                                                          v-for="(city,kk) in checkAll[index].provinceCheck[k].checkedCities"
                                                          :key="kk">
                                                 {{city.name}}
@@ -104,7 +104,8 @@
         },
         created() {
             this.getProvinceListGroupByDistrict();
-            // console.log(this.chooseData)
+            // this.chooseData=this.chooseData.split(';');
+            console.log(this.chooseData)
         },
         methods: {
             //获取省
@@ -128,10 +129,32 @@
                                         isChecked: false,
                                         isDisabled: false,
                                         cityCheck: [],
+                                        cityDisabled:[],
+                                        name: res.data.data[i][j].name,
+                                        zipcode: res.data.data[i][j].zipcode,
+                                        count: 0,
                                         ids: [],
                                         names: [],
                                         checkedCities: [],
                                     };
+                                    for (let c in that.chooseData) {//根据表格中的数据回显数据的选中和可选效果
+                                        if (that.chooseData[c].checkedId) {
+                                            let length = that.chooseData[c].checkedId.indexOf(':');
+                                            var checkedId = that.chooseData[c].checkedId.slice(0, length);
+                                            console.log(checkedId)
+                                            if (checkedId == res.data.data[i][j].zipcode) {
+                                                tempprovinceCheck.isChecked=true;
+                                            }
+                                        }
+                                        if (that.preData.checkedId) {
+                                            let length = that.chooseData[c].checkedId.indexOf(':');
+                                            let preId = that.preData.checkedId.slice(0, length);
+                                            let id=res.data.data[i][j].zipcode;
+                                            if (preId !=id &&that.chooseData[c].checkedId.indexOf(id)!=-1) {
+                                                tempprovinceCheck.isDisabled=true;
+                                            }
+                                        }
+                                    }
                                     temp.provinceCheck.push(tempprovinceCheck)
                                 }
                                 that.checkAll.push(temp);
@@ -142,7 +165,6 @@
                                 };
                                 that.area.push(tempArea);
                             }
-                            // console.log(that.checkAll)
                         } else {
                             that.$message.warning(res.data.msg)
                         }
@@ -165,25 +187,39 @@
                             if (res.data.data.length && !that.showCities) {
                                 that.showCities = true;
                             }
+                            that.checkAll[index].provinceCheck[k].count = res.data.data.length;
                             let newNames = [];
-                            let num=0;
+                            let num = 0;
                             for (let kk in res.data.data) {
                                 let v = res.data.data[kk];
-                                that.checkAll[index].provinceCheck[k].cityCheck[kk]=false;
+                                that.checkAll[index].provinceCheck[k].cityCheck[kk] = false;
+                                that.checkAll[index].provinceCheck[k].cityDisabled[kk] = false;
                                 for (let c in that.chooseData) {//根据表格中的数据回显数据的选中和可选效果
-                                    var checkedId = that.chooseData[c].checkedId.split(',');
-                                    for (let cId in checkedId) {
-                                        if (checkedId[cId] == v.zipcode) {
-                                            that.checkAll[index].provinceCheck[k].ids.push(v.zipcode);
-                                            that.checkAll[index].provinceCheck[k].names.push(v.name);
-                                            that.checkAll[index].provinceCheck[k].cityCheck[kk]=true;
+                                    if (that.chooseData[c].checkedId) {
+                                        let length = that.chooseData[c].checkedId.indexOf(':');
+                                        var checkedId = that.chooseData[c].checkedId.slice(length+1).split(',');
+                                        for (let cId in checkedId) {
+                                            if (checkedId[cId] == v.zipcode) {
+                                                that.checkAll[index].provinceCheck[k].ids.push(v.zipcode);
+                                                that.checkAll[index].provinceCheck[k].names.push(v.name);
+                                                that.checkAll[index].provinceCheck[k].cityCheck[kk] = true;
+                                            }
                                         }
                                     }
-                                }
-                                let preId = that.preData.checkedId.split(',');
-                                for (let pId in preId) {
-                                    if (preId[pId] == v.zipcode && checkedId.indexOf(preId[pId]) != -1) {
-                                        ++num
+                                    if (that.preData.checkedId) {
+                                        let length = that.chooseData[c].checkedId.indexOf(':');
+                                        let preId = that.preData.checkedId.slice(length+1).split(',');
+                                        for (let pId in preId) {
+                                            if (preId[pId] == v.zipcode ) {
+                                                ++num
+                                            }
+                                            // if(preId[pId]!= v.zipcode&& checkedId.indexOf(preId[pId])!= -1){
+                                            //     that.checkAll[index].provinceCheck[k].cityDisabled[kk] = true;
+                                            // }
+                                        }
+                                        if (num == res.data.data.length) {
+                                            that.checkAll[index].provinceCheck[k].isChecked = true;
+                                        }
                                     }
                                 }
                                 if (that.checkAll[index].provinceCheck[k].ids.indexOf(v.zipcode) == -1 && isChecked == 'checked') {
@@ -202,11 +238,6 @@
                                     that.checkAll[index].provinceCheck[k].names = newNames;
                                 }
                             }
-                            if(num==res.data.data.length){
-                                that.checkAll[index].provinceCheck[k].isDisabled = true;
-                                that.checkAll[index].provinceCheck[k].isChecked = true;
-                            }
-                            console.log(that.checkAll[index].provinceCheck[k].names)
                         } else {
                             that.$message.warning(res.data.msg)
                         }
@@ -220,9 +251,27 @@
                 let that = this;
                 for (let i in that.checkAll) {
                     for (let j in that.checkAll[i].provinceCheck) {
-                        for (let k in that.checkAll[i].provinceCheck[j].names) {
-                            that.checkNames.push(that.checkAll[i].provinceCheck[j].names[k]);
-                            that.checkIds.push(that.checkAll[i].provinceCheck[j].ids[k]);
+                        let length = that.checkAll[i].provinceCheck[j].names.length;
+                        if (length > 0) {
+                            let count = that.checkAll[i].provinceCheck[j].count;
+                            let name = that.checkAll[i].provinceCheck[j].name;
+                            let id = that.checkAll[i].provinceCheck[j].zipcode;
+                            if (length === count) {
+                                var tempName = name + ':', tempId = id + ':';
+                            } else {
+                                var tempName = name + ':', tempId = ' ' + ':';
+                            }
+                            for (let k in that.checkAll[i].provinceCheck[j].names) {
+                                if (k == length - 1) {
+                                    tempName += that.checkAll[i].provinceCheck[j].names[k];
+                                    tempId += that.checkAll[i].provinceCheck[j].ids[k];
+                                } else {
+                                    tempName += that.checkAll[i].provinceCheck[j].names[k] + ',';
+                                    tempId += that.checkAll[i].provinceCheck[j].ids[k] + ',';
+                                }
+                            }
+                            that.checkNames.push(tempName);
+                            that.checkIds.push(tempId);
                         }
                     }
                 }
@@ -268,7 +317,7 @@
                                 that.checkAll[index].provinceCheck[k].names.push(v.name);
                                 that.checkAll[index].provinceCheck[k].ids.push(v.zipcode);
                             }
-                        })
+                        });
                     } else {
                         that.checkAll[index].provinceCheck[k].ids = [];
                         that.checkAll[index].provinceCheck[k].names = [];
