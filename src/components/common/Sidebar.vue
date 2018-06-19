@@ -29,9 +29,9 @@
 
 <script>
 import bus from "../common/bus";
-import icon from './ico'
+import icon from "./ico";
 export default {
-  components:{
+  components: {
     icon
   },
   data() {
@@ -52,7 +52,7 @@ export default {
             {
               index: "channelItemManage",
               title: "渠道类目管理"
-            },
+            }
             // {
             //   index: "certificateUse",
             //   title: "授权证书模板"
@@ -86,73 +86,98 @@ export default {
             }
           ]
         },
-          {
-              icon: "icon-fenlei",
-              index: "4",
-              title: "品牌产品管理",
-              subs: [
-                  {
-                      index: "brandProductClassify",
-                      title: "产品分类管理"
-                  },
-                  {
-                      index: "brandManage",
-                      title: "品牌管理"
-                  },
-                  {
-                      index: "productList",
-                      title: "产品管理"
-                  },
-                  {
-                      index: "shippingTemplate",
-                      title: "运费模板"
-                  },
-                  {
-                      index: "giftManage",
-                      title: "产品礼包设置"
-                  }
-              ]
-          },
-          {
-              icon: "icon-huiyuanzhanghaoguanli",
-              index: "6",
-              title: "会员管理",
-              subs: [
-                  {
-                      index: "levelManage",
-                      title: "经销商层级管理"
-                  },{
-                      index: "joinManage",
-                      title: "经销商加盟管理"
-                  },{
-                      index: "memberManage",
-                      title: "经销商会员管理"
-                  },{
-                      index: "accountRecharge",
-                      title: "账户充值"
-                  },{
-                      index: "realNameAuthentication",
-                      title: "实名制认证审核"
-                  },{
-                      index: "activityParams",
-                      title: "活跃度参数设置"
-                  }
-              ]
-          },
-          {
-              icon: "icon-huiyuanzhanghaoguanli",
-              index: "9",
-              title: "服务管理",
-              subs: [
-                  {
-                      index: "noticeInformManage",
-                      title: "公告通知管理"
-                  },{
-                      index: "feedBack",
-                      title: "问题反馈"
-                  }
-              ]
-          },
+        {
+          icon: "icon-fenlei",
+          index: "4",
+          title: "品牌产品管理",
+          subs: [
+            {
+              index: "brandProductClassify",
+              title: "产品分类管理"
+            },
+            {
+              index: "brandManage",
+              title: "品牌管理"
+            },
+            {
+              index: "productList",
+              title: "产品管理"
+            },
+            {
+              index: "shippingTemplate",
+              title: "运费模板"
+            },
+            {
+              index: "giftManage",
+              title: "产品礼包设置"
+            }
+          ]
+        },
+        {
+          icon: "icon-huiyuanzhanghaoguanli",
+          index: "6",
+          title: "会员管理",
+          subs: [
+            {
+              index: "levelManage",
+              title: "经销商层级管理"
+            },
+            {
+              index: "joinManage",
+              title: "经销商加盟管理"
+            },
+            {
+              index: "memberManage",
+              title: "经销商会员管理"
+            },
+            {
+              index: "accountRecharge",
+              title: "账户充值"
+            },
+            {
+              index: "realNameAuthentication",
+              title: "实名制认证审核"
+            },
+            {
+              index: "activityParams",
+              title: "活跃度参数设置"
+            }
+          ]
+        },
+        {
+          icon: "icon-huiyuanzhanghaoguanli",
+          index: "9",
+          title: "服务管理",
+          subs: [
+            {
+              index: "noticeInformManage",
+              title: "公告通知管理"
+            },
+            {
+              index: "feedBack",
+              title: "问题反馈"
+            }
+          ]
+        },
+        {
+          icon: "icon-yunying",
+          index: "运营管理",
+          title: "运营管理",
+          subs: [
+            {
+              index: "helpCenter",
+              title: "帮助中心管理"
+            },
+            {
+              index: "currencyRatio",
+              title: "货币比例设置"
+            },
+            {
+              index: "baseParamsSet",
+              title: "基础参数设置"
+            },
+          ]
+        },
         {
           icon: "icon-shezhi",
           index: "7",

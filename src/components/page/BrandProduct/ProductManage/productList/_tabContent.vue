@@ -208,13 +208,10 @@ export default {
     },
     // 编辑产品
     editProduct(row) {
-      let tmp = [];
-      tmp.push(row.sec_category_id);
-      tmp.push(row.id);
-      sessionStorage.setItem("releaseProduct", JSON.stringify(tmp));
+      sessionStorage.setItem("releaseProduct", row.id);
       this.$router.push({
         name: "editProduct",
-        query: { releaseProductId: JSON.stringify(tmp) }
+        query: { releaseProductId: row.id }
       });
     },
     // 规格管理

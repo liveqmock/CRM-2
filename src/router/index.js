@@ -399,6 +399,37 @@ export default new Router({
                     component: resolve => require(['../components/page/Permission/OrganizeMange/OrganizeMange.vue'], resolve),
                     meta: { title: '组织结构管理',url:'/admin/role/queryDepartmentList' }
                 },
+                // 运营管理
+                {
+                    name:'helpCenter',
+                    path: '/helpCenter',
+                    component: resolve => require(['../components/page/OperateManage/HelpCenter/HelpCenter.vue'], resolve),
+                    meta: { title: '帮助中心管理' }
+                },
+                {
+                    name:'questionList',
+                    path: '/questionList',
+                    component: resolve => require(['../components/page/OperateManage/HelpCenter/QuestionList.vue'], resolve),
+                    meta: { title: '问题列表' }
+                },
+                {
+                    name:'addQuestion',
+                    path: '/addQuestion',
+                    component: resolve => require(['../components/page/OperateManage/HelpCenter/AddQuestion.vue'], resolve),
+                    meta: { title: '添加问题' }
+                },
+                {
+                    name:'currencyRatio',
+                    path: '/currencyRatio',
+                    component: resolve => require(['../components/page/OperateManage/CurrencyRatio.vue'], resolve),
+                    meta: { title: '货币比例设置',url:'/admin/sysConfig/updateSysConfigByCurrency'}
+                },
+                {
+                    name:'baseParamsSet',
+                    path: '/baseParamsSet',
+                    component: resolve => require(['../components/page/OperateManage/BaseParamsSet.vue'], resolve),
+                    meta: { title: '基础参数设置'}
+                },
             ]
         },
         {

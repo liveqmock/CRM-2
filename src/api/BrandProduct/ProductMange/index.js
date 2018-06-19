@@ -20,3 +20,7 @@ export const addTagLibrary = '/admin/tagLibrary/addTagLibrary';
 export const findProductById = '/admin/product/findProductById';
 // 根据二级id产品id获取产品信息
 export const querySaleSpecList = '/admin/saleSpec/querySaleSpecList';
+// 编辑产品，根据id获取产品信息
+export const findProductAllDataById = '/admin/product/findProductAllDataById';
+// 编辑产品
+export const aa = '';

@@ -69,7 +69,7 @@
             </el-form-item>
             <div class="pro-title">产品信息</div>
             <quill-editor v-model="form.content" ref="myQuillEditor" :options="editorOption" @change="onEditorChange($event)"></quill-editor>
-            <el-upload :action="qnLocation" :before-upload='beforeUpload' :data="uploadData" :on-success='upScuccess' ref="upload" style="display:none">
+            <el-upload :action="qnLocation" :data="uploadData" :on-success='upScuccess' ref="upload" style="display:none">
               <el-button size="small" type="primary" id="imgInput" element-loading-text="插入中,请稍候">点击上传</el-button>
             </el-upload>
             <div class="selected-tag">
@@ -293,24 +293,6 @@ export default {
     // 富文本编辑器
     onEditorChange({ editor, html, text }) {
       this.form.content = html;
-    },
-    beforeUpload(file) {
-      return this.qnUpload(file);
-    },
-    qnUpload(file) {
-      this.fullscreenLoading = true;
-      const suffix = file.name.split(".");
-      const ext = suffix.splice(suffix.length - 1, 1)[0];
-      console.log(this.uploadType);
-      if (this.uploadType === "image") {
-        this.$message.warning("正在上传");
-        return this.$axios(api.addImg).then(res => {
-          this.uploadData = {
-            key: `image/${suffix.join(".")}_${new Date().getTime()}.${ext}`,
-            token: res.data
-          };
-        });
-      }
     },
     // 图片上传成功回调 插入到编辑器中
     upScuccess(e, file, fileList) {

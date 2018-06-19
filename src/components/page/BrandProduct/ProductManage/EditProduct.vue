@@ -22,7 +22,7 @@
                 <div class="upload-tip">建议尺寸：800*800,拖拽图片可以改变顺序，第一张为默认头图</div>
             </el-form-item>
             <el-form-item label="产品分类">
-                <el-cascader @change='getProItemId' :options="itemList" @active-item-change="handleItemChange" :props="itemProps"></el-cascader>
+                <el-cascader @change='getProItemId' v-model="categoryArr" :options="itemList" @active-item-change="handleItemChange" :props="itemProps"></el-cascader>
                 <span style="margin-left:30px">产品品牌</span>
                 <el-select @change="getSupplyList" v-model="form.brandId" placeholder="请选择">
                   <el-option v-for="(v,k) in brandArr" :key="k" :label="v.label" :value="v.value"></el-option>
@@ -69,7 +69,7 @@
             </el-form-item>
             <div class="pro-title">产品信息</div>
             <quill-editor v-model="form.content" ref="myQuillEditor" :options="editorOption" @change="onEditorChange($event)"></quill-editor>
-            <el-upload :action="qnLocation" :before-upload='beforeUpload' :data="uploadData" :on-success='upScuccess' ref="upload" style="display:none">
+            <el-upload :action="qnLocation" :data="uploadData" :on-success='upScuccess' ref="upload" style="display:none">
               <el-button size="small" type="primary" id="imgInput" element-loading-text="插入中,请稍候">点击上传</el-button>
             </el-upload>
             <div class="selected-tag">
@@ -112,7 +112,6 @@ export default {
       isUseUpload: false,
       showSaleTime: false,
       productId:'',
-      secondItemId:'',
       uploadImg: "",
       imgArr:[],
       itemList: [],
@@ -120,6 +119,7 @@ export default {
       freightTemplateArr:[],
       supplierArr:[],
       shipperArr:[{label:'平台发货',value:'1'},{label:'供应商发货',value:'2'}],
+      categoryArr:[],
       aferServiceDays:[
         {label:'无售后服务',value:'0'},
         {label:'到货后7天',value:'7'},
@@ -196,12 +196,9 @@ export default {
     this.getFirstItem();
     // 获取运费模板
     this.getFreightTemplate();
-    // 获取所有标签
-    this.getAllTags();
     utils.cleanFormData(this.form);
     // 获取产品信息
-    this.productId = JSON.parse(this.$route.query.releaseProductId || sessionStorage.getItem('releaseProduct'))[1];
-    this.secondItemId = JSON.parse(this.$route.query.releaseProductId || sessionStorage.getItem('releaseProduct'))[0];
+    this.productId = this.$route.query.releaseProductId || sessionStorage.getItem('releaseProduct');
     this.getProductInfo();
   },
 
@@ -216,11 +213,45 @@ export default {
     // 获取产品信息
     getProductInfo(){
       let data = {};
-      data.secCategoryId = this.secondItemId;
       data.productId = this.productId;
-      this.$axios.post(api.querySaleSpecList,data)
+      this.$axios.post(api.findProductAllDataById,data)
       .then((res) => {
-        console.log(res)
+        this.imgArr = [];
+        res.data.data.ImgUrl.forEach((v,k)=>{
+          this.imgArr.push({'originUrl':v.original_img,'smallUrl':'aa'})
+        })
+        this.categoryArr = [];
+        this.categoryArr.push(res.data.data.product.first_category_id);
+        this.handleItemChange(this.categoryArr);
+        this.categoryArr.push(res.data.data.product.sec_category_id);
+        this.getProItemId(this.categoryArr);
+        this.form.brandId = res.data.data.product.brand_id;
+        this.getSupplyList();
+        this.form.supplierId = res.data.data.product.supplier_id;
+        this.form.sendfrom = res.data.data.product.sendfrom.toString();
+        this.form.name = res.data.data.product.name;
+        this.form.weight = res.data.data.product.weight;
+        this.form.volume = res.data.data.product.volume ;
+        res.data.data.infoValue.forEach((v,k)=>{
+          if(v.parm == '颜色'){
+            this.form.color = v.parm_value;
+          }else if(v.parm == '尺寸'){
+            this.form.size = v.parm_value;
+          }else if(v.parm == '产品'){
+            this.form.style = v.parm_value;
+          }else if(v.parm == '种类'){
+            this.form.species = v.parm_value;
+          }
+        })
+        this.form.freightTemplateId = res.data.data.product.freight_template_id;
+        this.form.aferServiceDays = res.data.data.product.afer_service_days.toString();
+        this.form.content = res.data.data.product.content;
+        this.selectedTagArr = [];
+        res.data.data.tagProduct.forEach((v,k)=>{
+          this.selectedTagArr.push({label:v.tagName,value:v.tag_id});
+        })
+        this.getAllTags();
+        console.log(res.data.data)
       }).catch((err) => {
         console.log(err)
       });
@@ -255,14 +286,15 @@ export default {
       this.form.originalImg = JSON.stringify(tmpOriUrl);
       let data = {};
       data = this.form;
-      this.$axios.post(api.addProduct,data)
-      .then(res=>{
-        this.$message.success(res.data.data);
-        this.$router.push('/productList');
-      })
-      .catch(err=>{
-        console.log(err);
-      })
+      console.log(data)
+      // this.$axios.post(api.addProduct,data)
+      // .then(res=>{
+      //   this.$message.success(res.data.data);
+      //   this.$router.push('/productList');
+      // })
+      // .catch(err=>{
+      //   console.log(err);
+      // })
     },
     beforeUploadArr(){
       this.$message.warning("上传中...");
@@ -311,24 +343,6 @@ export default {
     // 富文本编辑器
     onEditorChange({ editor, html, text }) {
       this.form.content = html;
-    },
-    beforeUpload(file) {
-      return this.qnUpload(file);
-    },
-    qnUpload(file) {
-      this.fullscreenLoading = true;
-      const suffix = file.name.split(".");
-      const ext = suffix.splice(suffix.length - 1, 1)[0];
-      console.log(this.uploadType);
-      if (this.uploadType === "image") {
-        this.$message.warning("正在上传");
-        return this.$axios(api.addImg).then(res => {
-          this.uploadData = {
-            key: `image/${suffix.join(".")}_${new Date().getTime()}.${ext}`,
-            token: res.data
-          };
-        });
-      }
     },
     // 图片上传成功回调 插入到编辑器中
     upScuccess(e, file, fileList) {
@@ -419,7 +433,7 @@ export default {
     },
     // 获取一级类目
     getFirstItem() {
-        this.itemList = [];
+      this.itemList = [];
       this.$axios
         .post(api.getCategoryList, { fatherid: 0 })
         .then(res => {
@@ -433,25 +447,25 @@ export default {
     },
     // 获取二级类目
     handleItemChange(val){
-        let index = 0;
-        this.itemList.forEach((v,k)=>{
-            if(v.value == val[0]){
-                index = k;
-            }
-        })
-        let data ={};
-        data.fatherid = val[0];
-        this.itemList[index].children = [];
-        this.$axios
-        .post(api.getCategoryList, data)
-        .then(res => {
-            res.data.data.data.forEach((v,k)=>{
-                this.itemList[index].children.push({label:v.name,value:v.id});
-            })
-        })
-        .catch(err => {
-          console.log(err);
-        });
+      let index = 0;
+      this.itemList.forEach((v,k)=>{
+          if(v.value == val[0]){
+              index = k;
+          }
+      })
+      let data ={};
+      data.fatherid = val[0];
+      this.itemList[index].children = [];
+      this.$axios
+      .post(api.getCategoryList, data)
+      .then(res => {
+          res.data.data.data.forEach((v,k)=>{
+              this.itemList[index].children.push({label:v.name,value:v.id});
+          })
+      })
+      .catch(err => {
+        console.log(err);
+      });
     },
     // 获取品牌列表
     getProItemId(val){
