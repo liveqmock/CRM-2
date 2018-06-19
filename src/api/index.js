@@ -44,6 +44,9 @@ axios.interceptors.response.use(
             sessionStorage.clear();
             localStorage.clear();
             Message.warning({duration: 1000, message: '登陆超时，请重新登陆'})
+            setTimeout(function(){
+                location.reload();
+            },1000)
             return Promise.reject(res.data.msg);
         }
         if (res.data.code != '200') {

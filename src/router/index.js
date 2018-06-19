@@ -454,6 +454,13 @@ export default new Router({
                     component: resolve => require(['../components/page/OperateManage/BaseParamsSet.vue'], resolve),
                     meta: { title: '基础参数设置',url:'/admin/sysConfig/updateSysConfigByTransaction'}
                 },
+                // 订单管理
+                {
+                    name:'orderList',
+                    path: '/orderList',
+                    component: resolve => require(['../components/page/OrderManage/OrderManage/OrderList.vue'], resolve),
+                    meta: { title: '订单管理'}
+                },
             ]
         },
         {

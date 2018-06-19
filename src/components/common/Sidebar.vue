@@ -64,6 +64,17 @@ export default {
           ]
         },
         {
+          icon: "icon-dingdan",
+          index: "订单管理",
+          title: "订单管理",
+          subs: [
+            {
+              index: "orderList",
+              title: "订单管理"
+            },
+          ]
+        },
+        {
           icon: "icon-suyuan",
           index: "101",
           title: "溯源管理",

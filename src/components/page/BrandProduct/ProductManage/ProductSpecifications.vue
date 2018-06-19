@@ -26,7 +26,7 @@
                 <el-button @click="addType">添加类型</el-button>
             </div>
         </div>
-        <el-button type="primary" style="margin:10px 0 50px 0">生成列表</el-button>
+        <el-button @click="createList" type="primary" style="margin:10px 0 50px 0">生成列表</el-button>
         <p style="margin:0 0 18px 10px">规格表</p>
         <el-table :data="tableData" border>
           <el-table-column prop="spec" label="规格" align="center"></el-table-column>
@@ -79,21 +79,8 @@ export default {
       rowId:'',
       deleteFirstItem: "",
       deleteItem: "",
-      specificationArr: [
-        { type: "颜色", id: "1", speArr: ["红色", "金色", "白色"] },
-        { type: "版本", id: "2", speArr: ["全网通", "联通"] },
-        { type: "规格", id: "3", speArr: ["32GB", "64GB", "128GB", "256GB"] }
-      ], 
-      tableData: [
-        { spec: "红色-128GB-中国", imgUrl: "src/assets/images/avatar.jpg" },
-        { spec: "红色-256GB-中国", imgUrl: "" },
-        { spec: "红色-64GB-中国", imgUrl: "" },
-        { spec: "红色-32GB-中国", imgUrl: "" },
-        { spec: "金色-128GB-中国", imgUrl: "" },
-        { spec: "金色-256GB-中国", imgUrl: "" },
-        { spec: "金色-64GB-中国", imgUrl: "" },
-        { spec: "金色-32GB-中国", imgUrl: "" }
-      ]
+      specificationArr: [], 
+      tableData: []
     };
   },
 
@@ -112,9 +99,38 @@ export default {
       data.productId = this.productId;
       this.$axios.post(api.querySaleSpecList,data)
       .then((res) => {
-        console.log(res)
+        this.specificationArr = [];
+        res.data.data.forEach((v,k)=>{
+          this.specificationArr.push({type:v.spec,id:v.specId,speArr:v.specValue});
+        })
       }).catch((err) => {
         console.log(err)
+      });
+    },
+    // 生成列表
+    createList(){
+      let data = {};
+      let tmp = [];
+      this.specificationArr.forEach((v,k)=>{
+        let tmpObj = {};
+        tmpObj.spec = v.type;
+        tmpObj.specId = v.id || "";
+        tmpObj.specValue = v.speArr;
+        tmpObj.productId = this.productId;
+        tmp.push(tmpObj)
+      })
+      data.saleSpecValue = JSON.stringify(tmp);
+      data.secCategoryId = this.secondItemId;
+      data.productId = this.productId;
+      this.$axios.post(api.addSaleSpecValue,data)
+      .then((res) => {
+          this.$message.success('生成成功!');
+          this.tableData = [];
+          res.data.data.forEach((v,k)=>{
+            this.tableData.push({spec:v.specValue.join('-'),imgUrl:'',code:'',id:v.id})
+          })
+      }).catch((err) => {
+        
       });
     },
     //  添加规格
