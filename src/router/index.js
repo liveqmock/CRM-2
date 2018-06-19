@@ -428,7 +428,7 @@ export default new Router({
                     name:'baseParamsSet',
                     path: '/baseParamsSet',
                     component: resolve => require(['../components/page/OperateManage/BaseParamsSet.vue'], resolve),
-                    meta: { title: '基础参数设置'}
+                    meta: { title: '基础参数设置',url:'/admin/sysConfig/updateSysConfigByTransaction'}
                 },
             ]
         },
