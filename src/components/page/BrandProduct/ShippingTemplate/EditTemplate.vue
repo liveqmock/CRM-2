@@ -95,7 +95,7 @@
                                     </template>
                                 </el-table-column>
                             </el-table>
-                            <div class="color-blue" @click="addSetting">增加制定省市运费设置</div>
+                            <div><span class="color-blue" @click="addSetting">增加制定省市运费设置</span></div>
                         </el-form-item>
                     </div>
 

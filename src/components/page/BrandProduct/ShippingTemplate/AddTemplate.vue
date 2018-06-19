@@ -95,10 +95,9 @@
                                     </template>
                                 </el-table-column>
                             </el-table>
-                            <div class="color-blue" @click="addSetting">增加制定省市运费设置</div>
+                            <div><span class="color-blue" @click="addSetting">增加制定省市运费设置</span></div>
                         </el-form-item>
                     </div>
-
                     <!--<el-form-item prop="status" label="是否启用">-->
                     <!--<el-radio-group v-model="form.defaultTrue">-->
                     <!--<el-radio label="1">启用</el-radio>-->
@@ -113,7 +112,7 @@
             </div>
         </div>
         <!--选择区域-->
-        <choose-area @getArea='chooseAreaToast' :index="tableIndex" v-if="isShowArea"></choose-area>
+        <choose-area @getArea='chooseAreaToast' :index="tableIndex" :chooseData="chooseData" :preData="preData" v-if="isShowArea"></choose-area>
         <!--平台承担运费弹窗-->
         <div class="mask" v-if="showTips">
             <div class="box">
@@ -173,6 +172,8 @@
                     {label: '4天内', id: 96},
                     {label: '7天内', id: 168},
                 ],
+                chooseData:[],
+                preData:[],
                 form: {
                     name: '',
                     sendDays: 24,
@@ -200,7 +201,7 @@
                 unit: '公斤',
                 title1: '首公斤数(kg)',
                 title2: '续公斤数(kg)',
-                tips: '应输入0.00至999.99的数字，小数保留两位'
+                tips: '应输入0.00至999.99的数字，小数保留两位',
             }
         },
         activated() {
@@ -333,7 +334,9 @@
             editAddress(index) {
                 let that = this;
                 that.isShowArea = true;
-                this.tableIndex = index;
+                that.tableIndex = index;
+                that.chooseData=that.tableData;
+                that.preData=that.tableData[index];
             },
             //删除制定省市运费设置
             delItem(row, index) {
@@ -342,12 +345,14 @@
             //选择区域
             chooseAreaToast(getArea) {
                 this.isShowArea = false;
-                let index = getArea.indexOf('IDS');
-                this.tableData[this.tableIndex].checkedName = getArea.substring(0, index);//名称
-                this.tableData[this.tableIndex].checkedId = getArea.substring(index + 4);//id
-                console.log(getArea)
-                console.log(getArea.substring(0, index))
-                console.log(getArea.substring(index + 4));//zipcode
+                if(getArea){
+                    let index = getArea.indexOf('IDS');
+                    this.tableData[this.tableIndex].checkedName = getArea.substring(0, index);//名称
+                    this.tableData[this.tableIndex].checkedId = getArea.substring(index + 4);//id
+                    console.log(getArea)
+                    console.log(getArea.substring(0, index))
+                    console.log(getArea.substring(index + 4));//zipcode
+                }
             },
             //增加制定省市运费设置
             addSetting() {
