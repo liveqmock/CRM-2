@@ -82,7 +82,7 @@
             </div>
             <div class="tag-list">
               <span v-if="tagArr.length == 0" class="tag-tip">请添加标签</span>
-              <el-button v-for="(v,k) in tagArr" :key="k" @click="insertTag(v)" :disabled="v.selected" :class="{'selected-btn':v.selected}">{{v.label}}</el-button>
+              <el-button style="margin-bottom:10px" v-for="(v,k) in tagArr" :key="k" @click="insertTag(v)" :disabled="v.selected" :class="{'selected-btn':v.selected}">{{v.label}}</el-button>
             </div>
             <el-button type="primary" @click="submitForm">确认发布</el-button>
             <el-button >取消</el-button>
@@ -251,7 +251,6 @@ export default {
           this.selectedTagArr.push({label:v.tagName,value:v.tag_id});
         })
         this.getAllTags();
-        console.log(res.data.data)
       }).catch((err) => {
         console.log(err)
       });
@@ -286,15 +285,15 @@ export default {
       this.form.originalImg = JSON.stringify(tmpOriUrl);
       let data = {};
       data = this.form;
-      console.log(data)
-      // this.$axios.post(api.addProduct,data)
-      // .then(res=>{
-      //   this.$message.success(res.data.data);
-      //   this.$router.push('/productList');
-      // })
-      // .catch(err=>{
-      //   console.log(err);
-      // })
+      data.id = this.productId;
+      this.$axios.post(api.addProduct,data)
+      .then(res=>{
+        this.$message.success(res.data.data);
+        this.$router.push('/productList');
+      })
+      .catch(err=>{
+        console.log(err);
+      })
     },
     beforeUploadArr(){
       this.$message.warning("上传中...");
@@ -469,6 +468,7 @@ export default {
     },
     // 获取品牌列表
     getProItemId(val){
+      this.form.brandId = '';
       let id = this.form.secCategoryId = val[1];
       this.form.firstCategoryId = val[0];
       this.form.secCategoryId = val[1];
@@ -486,6 +486,7 @@ export default {
     },
     // 获取供应商列表
     getSupplyList(){
+      this.form.supplierId = '';
       let data = {};
       this.supplierArr = [];
       data.firstCategoryId = this.form.firstCategoryId;

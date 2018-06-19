@@ -82,7 +82,7 @@
             </div>
             <div class="tag-list">
               <span v-if="tagArr.length == 0" class="tag-tip">请添加标签</span>
-              <el-button v-for="(v,k) in tagArr" :key="k" @click="insertTag(v)" :disabled="v.selected" :class="{'selected-btn':v.selected}">{{v.label}}</el-button>
+              <el-button style="margin-bottom:10px" v-for="(v,k) in tagArr" :key="k" @click="insertTag(v)" :disabled="v.selected" :class="{'selected-btn':v.selected}">{{v.label}}</el-button>
             </div>
             <el-button type="primary" @click="submitForm">确认发布</el-button>
             <el-button >取消</el-button>
@@ -419,6 +419,7 @@ export default {
     },
     // 获取品牌列表
     getProItemId(val){
+      this.form.brandId = ''
       let id = this.form.secCategoryId = val[1];
       this.form.firstCategoryId = val[0];
       this.form.secCategoryId = val[1];
@@ -436,6 +437,7 @@ export default {
     },
     // 获取供应商列表
     getSupplyList(){
+      this.supplierId = '';
       let data = {};
       this.supplierArr = [];
       data.firstCategoryId = this.form.firstCategoryId;
