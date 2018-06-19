@@ -21,8 +21,16 @@ Vue.use(Vue=>{
 import moment from 'moment';
 Vue.filter('formatDate',function (value) {
     return moment(value).format('YYYY-MM-DD HH:mm:ss');
-})
-
+});
+Vue.filter('bankCard',function (value) {
+    let length=value.length;
+    let star=length-9;
+    let starStr='';
+    for(let i=0;i<star;i++){
+        starStr+='*';
+    }
+    return value.substring(0,4)+starStr+value.substring(-1,5);
+});
 //使用钩子函数对路由进行权限跳转
 router.beforeEach((to, from, next) => {
     let privilege = JSON.parse(localStorage.getItem('privilegeList')) || [];

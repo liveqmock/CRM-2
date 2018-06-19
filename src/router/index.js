@@ -234,6 +234,30 @@ export default new Router({
                     meta: { title: '活跃度参数设置' }
                 },
                 {
+                    name:'supplierManage',
+                    path: '/supplierManage',
+                    component: resolve => require(['../components/page/MemberManage/SupplierManage.vue'], resolve),
+                    meta: { title: '供应商管理' }
+                },
+                {
+                    name:'supplierDetail',
+                    path: '/supplierDetail',
+                    component: resolve => require(['../components/page/MemberManage/SupplierManage/SupplierDetail.vue'], resolve),
+                    meta: { title: '供应商详情' }
+                },
+                {
+                    name:'addSupplier',
+                    path: '/addSupplier',
+                    component: resolve => require(['../components/page/MemberManage/SupplierManage/AddSupplier.vue'], resolve),
+                    meta: { title: '添加供应商' }
+                },
+                {
+                    name:'editSupplier',
+                    path: '/editSupplier',
+                    component: resolve => require(['../components/page/MemberManage/SupplierManage/EditSupplier.vue'], resolve),
+                    meta: { title: '编辑供应商' }
+                },
+                {
                     name:'promotionManage',
                     path: '/promotionManage',
                     component: resolve => require(['../components/page/MemberManage/PromotionManage.vue/PromotionManage.vue'], resolve),

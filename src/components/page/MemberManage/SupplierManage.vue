@@ -6,13 +6,14 @@
                 <el-form-item prop="name" label="供应商名称" label-width="120">
                     <el-input style="width:200px" placeholder="请输入供应商名称" v-model="form.name"></el-input>
                 </el-form-item>
-                <el-form-item prop="phone" label="手机号" label-width="120">
-                    <el-input style="width:200px" placeholder="请输入手机号" v-model="form.phone"></el-input>
+                <el-form-item prop="mobile" label="手机号" label-width="120">
+                    <el-input style="width:200px" placeholder="请输入手机号" v-model="form.mobile"></el-input>
                 </el-form-item>
                 <el-form-item>
                     <el-button @click="getList(1)" type="primary">查询</el-button>
                     <el-button @click="resetForm('form')">重置</el-button>
                 </el-form-item>
+                <el-button type="primary" v-if="p.addSupplier" style="margin-bottom: 20px" @click="addSupplier">添加供应商</el-button>
             </el-form>
         </el-card>
         <div class="table-block">
@@ -28,31 +29,41 @@
                     <el-table-column type="index" label="供应商编号" width="100" align="center"></el-table-column>
                     <el-table-column prop="name" label="供应商名称" align="center"></el-table-column>
                     <el-table-column label="供应商类型" width="100" align="center">
-                        <template slot-scope="scope">{{scope.row.levelName}}</template>
+                        <template slot-scope="scope">
+                            <template v-if="scope.row.itype==1">产品供应商</template>
+                            <template v-if="scope.row.itype==2">服务供应商</template>
+                        </template>
                     </el-table-column>
-                    <el-table-column prop="phone" label="手机号" align="center"></el-table-column>
-                    <el-table-column prop="num" label="供应产品数" width="100" align="center"></el-table-column>
-                    <el-table-column prop="addrPreFix" label="区域/省市区" align="center"></el-table-column>
+                    <el-table-column prop="mobile" label="手机号" align="center"></el-table-column>
+                    <el-table-column prop="porductNum" label="供应产品数" width="100" align="center"></el-table-column>
+                    <el-table-column label="区域/省市区" align="center">
+                        <template slot-scope="scope">
+                            <template v-if="scope.row.country==2">海外</template>
+                            <template v-else>
+                                {{scope.row.province_name}}{{scope.row.city_name}}{{scope.row.area_name}}
+                            </template>
+                        </template>
+                    </el-table-column>
                     <el-table-column label="状态" align="center">
                         <template slot-scope="scope">
-                            <template v-if="scope.row.status==1">待激活</template>
-                            <template v-if="scope.row.status==2">正常</template>
-                            <template v-if="scope.row.status==3">已关闭</template>
+                            <template v-if="scope.row.status==1">正常</template>
+                            <template v-if="scope.row.status==2">停用</template>
+                            <template v-if="scope.row.status==3">删除</template>
                         </template>
                     </el-table-column>
                     <el-table-column v-if="isShowOperate" label="操作" align="center">
                         <template slot-scope="scope">
-                            <el-button type="warning" v-if="p.findDealerById" size="small"
+                            <el-button type="warning" v-if="p.findSupplierById" size="small"
                                        @click="detailItem(scope.$index,scope.row)">详情
                             </el-button>
-                            <el-button type="warning" v-if="p.findDealerById" size="small"
+                            <el-button type="warning" v-if="p.findSupplierById" size="small"
                                        @click="editItem(scope.$index,scope.row)">编辑
                             </el-button>
-                            <el-button type="danger" v-if="scope.row.status!=3&&p.stopDealerById" size="small"
-                                       @click="updateStatusItem(scope.$index,scope.row.id,1)">关闭
+                            <el-button type="danger" v-if="scope.row.status==1&&p.updateSupplierDeleteById" size="small"
+                                       @click="updateStatusItem(scope.$index,scope.row.id,1)">停用
                             </el-button>
-                            <el-button type="danger" v-if="scope.row.status==3&&p.openDealerById" size="small"
-                                       @click="updateStatusItem(scope.$index,scope.row.id,2)">开启
+                            <el-button type="danger" v-if="scope.row.status==2&&p.updateSupplierDeleteById" size="small"
+                                       @click="updateStatusItem(scope.$index,scope.row.id,2)">启用
                             </el-button>
                         </template>
                     </el-table-column>
@@ -94,9 +105,9 @@
     import vBreadcrumb from '../../common/Breadcrumb.vue';
     import icon from '../../common/ico.vue';
     import region from '../../common/Region';
-    import * as api from '../../../api/api';
+    import * as api from '../../../api/MemberManage/SupplierManage/index';
     import utils from '../../../utils/index.js'
-    import * as pApi from '../../../privilegeList/index.js';
+    import * as pApi from '../../../privilegeList/MemberManage/SupplierManage/index.js';
     import moment from 'moment';
 
     export default {
@@ -107,13 +118,11 @@
             return {
                 // 权限控制
                 p: {
-                    stopDealerById: false,
-                    openDealerById: false,
-                    exportDealerListExcel: false,
-                    findDealerById: false
+                    addSupplier: false,
+                    updateSupplierDeleteById: false,
+                    findSupplierById: false
                 },
                 isShowOperate: true,
-
                 tableData: [],
                 tableLoading: false,
                 btnLoading: false,
@@ -125,19 +134,12 @@
                 height: '',
                 formLabelWidth: '100px',
                 form: {
-                    id: '',
-                    nickName: '',
-                    code: '',
-                    idCard: '',
-                    phone: '',
-                    dType: '',
+                    name: '',
+                    mobile: '',
                 },
-                exportForm: {
-                    levelId: '',
-                },
+                exportForm:{},
                 selected: '',
                 address: [],
-                levelList: [],//用户层级列表
                 id: '',
                 info: '',
                 type: '',
@@ -151,7 +153,6 @@
         },
         activated() {
             this.getList(this.page.currentPage);
-            this.getLevelList();
             this.pControl();
         },
         methods: {
@@ -160,7 +161,7 @@
                 for (const k in this.p) {
                     this.p[k] = utils.pc(pApi[k]);
                 }
-                if (!this.p.stopDealerById && !this.p.findDealerById && !this.p.openDealerById) {
+                if (!this.p.updateSupplierDeleteById && !this.p.findSupplierById) {
                     this.isShowOperate = false;
                 }
             },
@@ -169,7 +170,6 @@
                 let that = this;
                 let data = that.form;
                 data.page = val;
-                data.levelId = that.exportForm.levelId;
                 let addrss = that.address;
                 if (addrss && addrss[0]) {
                     data.provinceId = addrss[0];
@@ -184,10 +184,10 @@
                     data.cityId = '';
                     data.areaId = '';
                 }
-                data.url = pApi.getDealerPageList;
+                data.url = pApi.querySupplierPageList;
                 that.tableLoading = true;
                 that.$axios
-                    .post(api.getDealerPageList, data)
+                    .post(api.querySupplierPageList, data)
                     .then(res => {
                         if (res.data.code == 200) {
                             that.tableLoading = false;
@@ -204,24 +204,6 @@
                         that.tableLoading = false;
                     })
             },
-            //获取用户层级列表
-            getLevelList() {
-                let that = this;
-                let data = {};
-                that.$axios
-                    .post(api.getDealerLevelList, data)
-                    .then(res => {
-                        if (res.data.code == 200) {
-                            that.levelList = res.data.data;
-                        } else {
-                            that.$message.warning(res.data.msg);
-                        }
-
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    })
-            },
             //分页
             handleSizeChange(val) {
                 console.log(`每页 ${val} 条`);
@@ -231,11 +213,6 @@
                 this.page.currentPage = val;
                 this.getList(val)
             },
-            //跳到下级列表
-            toLower(id) {
-                sessionStorage.setItem('memberId', id);
-                this.$router.push({path: '/lowerMemberManage'})
-            },
             //详情
             detailItem(index, row) {
                 localStorage.setItem('supplierDetail', row.id);
@@ -243,21 +220,21 @@
             },
             //编辑
             editItem(index, row){
-                localStorage.setItem('memberDetail', row.id);
-                this.$router.push({path: '/memberDetail', query: {id: row.id}})
+                localStorage.setItem('supplierDetail', row.id);
+                this.$router.push({path: '/supplierDetail', query: {id: row.id}})
             },
             //关闭,开启
             updateStatusItem(index, id, num) {
                 let that = this;
                 that.id = id;
                 if (num == 1) {
-                    that.info = '是否确认关闭？';
-                    that.type = '关闭';
-                    that.btnTxt = '确认关闭'
+                    that.info = '是否确认停用？';
+                    that.type = 2;
+                    that.btnTxt = '确认停用'
                 } else {
-                    that.info = '是否确认开启？';
-                    that.type = '开启';
-                    that.btnTxt = '确认开启'
+                    that.info = '是否确认启用？';
+                    that.type = 1;
+                    that.btnTxt = '确认启用'
                 }
                 that.tipsMask = true;
             },
@@ -266,17 +243,15 @@
                 let data = {
                     id: that.id
                 };
-                let url = '';
-                if (that.type == '关闭') {
-                    url = api.stopDealerById;
-                    data.url = pApi.stopDealerById
+                if (that.type == 1) {
+                    data.status = 1;
                 } else {
-                    url = api.openDealerById;
-                    data.url = pApi.openDealerById
+                    data.status = 2;
                 }
+                data.url = pApi.updateSupplierDeleteById;
                 that.btnLoading = true;
                 that.$axios
-                    .post(url, data)
+                    .post(api.updateSupplierDeleteById, data)
                     .then(res => {
                         that.btnLoading = false;
                         if (res.data.code == 200) {
@@ -293,46 +268,9 @@
                         that.tipsMask = false;
                     });
             },
-            //导出
-            exportData() {
-                let that = this;
-                let data = that.form;
-                data.page = that.page.currentPage;
-                data.levelId = that.exportForm.levelId;
-                data.url = pApi.exportDealerListExcel;
-                let addrss = that.address;
-                if (addrss && addrss[0]) {
-                    data.provinceId = addrss[0];
-                    if (addrss[1]) {
-                        data.cityId = addrss[1];
-                    }
-                    if (addrss[2]) {
-                        data.areaId = addrss[2];
-                    }
-                } else {
-                    data.provinceId = '';
-                    data.cityId = '';
-                    data.areaId = '';
-                }
-                that.$axios
-                    .post(api.exportDealerListExcel, data, {responseType: "blob"})
-                    .then(res => {
-                        var data = res.data;
-                        if (!data) {
-                            return;
-                        }
-                        let url = window.URL.createObjectURL(new Blob([data]));
-                        let link = document.createElement("a");
-                        link.style.display = "none";
-                        link.href = url;
-                        let time = moment(new Date()).format('YYYYMMDDHHmmss');
-                        link.setAttribute("download", "会员列表" + time + ".xlsx");
-                        document.body.appendChild(link);
-                        link.click();
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    });
+            //添加供应商
+            addSupplier() {
+               this.$router.push('/addSupplier')
             },
             //   重置表单
             resetForm(formName) {

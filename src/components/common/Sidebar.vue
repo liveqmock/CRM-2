@@ -139,9 +139,13 @@ export default {
               title: "实名制认证审核"
             },
             {
-              index: "activityParams",
-              title: "活跃度参数设置"
-            }
+              index: "supplierManage",
+              title: "供应商管理"
+            },
+              {
+                  index: "activityParams",
+                  title: "活跃度参数设置"
+              }
           ]
         },
         {

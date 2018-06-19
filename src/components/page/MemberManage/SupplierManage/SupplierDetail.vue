@@ -2,45 +2,53 @@
     <div>
         <v-breadcrumb :nav="['会员管理','供应商管理','供应商详情']"></v-breadcrumb>
         <div class="container" v-loading="loading">
-            <div class="basic-inf-area line">
+            <div class="basic-inf-area">
                 <div class="item-row">
-                    供应商名称：{{detail.levelName}}
+                    供应商名称：{{detail.name}}
                 </div>
                 <div class="item-row">
-                    供应商ID：{{detail.levelName}}
+                    供应商ID：{{detail.id}}
                 </div>
                 <div class="item-row">
                     供应商类型：
-                    <span v-if="detail.invite_type==1">网信经销商</span>
-                    <span v-if="detail.invite_type==2">供货经销商</span>
-                    <span v-if="detail.invite_type==3">网红经销商</span>
+                    <span v-if="detail.itype==1">产品供应商</span>
+                    <span v-if="detail.itype==2">服务供应商</span>
                 </div>
-
                 <div class="item-row">
                     供应商姓名：
-                    {{detail.adminName}}
+                    {{detail.username}}
                 </div>
                 <div class="item-row">
                     联系方式：
-                    {{detail.phone}}
+                    {{detail.telephone}}
                 </div>
                 <div class="item-row">
                     手机：
-                    {{detail.phone}}
+                    {{detail.mobile}}
                 </div>
                 <div class="item-row">
                     供应商账户：
-                    {{detail.phone}}
+                    {{detail.bank_name}} <span style="margin-left: 30px" v-if="detail.bank_card">{{detail.bank_card|bankCard}}</span>
                 </div>
                 <div class="item-row">
                     供应商地址：
-                    {{detail.phone}}
+                    <span v-if="detail.country==2">海外</span>
+                    <span v-else>
+                        {{detail.province_name}}{{detail.city_name}}{{detail.area_name}}{{detail.address}}
+                    </span>
                 </div>
-                <div class="item-row">
+                <div class="item-row supplier-product">
                     供应产品品类品牌：
-                    {{detail.phone}}
-                </div>
+                    <div style="margin-top: -40px">
+                        <div v-for="p in product" class="area">
+                            <div class="product-item">{{p.p_name}}-{{p.name}}</div><span>供应产品数：{{p.porductNum}}</span>
+                        </div>
+                        <div v-for="b in brand" class="area">
+                            <div class="product-item">{{b.name}}</div><span>供应产品数：{{b.porductNum}}</span>
+                        </div>
+                    </div>
 
+                </div>
             </div>
             <div style="margin:50px">
                 <el-button type="primary" @click="backToList">返回列表</el-button>
@@ -52,8 +60,8 @@
 <script>
     import vBreadcrumb from '../../../common/Breadcrumb.vue';
     import icon from '../../../common/ico.vue';
-    import * as api from '../../../../api/api';
-    import * as pApi from '../../../../privilegeList/index.js';
+    import * as api from '../../../../api/MemberManage/SupplierManage/index';
+    import * as pApi from '../../../../privilegeList/MemberManage/SupplierManage/index.js';
     export default {
         components: {
             icon, vBreadcrumb,
@@ -61,6 +69,8 @@
         data: function () {
             return {
                 detail: {},
+                product:[],
+                brand:[],
                 id: '',
                 loading: false,
                 list: ''
@@ -69,7 +79,7 @@
         activated() {
             this.id =
                 this.$route.query.id ||
-                JSON.parse(sessionStorage.getItem("inviteDetail").id);
+                JSON.parse(sessionStorage.getItem("supplierDetail"));
             this.getDetail()
         },
         methods: {
@@ -78,16 +88,16 @@
                 let that = this;
                 let data = {
                     id: that.id,
-                    url:pApi.findInviteInfo
+                    url:pApi.findSupplierById
                 };
                 that.$axios
-                    .post(api.findInviteInfo, data)
+                    .post(api.findSupplierById, data)
                     .then(res => {
                         if (res.data.code == 200) {
                             that.loading = false;
-                            that.detail = res.data.data.invite;
-                            that.list = res.data.data.list;
-                            console.log(that.list)
+                            that.detail = res.data.data.map;
+                            that.product = res.data.data.product;
+                            that.brand = res.data.data.brand;
                         } else {
                             that.$message.warning(res.data.msg);
                             that.loading = false;
@@ -100,7 +110,7 @@
             },
             //返回列表
             backToList() {
-                this.$router.push('/joinManage')
+                this.$router.push('/supplierManage')
             },
             //跳到用户详情页面
             toUserDetail(item) {
@@ -110,7 +120,7 @@
         }
     }
 </script>
-<style scoped>
+<style scoped lang="less">
     .container {
         font-size: 14px;
         color: #606266;
@@ -190,5 +200,17 @@
         padding: 8px 12px;
         display: inline-block;
         margin: 0 10px 10px 0;
+    }
+    .supplier-product{
+        display: inline-block;
+        .area{
+            width:400px;
+        }
+        .product-item{
+            display: inline-block;
+            line-height: 30px;
+            width: 120px;
+            margin-left: 130px;
+        }
     }
 </style>
