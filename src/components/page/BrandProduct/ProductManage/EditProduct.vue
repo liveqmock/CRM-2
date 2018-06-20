@@ -217,8 +217,8 @@ export default {
       this.$axios.post(api.findProductAllDataById,data)
       .then((res) => {
         this.imgArr = [];
-        res.data.data.ImgUrl.forEach((v,k)=>{
-          this.imgArr.push({'originUrl':v.original_img,'smallUrl':'aa'})
+        res.data.data.originalList.forEach((v,k)=>{
+          this.imgArr.push({'originUrl':v,'smallUrl':res.data.data.smalllList[k]})
         })
         this.categoryArr = [];
         this.categoryArr.push(res.data.data.product.first_category_id);

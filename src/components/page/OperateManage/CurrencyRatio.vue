@@ -5,16 +5,16 @@
           <div class="currency-title">货币比例设置</div>
           <div class="currency-wrap">
               <span class="currency-small-title">分红点数等值设置</span><br/>
-              <el-input v-model="firstPoint" class="input-sty"></el-input><span class="point">点</span><span class="point-mer">=</span>
-              <el-input v-model="firstToken" class="input-sty"></el-input><span class="point">枚（代币）</span><br />
-              <el-input v-model="secPoint" class="input-sty"></el-input><span class="point">点</span><span class="point-mer">=</span>
-              <el-input v-model="secMoney" class="input-sty"></el-input><span class="point">元（金额）</span><br />
+              <el-input v-model="bonusPointA" class="input-sty"></el-input><span class="point">点</span><span class="point-mer">=</span>
+              <el-input v-model="bonusPointB" class="input-sty"></el-input><span class="point">枚（代币）</span><br />
+              <el-input v-model="bonusPointC" class="input-sty"></el-input><span class="point">点</span><span class="point-mer">=</span>
+              <el-input v-model="bonusPointD" class="input-sty"></el-input><span class="point">元（金额）</span><br />
               <span class="currency-small-title">代币等值设置</span><br/>
-              <el-input v-model="thirdToken" class="input-sty"></el-input><span class="point">枚（代币）</span><span class="point-mer">=</span>
-              <el-input v-model="thirMoney" class="input-sty"></el-input><span class="point">元（金额）</span><br />
+              <el-input v-model="tokenCoinA" class="input-sty"></el-input><span class="point">枚（代币）</span><span class="point-mer">=</span>
+              <el-input v-model="tokenCoinB" class="input-sty"></el-input><span class="point">元（金额）</span><br />
               <span class="currency-small-title">积分使用等值设置</span><br/>
-              <el-input v-model="fourScore" class="input-sty"></el-input><span class="point">积分可抵扣</span>
-              <el-input v-model="fourMoney" class="input-sty"></el-input><span class="point">元（金额）</span><br />
+              <el-input v-model="userScoreA" class="input-sty"></el-input><span class="point">积分可抵扣</span>
+              <el-input v-model="userScoreB" class="input-sty"></el-input><span class="point">元（金额）</span><br />
               <div class="btn-group">
                   <el-button :loading="btnLoading" type="primary" @click="submitForm">确认提交</el-button>
                   <el-button >取消</el-button>
@@ -35,19 +35,19 @@ export default {
     return {
       nav: ["运营管理", "货币比例设置"],
       btnLoading: false,
-      pointToToken: "",
-      pointToMoney: "",
-      tokenToMoney: "",
-      scoreTomoney: "",
-      firstPoint: "",
-      firstToken: "",
-      secPoint: "",
-      secMoney: "",
-      thirdToken: "",
-      thirMoney: "",
-      fourScore: "",
-      fourMoney: ""
+      bonusPointA: "",
+      bonusPointB: "",
+      bonusPointC: "",
+      bonusPointD: "",
+      tokenCoinA: "",
+      tokenCoinB: "",
+      userScoreA: "",
+      userScoreB: ""
     };
+  },
+
+  activated(){
+    this.getInfo();
   },
 
   methods: {
@@ -56,10 +56,15 @@ export default {
       this.$axios
         .post(api.findSysConfig, {})
         .then(res => {
-          this.orderCancleTime = res.data.data.time_order_cancel;
-          this.toBeConfirmTime = res.data.data.time_goods_confirm;
-          this.returnGoodsTime = res.data.data.time_return_send;
-          this.returnDownTime = res.data.data.time_express_send;
+          console.log(res.data.data)
+          this.bonusPointA = res.data.data.bonus_point_a;
+          this.bonusPointB = res.data.data.bonus_point_b;
+          this.bonusPointC = res.data.data.bonus_point_c;
+          this.bonusPointD = res.data.data.bonus_point_d;
+          this.tokenCoinA = res.data.data.token_coin_a;
+          this.tokenCoinB = res.data.data.token_coin_b;
+          this.userScoreA = res.data.data.user_score_a;
+          this.userScoreB = res.data.data.user_score_b;
         })
         .catch(err => {
           console.log(err);
@@ -67,15 +72,15 @@ export default {
     },
     // 提交表单
     submitForm() {
-      this.pointToToken = this.handleNum(this.firstPoint, this.firstToken);
-      this.pointToMoney = this.handleNum(this.secPoint, this.secMoney);
-      this.tokenToMoney = this.handleNum(this.thirdToken, this.thirMoney);
-      this.scoreTomoney = this.handleNum(this.fourScore, this.fourMoney);
       let data = {};
-      data.bonusPointToTokenCoin = this.pointToToken;
-      data.bonusPointToBalancee = this.pointToMoney;
-      data.tokenCoinToBalance = this.tokenToMoney;
-      data.userScoreToBalance = this.scoreTomoney;
+      data.bonusPointA = this.bonusPointA;
+      data.bonusPointB = this.bonusPointB;
+      data.bonusPointC = this.bonusPointC;
+      data.bonusPointD = this.bonusPointD;
+      data.tokenCoinA = this.tokenCoinA;
+      data.tokenCoinB = this.tokenCoinB;
+      data.userScoreA = this.userScoreA;
+      data.userScoreB = this.userScoreB;
       this.btnLoading = true;
       this.$axios
         .post(api.updateSysConfigByCurrency, data)
@@ -86,9 +91,6 @@ export default {
         .catch(err => {
           console.log(err);
         });
-    },
-    handleNum(a, b) {
-      return Math.floor(b / a * 100) / 100;
     }
   }
 };

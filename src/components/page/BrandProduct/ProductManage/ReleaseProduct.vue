@@ -304,7 +304,6 @@ export default {
         url = e.data.imageUrl;
         this.form.original_img = e.data.imageUrl;
         this.form.small_img = e.data.imageThumbUrl;
-        console.log(e);
       }
       if (url != null && url.length > 0) {
         // 将文件上传后的URL地址插入到编辑器文本中

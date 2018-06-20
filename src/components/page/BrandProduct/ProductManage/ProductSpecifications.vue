@@ -59,6 +59,8 @@
             </template>
           </el-table-column>
         </el-table>
+        <el-button @click="submitForm" style="margin-top:10px" type="primary">确认提交</el-button>
+        <el-button >取消</el-button>
       </el-card>
       
   </div>
@@ -88,10 +90,15 @@ export default {
     this.imgUpload = api.addImg;
     this.productId = JSON.parse(this.$route.query.releaseProductId || sessionStorage.getItem('productSpecifications'))[1];
     this.secondItemId = JSON.parse(this.$route.query.releaseProductId || sessionStorage.getItem('productSpecifications'))[0];
+    this.specificationArr = []; 
     this.getProductInfo();
   },
 
   methods: {
+    // 提交表单信息
+    submitForm(){
+      console.log(this.tableData)
+    },
     // 获取产品信息
     getProductInfo(){
       let data = {};
@@ -126,11 +133,11 @@ export default {
       .then((res) => {
           this.$message.success('生成成功!');
           this.tableData = [];
-          res.data.data.forEach((v,k)=>{
-            this.tableData.push({spec:v.specValue.join('-'),imgUrl:'',code:'',id:v.id})
+          res.data.data.value.forEach((v,k)=>{
+            this.tableData.push({spec:v.join('-'),imgUrl:'',code:'',id:res.data.data.id[k]})
           })
       }).catch((err) => {
-        
+          console.log(err);
       });
     },
     //  添加规格
@@ -175,7 +182,7 @@ export default {
     },
     // 禁用/启用
     operateProduct(row,status){
-
+      console.log(row)
     }
   }
 };

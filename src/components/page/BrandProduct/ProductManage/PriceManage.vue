@@ -58,6 +58,7 @@
 
 <script>
 import vBreadcrumb from "@/components/common/Breadcrumb.vue";
+import * as api from "@/api/BrandProduct/ProductMange/index.js";
 export default {
   components: {
     vBreadcrumb
@@ -67,6 +68,7 @@ export default {
     return {
       nav:['品牌产品管理','产品管理','价格管理'],
       oldtableLength:0,
+      productId:'',
       tableData: [
         { color: "红色", guige: "128GB", address: "中国" },
         { color: "红色", guige: "256GB", address: "中国" },
@@ -81,10 +83,23 @@ export default {
   },
 
   activated(){
+    this.productId = this.$route.query.priceManageId || sessionStorage.getItem('priceManage');
+    this.getProductInfo();
     this.ambData();
   },
 
   methods: {
+    // 获取产品信息
+    getProductInfo(){
+      this.$axios.post(api.queryProductPriceSaleSpecList,{productId:this.productId})
+      .then((res) => {
+        res.data.data.forEach((v,k)=>{
+          console.log(v)
+        })
+      }).catch((err) => {
+        
+      });
+    },
     // 组装表格数据
     ambData(){
       this.oldtableLength = this.tableData.length == 0?0:Object.keys(this.tableData[0]).length;

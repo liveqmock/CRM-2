@@ -24,3 +24,7 @@ export const querySaleSpecList = '/admin/saleSpec/querySaleSpecList';
 export const findProductAllDataById = '/admin/product/findProductAllDataById';
 // 添加规格
 export const addSaleSpecValue = '/admin/saleSpecValue/addSaleSpecValue';
+// 删除规格
+export const deleteSaleSpecValue = '/admin/saleSpecValue/deleteSaleSpecValue';
+// 获取产品库存价格
+export const queryProductPriceSaleSpecList = '/admin/price/queryProductPriceSaleSpecList'

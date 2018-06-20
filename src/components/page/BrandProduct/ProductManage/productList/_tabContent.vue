@@ -63,7 +63,7 @@
                 <template v-else-if='scope.row.status == 6'>删除</template>
             </template>
         </el-table-column>
-        <el-table-column label="操作" align="center" min-width="220">
+        <el-table-column label="操作" min-width="220">
             <template slot-scope="scope">
                 <div class="operate">
                     <el-button @click="inventoryManage(scope.row)" type="primary">库存管理</el-button>
@@ -332,6 +332,9 @@ export default {
   }
   .operate-table {
     margin-top: 10px;
+  }
+  .el-button+.el-button{
+    margin-left: 0px;
   }
   .block {
     float: right;
