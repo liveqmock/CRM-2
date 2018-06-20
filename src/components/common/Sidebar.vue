@@ -234,11 +234,12 @@ export default {
 .sidebar {
   display: block;
   position: absolute;
-  width: 250px;
+  width: 220px;
   left: 0;
   top: 70px;
   bottom: 0;
   background-color: #222d32;
+  overflow-y: scroll;
   .el-submenu__title {
     font-size: 16px;
   }
@@ -267,7 +268,7 @@ export default {
   }
 }
 .sidebar-el-menu:not(.el-menu--collapse) {
-  width: 250px;
+  width: 200px;
 }
 .sidebar > ul {
   height: 100%;

@@ -156,7 +156,7 @@ export default {
 }
 .header .logo {
   float: left;
-  width: 250px;
+  width: 200px;
   text-align: center;
   line-height: 70px;
   background-color: #fb1f30;
@@ -231,7 +231,7 @@ export default {
 }
 @keyframes bounce-in {
   0% {
-    width: 250px;
+    width: 200px;
   }
   100% {
     width: 0px;
@@ -242,7 +242,7 @@ export default {
     width: 0px;
   }
   100% {
-    width: 250px;
+    width: 200px;
   }
 }
 </style>

@@ -28,7 +28,7 @@
             <el-button type="warning">最近三个月订单</el-button>
         </div>
         <el-tabs v-model="activeName" @tab-click="handleClick">
-            <el-tab-pane label="全部订单" name="allOrder"><v-tab-content v-if='activeName == "allOrder"' :name='activeName'></v-tab-content></el-tab-pane>
+            <el-tab-pane style="min-width:1366px" label="全部订单" name="allOrder"><v-tab-content v-if='activeName == "allOrder"' :name='activeName'></v-tab-content></el-tab-pane>
             <el-tab-pane label="待支付" name="toBePaid"><v-tab-content v-if='activeName == "toBePaid"' :name='activeName'></v-tab-content></el-tab-pane>
             <el-tab-pane label="待发货" name="toBeSend"><v-tab-content v-if='activeName == "toBeSend"' :name='activeName'></v-tab-content></el-tab-pane>
             <el-tab-pane label="待自提" name="toBeStay"><v-tab-content v-if='activeName == "toBeStay"' :name='activeName'></v-tab-content></el-tab-pane>

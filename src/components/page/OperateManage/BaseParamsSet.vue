@@ -24,73 +24,92 @@
 
 <script>
 import vBreadcrumb from "@/components/common/Breadcrumb.vue";
-import * as api from "@/api/OperateManage/baseParamsSet.js"
+import * as api from "@/api/OperateManage/baseParamsSet.js";
 export default {
-  components: {vBreadcrumb},
+  components: { vBreadcrumb },
 
-  data () {
+  data() {
     return {
-        nav:['运营管理','交易基础参数设置'],
-        btnLoading:false,
-        orderCancleTime:'',
-        toBeConfirmTime:'',
-        returnGoodsTime:'',
-        returnDownTime:''
+      nav: ["运营管理", "交易基础参数设置"],
+      btnLoading: false,
+      orderCancleTime: "",
+      toBeConfirmTime: "",
+      returnGoodsTime: "",
+      returnDownTime: ""
     };
   },
 
-  methods: {
-      submitForm(){
-          let data = {};
-          data.timeOrderCancel = this.orderCancleTime;
-          data.timeGoodsConfirm = this.toBeConfirmTime;
-          data.timeReturnSend = this.returnGoodsTime;
-          data.timeExpressSend = this.returnDownTime;
-          data.id = '1';
-          this.btnLoading = true;
-          this.$axios.post(api.updateSysConfigByTransaction,data)
-          .then((res) => {
-            this.$message.success(res.data.data);
-            this.btnLoading = false;
-          }).catch((err) => {
-            console.log(err);
-            this.btnLoading = false;
-          });
-      },
-  }
-}
+  activated() {
+      this.getInfo();
+  },
 
+  methods: {
+    //   获取数据
+    getInfo() {
+      this.$axios
+        .post(api.findSysConfig, {})
+        .then(res => {
+            this.orderCancleTime = res.data.data.time_order_cancel;
+            this.toBeConfirmTime = res.data.data.time_goods_confirm;
+            this.returnGoodsTime = res.data.data.time_return_send;
+            this.returnDownTime = res.data.data.time_express_send;
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    //   提交表单
+    submitForm() {
+      let data = {};
+      data.timeOrderCancel = this.orderCancleTime;
+      data.timeGoodsConfirm = this.toBeConfirmTime;
+      data.timeReturnSend = this.returnGoodsTime;
+      data.timeExpressSend = this.returnDownTime;
+      this.btnLoading = true;
+      this.$axios
+        .post(api.updateSysConfigByTransaction, data)
+        .then(res => {
+          this.$message.success(res.data.data);
+          this.btnLoading = false;
+        })
+        .catch(err => {
+          console.log(err);
+          this.btnLoading = false;
+        });
+    }
+  }
+};
 </script>
 <style lang='less' scoped>
-.base-params{
-    .currency-title{
-        width: 100%;
-        height: 60px;
-        background-color: #f7f7f7;
-        line-height: 60px;
-        padding: 0 20px;
-        box-sizing: border-box;
+.base-params {
+  .currency-title {
+    width: 100%;
+    height: 60px;
+    background-color: #f7f7f7;
+    line-height: 60px;
+    padding: 0 20px;
+    box-sizing: border-box;
+  }
+  .currency-wrap {
+    padding: 0 20px;
+    box-sizing: border-box;
+    .currency-small-title {
+      display: inline-block;
+      margin: 20px 0;
+      box-sizing: border-box;
+      font-size: 14px;
     }
-    .currency-wrap{
-        padding: 0 20px;
-        box-sizing: border-box;
-        .currency-small-title{
-            display: inline-block;
-            margin: 20px 0;
-            box-sizing: border-box;
-            font-size: 14px;
-        }
-        .input-sty{
-            width: 350px;
-            margin-bottom: 20px;
-        }
-        .point{
-            font-size: 14px;
-            padding:0 15px 0 5px; 
-        }
-        .btn-group{
-            margin-top: 40px;
-        }
+    .input-sty {
+      width: 350px;
+      margin-bottom: 20px;
     }
+    .point {
+      font-size: 14px;
+      padding: 0 15px 0 5px;
+    }
+    .btn-group {
+      margin-top: 40px;
+    }
+  }
 }
 </style>
