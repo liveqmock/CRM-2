@@ -1,6 +1,6 @@
 <template>
     <div class="activityParams">
-        <v-breadcrumb :nav="['会员管理','经销商会员管理','活跃度参数设置']"></v-breadcrumb>
+        <v-breadcrumb :nav="['经销商会员管理','会员管理','活跃度参数设置']"></v-breadcrumb>
         <el-card style="margin:10px 0 20px" >
             <el-form ref="form" :inline="true" :model="form">
                 <div class="cardContent">

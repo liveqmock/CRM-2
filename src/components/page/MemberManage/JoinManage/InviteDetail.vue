@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-breadcrumb :nav="['会员管理','经销商加盟管理','邀请详情']"></v-breadcrumb>
+        <v-breadcrumb :nav="['经销商会员管理','经销商加盟管理','邀请详情']"></v-breadcrumb>
         <div class="container" v-loading="loading">
             <div class="basic-inf-area line">
                 <div class="item-row">

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-breadcrumb :nav="['会员管理','经销商加盟管理','邀请链接']"></v-breadcrumb>
+        <v-breadcrumb :nav="['经销商会员管理','经销商加盟管理','邀请链接']"></v-breadcrumb>
         <div class="invite-link">
             <div class="box">
                 <div class="mask-content">

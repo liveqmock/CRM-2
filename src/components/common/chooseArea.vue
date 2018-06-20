@@ -100,14 +100,60 @@
                 checkNames: [],//选中的名称
                 checkIds: [],//选中的id
                 btnLoading: false,
+                ids: [],
+                tempValue: [],
             }
         },
         created() {
             this.getProvinceListGroupByDistrict();
-            // this.chooseData=this.chooseData.split(';');
-            console.log(this.chooseData)
+            // console.log(this.chooseData)
+            // let str="310000:310200,310100,330000:330600,331100,330700,330400,330500,331000,330200,330300,330800,330900,330100";
+            // this.test(str)
+            // console.log(this.tempValue)
         },
         methods: {
+            //
+            test(str) {
+                this.changeStr(str);
+                this.getIds();
+                this.getValue();
+            },
+            changeStr(str) {
+                let that = this;
+                if (str.indexOf(':') != -1) {
+                    let index = str.indexOf(':');
+                    let id = str.substring(0, index);
+                    if(that.ids.indexOf(id)==-1){
+                        that.ids.push(id);
+                        str = str.substring(index + 1);
+                        if(that.tempValue.indexOf(str)==-1){
+                            that.tempValue.push(str);
+                            this.changeStr(str);
+                        }
+                    }
+                }
+            },
+            getIds() {
+                let ids = this.ids;
+                this.ids[0] = ids[0];
+                for (let i = 1; i < ids.length; i++) {
+                    if (ids[i].indexOf(',') != -1) {
+                        let index = ids[i].lastIndexOf(',');
+                        this.ids[i] = ids[i].substring(index + 1)
+                    }
+                }
+            },
+            getValue() {
+                let tempValue = this.tempValue;
+                let ids = this.ids;
+                for (let i = 0; i < ids.length - 1; i++) {
+                    if (tempValue[i].indexOf(',') != -1) {
+                        let index = tempValue[i].indexOf(':');
+                        this.tempValue[i] = tempValue[i].substring(0, index - 7)
+                    }
+                }
+                console.log(this.tempValue)
+            },
             //获取省
             getProvinceListGroupByDistrict() {
                 let that = this;
@@ -129,7 +175,7 @@
                                         isChecked: false,
                                         isDisabled: false,
                                         cityCheck: [],
-                                        cityDisabled:[],
+                                        cityDisabled: [],
                                         name: res.data.data[i][j].name,
                                         zipcode: res.data.data[i][j].zipcode,
                                         count: 0,
@@ -139,19 +185,22 @@
                                     };
                                     for (let c in that.chooseData) {//根据表格中的数据回显数据的选中和可选效果
                                         if (that.chooseData[c].checkedId) {
-                                            let length = that.chooseData[c].checkedId.indexOf(':');
-                                            var checkedId = that.chooseData[c].checkedId.slice(0, length);
-                                            console.log(checkedId)
-                                            if (checkedId == res.data.data[i][j].zipcode) {
-                                                tempprovinceCheck.isChecked=true;
+                                            this.test(that.chooseData[c].checkedId);
+                                            var checkedId = that.ids;
+                                            for(let k in checkedId){
+                                                if (checkedId[k] == res.data.data[i][j].zipcode) {
+                                                    tempprovinceCheck.isChecked = true;
+                                                }
                                             }
                                         }
                                         if (that.preData.checkedId) {
-                                            let length = that.chooseData[c].checkedId.indexOf(':');
-                                            let preId = that.preData.checkedId.slice(0, length);
-                                            let id=res.data.data[i][j].zipcode;
-                                            if (preId !=id &&that.chooseData[c].checkedId.indexOf(id)!=-1) {
-                                                tempprovinceCheck.isDisabled=true;
+                                            this.test(that.preData.checkedId);
+                                            var preId = that.ids;
+                                            let id = res.data.data[i][j].zipcode;
+                                            for(let k in preId){
+                                                if (preId[k] != id && checkedId.indexOf(id) != -1) {
+                                                    tempprovinceCheck.isDisabled = true;
+                                                }
                                             }
                                         }
                                     }
@@ -176,6 +225,7 @@
             //获取省对应的市
             getCityList(id, isChecked, index, k) {
                 let that = this;
+                that.ids=[];
                 let data = {
                     fatherZipcode: id
                 };
@@ -195,9 +245,11 @@
                                 that.checkAll[index].provinceCheck[k].cityCheck[kk] = false;
                                 that.checkAll[index].provinceCheck[k].cityDisabled[kk] = false;
                                 for (let c in that.chooseData) {//根据表格中的数据回显数据的选中和可选效果
+                                    // console.log(that.chooseData[c].checkedId)
                                     if (that.chooseData[c].checkedId) {
-                                        let length = that.chooseData[c].checkedId.indexOf(':');
-                                        var checkedId = that.chooseData[c].checkedId.slice(length+1).split(',');
+                                        this.test(that.chooseData[c].checkedId);
+                                        var checkedId = that.tempValue;
+                                        // console.log(that.tempValue)
                                         for (let cId in checkedId) {
                                             if (checkedId[cId] == v.zipcode) {
                                                 that.checkAll[index].provinceCheck[k].ids.push(v.zipcode);
@@ -207,10 +259,11 @@
                                         }
                                     }
                                     if (that.preData.checkedId) {
-                                        let length = that.chooseData[c].checkedId.indexOf(':');
-                                        let preId = that.preData.checkedId.slice(length+1).split(',');
+                                        this.test(that.preData.checkedId);
+                                        // let length = that.chooseData[c].checkedId.indexOf(':');
+                                        var preId = that.tempValue;
                                         for (let pId in preId) {
-                                            if (preId[pId] == v.zipcode ) {
+                                            if (preId[pId] == v.zipcode) {
                                                 ++num
                                             }
                                             // if(preId[pId]!= v.zipcode&& checkedId.indexOf(preId[pId])!= -1){

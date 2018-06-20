@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-breadcrumb :nav="['会员管理','经销商会员管理','会员详情','会员树状图']"></v-breadcrumb>
+        <v-breadcrumb :nav="['经销商会员管理','会员管理','会员详情','会员树状图']"></v-breadcrumb>
         <!--<transition name="move" appear>-->
         <!--<el-card style="margin:10px 0 20px">-->
         <!--<el-form ref="form" :inline="true" :model="form" label-width="120">-->
