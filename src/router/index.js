@@ -454,6 +454,18 @@ export default new Router({
                     component: resolve => require(['../components/page/OperateManage/BaseParamsSet.vue'], resolve),
                     meta: { title: '基础参数设置',url:'/admin/sysConfig/updateSysConfigByTransaction'}
                 },
+                {
+                    name:'advertisingManage',
+                    path: '/advertisingManage',
+                    component: resolve => require(['../components/page/OperateManage/AdvertisingManage.vue'], resolve),
+                    meta: { title: '广告位管理'}
+                },
+                {
+                    name:'keyWords',
+                    path: '/keyWords',
+                    component: resolve => require(['../components/page/OperateManage/AdvertisingManage/KeyWords.vue'], resolve),
+                    meta: { title: '搜索热门搜索关键词'}
+                },
                 // 订单管理
                 {
                     name:'orderList',

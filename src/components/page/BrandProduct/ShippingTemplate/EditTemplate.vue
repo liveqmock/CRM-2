@@ -209,6 +209,7 @@
         activated() {
             let that = this;
             that.id = that.$route.query.templateId || sessionStorage.getItem('templateId');
+            that.tableData=[];
             that.getDetail();
         },
         methods: {

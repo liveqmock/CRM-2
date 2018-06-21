@@ -259,26 +259,28 @@
                                                 tempIndex = i;
                                             }
                                         }
-                                            var includeArea = JSON.stringify(that.tempValue);
-                                                if (includeArea.indexOf(v.zipcode)!=-1) {
-                                                    that.checkAll[index].provinceCheck[k].ids.push(v.zipcode);
-                                                    that.checkAll[index].provinceCheck[k].names.push(v.name);
-                                                    that.checkAll[index].provinceCheck[k].cityCheck[kk] = true;
-                                                    if (!that.preData.includeArea) {
+                                        var includeArea = JSON.stringify(that.tempValue);
+                                        if (includeArea.indexOf(v.zipcode) != -1) {
+                                            if (that.checkAll[index].provinceCheck[k].ids.indexOf(v.zipcode) == -1) {
+                                                that.checkAll[index].provinceCheck[k].ids.push(v.zipcode);
+                                                that.checkAll[index].provinceCheck[k].names.push(v.name);
+                                                that.checkAll[index].provinceCheck[k].cityCheck[kk] = true;
+                                                if (!that.preData.includeArea) {
+                                                    that.checkAll[index].provinceCheck[k].cityDisabled[kk] = true;
+                                                } else {
+                                                    that.ids = [];
+                                                    that.tempValue = [];
+                                                    that.orgIds = [];
+                                                    that.orgValue = [];
+                                                    this.changeData(that.preData.includeArea);
+                                                    var preId = JSON.stringify(that.tempValue);
+                                                    let id = v.zipcode;
+                                                    if (preId.indexOf(id) == -1 && includeArea.indexOf(id) != -1) {
                                                         that.checkAll[index].provinceCheck[k].cityDisabled[kk] = true;
-                                                    } else {
-                                                        that.ids = [];
-                                                        that.tempValue = [];
-                                                        that.orgIds = [];
-                                                        that.orgValue = [];
-                                                        this.changeData(that.preData.includeArea);
-                                                        var preId = JSON.stringify(that.tempValue);
-                                                        let id = v.zipcode;
-                                                        if (preId.indexOf(id) == -1 && includeArea.indexOf(id) != -1) {
-                                                            that.checkAll[index].provinceCheck[k].cityDisabled[kk] = true;
-                                                        }
                                                     }
                                                 }
+                                            }
+                                        }
                                     }
                                 }
                                 if (that.checkAll[index].provinceCheck[k].ids.indexOf(v.zipcode) == -1 && isChecked == 'checked') {
@@ -315,9 +317,9 @@
                             let count = that.checkAll[i].provinceCheck[j].count;
                             let name = that.checkAll[i].provinceCheck[j].name;
                             let id = that.checkAll[i].provinceCheck[j].zipcode;
-                            if(count==length){
+                            if (count == length) {
                                 var tempName = name + ':', tempId = id + ':';
-                            }else{
+                            } else {
                                 var tempName = name + ':', tempId = '1' + ':';
                             }
                             for (let k in that.checkAll[i].provinceCheck[j].names) {
@@ -396,6 +398,7 @@
                 that.checkAll[index].provinceCheck[k].checkedCities.forEach(function (v) {
                     temp.push(v.name);
                 });
+                console.log(value)
                 that.checkAll[index].provinceCheck[k].isChecked = checkedCount === temp.length;
                 that.$set(that.checkAll[index].provinceCheck[k], k, that.checkAll[index].provinceCheck[k].isChecked);
                 that.areaCheckedAll(index);

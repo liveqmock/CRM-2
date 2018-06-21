@@ -25,7 +25,12 @@
                         <el-input v-model="permit.up_dealerid" @blur="sureUpdate" size="medium"></el-input>
                         <span class="tip">请输入上级代理</span>
                     </el-form-item>
-
+                    <el-form-item label="是否启用" class="special">
+                        <el-radio-group v-model="permit.pickedUp">
+                            <el-radio label="1">是</el-radio>
+                            <el-radio label="2">否</el-radio>
+                        </el-radio-group>
+                    </el-form-item>
                 </el-form>
             </div>
             <div class="submit-btn">
@@ -80,7 +85,8 @@
             this.getLevelList();
             this.permit.level = this.permit.level_id;
             this.oldId = this.permit.id;
-            this.permit.d_type = this.permit.d_type.toString()
+            this.permit.d_type = this.permit.d_type.toString();
+            this.permit.pickedUp = this.permit.pickedUp.toString();
         },
         methods: {
             //获取用户层级列表
@@ -118,6 +124,7 @@
                 data.id = that.id;
                 data.dType = that.permit.d_type;
                 data.levelId = that.permit.level;
+                data.pickedUp = that.permit.pickedUp;
                 data.url=pApi.updateDealerPermitById;
                 if (that.oldId != that.permit.up_dealerid) {
                     data.upDealerid = that.permit.up_dealerid;

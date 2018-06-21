@@ -103,6 +103,7 @@
                     </div>
                     <div class="item-row">
                         <div class="item">经验值：{{permit.code}}</div>
+                        <div class="item">是否自提：<span v-if="permit.picked_up==1">是</span><span v-else>否</span></div>
                     </div>
                 </div>
                 <div class="center">

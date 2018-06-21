@@ -191,6 +191,10 @@ export default {
               index: "baseParamsSet",
               title: "基础参数设置"
             },
+            {
+              index: "advertisingManage",
+              title: "广告位管理"
+            },
           ]
         },
         {
