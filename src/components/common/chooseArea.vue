@@ -100,17 +100,65 @@
                 checkNames: [],//选中的名称
                 checkIds: [],//选中的id
                 btnLoading: false,
+                ids: [],
+                orgIds: [],
+                tempValue: [],
+                orgValue: [],
             }
         },
         created() {
             this.getProvinceListGroupByDistrict();
-            // this.chooseData=this.chooseData.split(';');
             console.log(this.chooseData)
         },
         methods: {
+            //
+            changeData(str) {
+                this.changeStr(str);
+                this.getIds();
+                this.getValue();
+            },
+            changeStr(str) {
+                let that = this;
+                if (str.indexOf(':') != -1) {
+                    let index = str.indexOf(':');
+                    let id = str.substring(0, index);
+                    if (that.ids.indexOf(id) == -1) {
+                        that.ids.push(id);
+                        that.orgIds.push(id);
+                        str = str.substring(index + 1);
+                        that.tempValue.push(str);
+                        that.orgValue.push(str);
+                        this.changeStr(str);
+                    }
+                }
+            },
+            getIds() {
+                let ids = this.orgIds;
+                this.orgIds[0] = ids[0];
+                for (let i = 1; i < ids.length; i++) {
+                    if (ids[i].indexOf(',') != -1) {
+                        let index = ids[i].lastIndexOf(',');
+                        this.ids[i] = ids[i].substring(index + 1)
+                    }
+                }
+            },
+            getValue() {
+                let tempValue = this.orgValue;
+                let ids = this.orgIds;
+                for (let i = 0; i < ids.length - 1; i++) {
+                    if (tempValue[i].indexOf(',') != -1 && tempValue[i].indexOf(':') != -1) {
+                        let index = tempValue[i].indexOf(':');
+                        this.tempValue[i] = tempValue[i].substring(0, index - 7)
+                    }
+                }
+            },
             //获取省
             getProvinceListGroupByDistrict() {
                 let that = this;
+                that.ids = [];
+                that.tempValue = [];
+                that.orgIds = [];
+                that.orgValue = [];
                 let data = {};
                 that.$axios
                     .post(api.getProvinceListGroupByDistrict, data)
@@ -129,7 +177,7 @@
                                         isChecked: false,
                                         isDisabled: false,
                                         cityCheck: [],
-                                        cityDisabled:[],
+                                        cityDisabled: [],
                                         name: res.data.data[i][j].name,
                                         zipcode: res.data.data[i][j].zipcode,
                                         count: 0,
@@ -138,20 +186,25 @@
                                         checkedCities: [],
                                     };
                                     for (let c in that.chooseData) {//根据表格中的数据回显数据的选中和可选效果
-                                        if (that.chooseData[c].checkedId) {
-                                            let length = that.chooseData[c].checkedId.indexOf(':');
-                                            var checkedId = that.chooseData[c].checkedId.slice(0, length);
-                                            console.log(checkedId)
-                                            if (checkedId == res.data.data[i][j].zipcode) {
-                                                tempprovinceCheck.isChecked=true;
-                                            }
-                                        }
-                                        if (that.preData.checkedId) {
-                                            let length = that.chooseData[c].checkedId.indexOf(':');
-                                            let preId = that.preData.checkedId.slice(0, length);
-                                            let id=res.data.data[i][j].zipcode;
-                                            if (preId !=id &&that.chooseData[c].checkedId.indexOf(id)!=-1) {
-                                                tempprovinceCheck.isDisabled=true;
+                                        if (that.chooseData[c].includeArea) {
+                                            this.changeData(that.chooseData[c].includeArea);
+                                            var includeArea = that.ids;
+                                            for (let k in includeArea) {
+                                                if (includeArea[k] == res.data.data[i][j].zipcode) {
+                                                    tempprovinceCheck.isChecked = true;
+                                                    if (!that.preData.includeArea) {
+                                                        tempprovinceCheck.isDisabled = true;
+                                                    } else {
+                                                        that.ids = [];
+                                                        that.orgIds = [];
+                                                        this.changeData(that.preData.includeArea);
+                                                        var preId = that.ids;
+                                                        let id = res.data.data[i][j].zipcode;
+                                                        if (preId.join(',').indexOf(id) == -1 && includeArea.join(',').indexOf(id) != -1) {
+                                                            tempprovinceCheck.isDisabled = true;
+                                                        }
+                                                    }
+                                                }
                                             }
                                         }
                                     }
@@ -176,6 +229,10 @@
             //获取省对应的市
             getCityList(id, isChecked, index, k) {
                 let that = this;
+                that.ids = [];
+                that.tempValue = [];
+                that.orgIds = [];
+                that.orgValue = [];
                 let data = {
                     fatherZipcode: id
                 };
@@ -189,37 +246,39 @@
                             }
                             that.checkAll[index].provinceCheck[k].count = res.data.data.length;
                             let newNames = [];
-                            let num = 0;
                             for (let kk in res.data.data) {
                                 let v = res.data.data[kk];
                                 that.checkAll[index].provinceCheck[k].cityCheck[kk] = false;
                                 that.checkAll[index].provinceCheck[k].cityDisabled[kk] = false;
                                 for (let c in that.chooseData) {//根据表格中的数据回显数据的选中和可选效果
-                                    if (that.chooseData[c].checkedId) {
-                                        let length = that.chooseData[c].checkedId.indexOf(':');
-                                        var checkedId = that.chooseData[c].checkedId.slice(length+1).split(',');
-                                        for (let cId in checkedId) {
-                                            if (checkedId[cId] == v.zipcode) {
-                                                that.checkAll[index].provinceCheck[k].ids.push(v.zipcode);
-                                                that.checkAll[index].provinceCheck[k].names.push(v.name);
-                                                that.checkAll[index].provinceCheck[k].cityCheck[kk] = true;
+                                    if (that.chooseData[c].includeArea) {
+                                        this.changeData(that.chooseData[c].includeArea);
+                                        var tempIndex;
+                                        for (let i in that.ids) {
+                                            if (id == that.ids[i]) {
+                                                tempIndex = i;
                                             }
                                         }
-                                    }
-                                    if (that.preData.checkedId) {
-                                        let length = that.chooseData[c].checkedId.indexOf(':');
-                                        let preId = that.preData.checkedId.slice(length+1).split(',');
-                                        for (let pId in preId) {
-                                            if (preId[pId] == v.zipcode ) {
-                                                ++num
-                                            }
-                                            // if(preId[pId]!= v.zipcode&& checkedId.indexOf(preId[pId])!= -1){
-                                            //     that.checkAll[index].provinceCheck[k].cityDisabled[kk] = true;
-                                            // }
-                                        }
-                                        if (num == res.data.data.length) {
-                                            that.checkAll[index].provinceCheck[k].isChecked = true;
-                                        }
+                                            var includeArea = JSON.stringify(that.tempValue);
+                                                if (includeArea.indexOf(v.zipcode)!=-1) {
+                                                    that.checkAll[index].provinceCheck[k].ids.push(v.zipcode);
+                                                    that.checkAll[index].provinceCheck[k].names.push(v.name);
+                                                    that.checkAll[index].provinceCheck[k].cityCheck[kk] = true;
+                                                    if (!that.preData.includeArea) {
+                                                        that.checkAll[index].provinceCheck[k].cityDisabled[kk] = true;
+                                                    } else {
+                                                        that.ids = [];
+                                                        that.tempValue = [];
+                                                        that.orgIds = [];
+                                                        that.orgValue = [];
+                                                        this.changeData(that.preData.includeArea);
+                                                        var preId = JSON.stringify(that.tempValue);
+                                                        let id = v.zipcode;
+                                                        if (preId.indexOf(id) == -1 && includeArea.indexOf(id) != -1) {
+                                                            that.checkAll[index].provinceCheck[k].cityDisabled[kk] = true;
+                                                        }
+                                                    }
+                                                }
                                     }
                                 }
                                 if (that.checkAll[index].provinceCheck[k].ids.indexOf(v.zipcode) == -1 && isChecked == 'checked') {
@@ -256,10 +315,10 @@
                             let count = that.checkAll[i].provinceCheck[j].count;
                             let name = that.checkAll[i].provinceCheck[j].name;
                             let id = that.checkAll[i].provinceCheck[j].zipcode;
-                            if (length === count) {
+                            if(count==length){
                                 var tempName = name + ':', tempId = id + ':';
-                            } else {
-                                var tempName = name + ':', tempId = ' ' + ':';
+                            }else{
+                                var tempName = name + ':', tempId = '1' + ':';
                             }
                             for (let k in that.checkAll[i].provinceCheck[j].names) {
                                 if (k == length - 1) {
@@ -377,7 +436,7 @@
             background-color: rgba(0, 0, 0, 0.2);
             .box {
                 position: relative;
-                width: 845px;
+                width: 870px;
                 background-color: #fff;
                 border-radius: 10px;
                 overflow: hidden;

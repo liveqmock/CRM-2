@@ -1,6 +1,6 @@
 <template>
     <div class="supplier">
-        <v-breadcrumb :nav="['会员管理','供应商管理']"></v-breadcrumb>
+        <v-breadcrumb :nav="['经销商会员管理','供应商管理']"></v-breadcrumb>
         <el-card style="margin:10px 0 20px">
             <el-form ref="form" :inline="true" :model="form">
                 <el-form-item prop="name" label="供应商名称" label-width="120">
@@ -56,9 +56,16 @@
                             <el-button type="warning" v-if="p.findSupplierById" size="small"
                                        @click="detailItem(scope.$index,scope.row)">详情
                             </el-button>
-                            <el-button type="warning" v-if="p.findSupplierById" size="small"
-                                       @click="editItem(scope.$index,scope.row)">编辑
-                            </el-button>
+                            <template v-if="scope.row.status==2">
+                                <el-button type="primary" v-if="p.findSupplierById" size="small"
+                                           @click="editItem(scope.$index,scope.row)">编辑
+                                </el-button>
+                            </template>
+                           <template v-else>
+                               <el-button type="primary" disabled v-if="p.findSupplierById" size="small"
+                                          @click="editItem(scope.$index,scope.row)">编辑
+                               </el-button>
+                           </template>
                             <el-button type="danger" v-if="scope.row.status==1&&p.updateSupplierDeleteById" size="small"
                                        @click="updateStatusItem(scope.$index,scope.row.id,1)">停用
                             </el-button>
@@ -221,7 +228,7 @@
             //编辑
             editItem(index, row){
                 localStorage.setItem('supplierDetail', row.id);
-                this.$router.push({path: '/supplierDetail', query: {id: row.id}})
+                this.$router.push({path: '/editSupplier', query: {id: row.id}})
             },
             //关闭,开启
             updateStatusItem(index, id, num) {

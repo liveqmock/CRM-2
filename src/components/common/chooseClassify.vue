@@ -3,7 +3,7 @@
         <el-input
                 placeholder="输入品牌关键词搜索"
                 suffix-icon="el-icon-search"
-                @change="search" v-model="value">
+                @change="search" v-model="value" v-if="!isSearch">
         </el-input>
         <div style="margin-top: 10px">
             <div class="check-area">
@@ -56,7 +56,7 @@
         components: {
             icon
         },
-        props: ['productcIds', 'detailData', 'addOrUp'],
+        props: ['productcIds', 'detailData', 'addOrUp','isSearch','isSupplider'],
         data() {
             return {
                 value: '',//查询关键词
@@ -86,7 +86,7 @@
 
         },
         activated(){
-            // 获取品牌列表并默认加载第一个品牌对于的品类列表
+            // 获取品牌列表并默认加载第一个品牌的对应的品类列表
             let that = this;
             if(that.addOrUp != 'update'){
                 that.search(that.value);
@@ -125,26 +125,58 @@
                 that.classifyId=[];
                 that.classifyName=[];
                 that.tempChooseList=[];
-                for (let i in that.detailData) {
-                    let brandName = that.detailData[i].product_name;
-                    let brandId = that.detailData[i].product_id;
-                    let child = that.detailData[i].category_name;
-                    let id = that.detailData[i].c_id;
-                    let param = {
-                        brandId: brandId,
-                        name: brandName + '-' + child,
-                        checked: false,
-                        classifyId: id,
-                    };
-                    that.tempChooseList.push({
-                        brandId: brandId,
-                        brandName: brandName
-                    });
-                    that.classifyId.push(id);
-                    that.classifyName.push(child);
-                    that.chooseList.push(param);
+                if(that.isSupplider){
+                    for (let i in that.detailData) {
+                        let brandName = that.detailData[i].p_name;
+                        let brandId = that.detailData[i].fatherid;
+                        let child = that.detailData[i].name;
+                        let id = that.detailData[i].sec_category_id;
+                        let param = {
+                            brandId: brandId,
+                            name: brandName + '-' + child,
+                            checked: false,
+                            classifyId: id,
+                        };
+                        that.tempChooseList.push({
+                            brandId: brandId,
+                            brandName: brandName
+                        });
+                        that.classifyId.push(id);
+                        that.classifyName.push(child);
+                        that.chooseList.push(param);
+                    }
+                    let arr=[];
+                    for(let i in that.tempChooseList){
+                        let temp={
+                            firstCategoryId:that.tempChooseList[i].brandId,
+                            secCategoryId:that.classifyId[i]
+                        };
+                        arr.push(temp)
+                    }
+                    that.$emit('productcIds',arr)
+                }else{
+                    for (let i in that.detailData) {
+                        let brandName = that.detailData[i].product_name;
+                        let brandId = that.detailData[i].product_id;
+                        let child = that.detailData[i].category_name;
+                        let id = that.detailData[i].c_id;
+                        let param = {
+                            brandId: brandId,
+                            name: brandName + '-' + child,
+                            checked: false,
+                            classifyId: id,
+                        };
+                        that.tempChooseList.push({
+                            brandId: brandId,
+                            brandName: brandName
+                        });
+                        that.classifyId.push(id);
+                        that.classifyName.push(child);
+                        that.chooseList.push(param);
+                    }
+                    that.$emit('productcIds', that.classifyId)
                 }
-                that.$emit('productcIds', that.classifyId)
+
             },
             //根据品牌名称查询
             search(name) {
@@ -167,7 +199,6 @@
                             that.brandList = res.data.data;
                             that.brandName = that.brandList[0].name;
                             that.brandId = that.brandList[0].id;
-                            // that.brandsId.push(that.brandList[0].id);
                             that.getClassifyList(0, that.brandList[0].id);
                         } else {
                             that.$message.warning(res.data.msg);
@@ -225,10 +256,6 @@
                 that.brandName = that.brandList[index].name;
                 that.brandIndex = index;
                 that.brandId = item.id;
-                // if (that.brandsId.indexOf(item.id) == -1) {
-                //     that.brandsId.push(item.id)
-                // }
-                // that.$emit('brandsId', that.brandsId);
                 that.getClassifyList(index, item.id);
             }
             ,
@@ -271,7 +298,19 @@
                     that.changeClassifyList(that.tempChooseList[i].brandId, that.classifyId[i], 'add');
                     that.brandIsAllCheck();
                 }
-                that.$emit('productcIds', that.classifyId)
+                if(that.isSupplider){
+                    let arr=[];
+                    for(let i in that.tempChooseList){
+                        let temp={
+                            firstCategoryId:that.tempChooseList[i].brandId,
+                            secCategoryId:that.classifyId[i]
+                        };
+                       arr.push(temp)
+                    }
+                    that.$emit('productcIds',arr)
+                }else{
+                    that.$emit('productcIds', that.classifyId)
+                }
             }
             ,
             //选中已选择的品类
@@ -307,7 +346,19 @@
                         }
                     }
                 }
-                that.$emit('productcIds', that.classifyId)
+                if(that.isSupplider){
+                    let arr=[];
+                    for(let i in that.tempChooseList){
+                        let temp={
+                            firstCategoryId:that.tempChooseList[i].brandId,
+                            secCategoryId:that.classifyId[i]
+                        };
+                        arr.push(temp)
+                    }
+                    that.$emit('productcIds',arr)
+                }else{
+                    that.$emit('productcIds', that.classifyId)
+                }
             }
             ,
             // 判断品牌是否已被全选

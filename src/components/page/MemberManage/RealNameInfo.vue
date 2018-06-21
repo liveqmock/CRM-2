@@ -30,7 +30,7 @@ export default {
     mixins: [getUserId],
     data () {
         return {
-            nav: ["会员管理", "经销商会员管理", "会员详情","实名认证"],
+            nav: ["经销商会员管理", "会员管理", "会员详情","实名认证"],
             img:[],
             detail:{},
             id:''

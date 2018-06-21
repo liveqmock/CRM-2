@@ -12,12 +12,12 @@
       </div>
       <div v-for="(v,k) in orderArr" :key="k" class="tab-wrap">
         <div class="tab-content-title">
-          <el-checkbox label=""></el-checkbox>
+          <el-checkbox @change="orderCheckBox(v)"></el-checkbox>
           <span>订单号：{{v.orderNum}}</span>
           <span style="margin-left:30px">创建时间：{{v.createTime}}</span>
           <div class="operate-btn-group">
-            <span>推送云仓</span>
-            <span style="margin:0 15px 0 15px">订单详情</span>
+            <span @click="pushCloud(v)">推送云仓</span>
+            <span @click="orderInfo(v)" style="margin:0 15px 0 15px">订单详情</span>
             <el-popover placement="bottom" width="150" v-model="v.isShowPop" trigger="click">
               <span slot="reference" style="cursor:pointer">标记 &nbsp <span class="star" :style="{color:v.starColor}">★</span></span>
               <span v-for="(v1,k1) in markArr" :key="k1" @click="changeColor(v1,v)" :style="{color:v1,fontSize:'22px',cursor:'pointer',marginRight:'5px'}">★</span>
@@ -40,11 +40,16 @@
           </div>
           <div class="center" >
             <div class="status" :style="{height:120*v.productArr.length+v.productArr.length-1+'px',lineHeight:120*v.productArr.length+v.productArr.length-1+'px'}">待付款</div>
-            <div class="status" :style="{height:120*v.productArr.length+v.productArr.length-1+'px',lineHeight:120*v.productArr.length+v.productArr.length-1+'px'}">
-              
+            <div class="collection" :style="{height:120*v.productArr.length+v.productArr.length-1+'px',lineHeight:120*v.productArr.length+v.productArr.length-1+'px'}">
+              <span>{{v.totalPrice | handleMoney}}（含运费：{{v.postAge | handleMoney}}）</span><br>
             </div>
           </div>
-          <div class="right"></div>
+          <div class="right">
+            <div v-for="(value,index) in v.productArr" :key="index" class="bar">
+              <div class="shipper">{{value.origin}}</div>
+              <div class="operate"><el-button type="primary">{{value.status}}</el-button></div>
+            </div>
+          </div>
         </div>
       </div>
   </div>
@@ -70,8 +75,8 @@ export default {
         minWidth: "100px"
       },
       orderArr: [
-        { id:'1',starColor:'#e7e7e7',isShowPop:false,orderNum: "201806200508", createTime: "2018-12-24 12:12:12",starLevel:'',markTip:'',totalPrice:'9999',status:'1',productArr:[{name:'Apple/苹果iPhone 8 Plus 64G全网通4G手机',spec:'iphone金色128G',price:'1288',num:'2',people:'张三',origin:'角色A',status:'待自提'},{name:'Apple/苹果iPhone 8 Plus 64G全网通4G手机',spec:'iphone金色128G',price:'1288',num:'2',people:'张三',origin:'角色A',status:'待自提'}] },
-        { id:'1',starColor:'#e7e7e7',isShowPop:false,orderNum: "201806200508", createTime: "2018-12-24 12:12:12",starLevel:'',markTip:'',totalPrice:'9999',status:'1',productArr:[{name:'Apple/苹果iPhone 8 Plus 64G全网通4G手机',spec:'iphone金色128G',price:'1288',num:'2',people:'张三',origin:'角色A',status:'待自提'}] },
+        { id:'1',starColor:'#e7e7e7',isShowPop:false,orderNum: "201806200508", createTime: "2018-12-24 12:12:12",starLevel:'',markTip:'',totalPrice:'9999',postAge:'9',status:'1',productArr:[{name:'Apple/苹果iPhone 8 Plus 64G全网通4G手机',spec:'iphone金色128G',price:'1288',num:'2',people:'张三',origin:'角色A',status:'待自提'},{name:'Apple/苹果iPhone 8 Plus 64G全网通4G手机',spec:'iphone金色128G',price:'1288',num:'2',people:'张三',origin:'角色A',status:'待自提'}] },
+        { id:'1',starColor:'#e7e7e7',isShowPop:false,orderNum: "201806200508", createTime: "2018-12-24 12:12:12",starLevel:'',markTip:'',totalPrice:'9999',postAge:'10',status:'1',productArr:[{name:'Apple/苹果iPhone 8 Plus 64G全网通4G手机',spec:'iphone金色128G',price:'1288',num:'2',people:'张三',origin:'角色A',status:'待自提'}] },
       ],
       markArr: ["red", "skyblue", "deeppink", "green", "purple", "yellow"],
     };
@@ -85,6 +90,23 @@ export default {
     changeColor(v1,v) {
       v.starColor = v1;
       v.isShowPop = false;
+    },
+    // 推送云仓
+    pushCloud(row){
+      console.log(row)
+    },
+    // 订单详情
+    orderInfo(row){
+      console.log(row)
+    },
+    // 订单多选框
+    orderCheckBox(row){
+      console.log(row);
+    }
+  },
+  filters:{
+    handleMoney(val){
+      return `￥${val}`
     }
   }
 };
@@ -128,6 +150,10 @@ export default {
       .operate-btn-group {
         float: right;
         margin-right: 90px;
+        span{
+          color: #33b4ff;
+          cursor: pointer;
+        }
       }
     }
     .tab-content {
@@ -202,11 +228,49 @@ export default {
       }
       .center{
         float: left;
-        width: 20%;
+        border-right: 1px solid #eee;
+        width: 21%;
+        font-size: 14px;
         .status{
+          display: inline-block;
+          float: left;
           width: 50%;
           text-align: center;
           border-right: 1px solid #eee;
+        }
+        .collection{
+          display: inline-block;
+          float: left;
+          width: 46%;
+          text-align: center;
+        }
+      }
+      .right{
+        float: left;
+        width: 25%;
+        .bar {
+          padding: 10px;
+          box-sizing: border-box;
+          font-size: 14px;
+          overflow: hidden;
+          border-bottom: 1px solid #eee;
+          .shipper{
+            float: left;
+            width: 36%;
+            height: 100px;
+            text-align: center;
+            line-height: 100px;
+          }
+          .operate{
+            float: left;
+            width: 63%;
+            height: 100px;
+            text-align: center;
+            line-height: 100px;
+          }
+        }
+        .bar:last-child{
+          border: none;
         }
       }
     }

@@ -127,7 +127,7 @@ export default {
         {
           icon: "icon-huiyuanzhanghaoguanli",
           index: "6",
-          title: "会员管理",
+          title: "经销商会员管理",
           subs: [
             {
               index: "levelManage",
@@ -139,7 +139,7 @@ export default {
             },
             {
               index: "memberManage",
-              title: "经销商会员管理"
+              title: "会员管理"
             },
             {
               index: "accountRecharge",

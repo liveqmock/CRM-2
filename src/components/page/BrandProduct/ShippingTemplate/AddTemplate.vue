@@ -65,7 +65,7 @@
                                 <el-table-column label="选择地区" align="center">
                                     <template slot-scope="scope">
                                         <template><span
-                                            style="float: left;display: inline-block;text-align: left;width: 70%">{{scope.row.checkedName}}</span>
+                                            style="float: left;display: inline-block;text-align: left;width: 70%">{{scope.row.includeAreaName}}</span>
                                         </template>
                                         <span style="float: right;display: inline-block">
                                         <span class="color-blue" @click="editAddress(scope.$index)">编辑</span>
@@ -267,7 +267,7 @@
                         list.push(temp);
                         that.tableData.forEach(function (v, k) {
                             let tableTemp = {
-                                includeAreaName: v.checkedName,
+                                includeAreaName: v.includeAreaName,
                                 includeArea: v.checkedId,
                                 startUnit: v.startUnit,
                                 startPrice: v.startPrice,
@@ -328,7 +328,7 @@
             },
             //取消
             cancel() {
-                this.$router.path('/shippingTemplate')
+                this.$router.push('/shippingTemplate')
             },
             //编辑区域
             editAddress(index) {
@@ -347,8 +347,8 @@
                 this.isShowArea = false;
                 if(getArea){
                     let index = getArea.indexOf('IDS');
-                    this.tableData[this.tableIndex].checkedName = getArea.substring(0, index);//名称
-                    this.tableData[this.tableIndex].checkedId = getArea.substring(index + 4);//id
+                    this.tableData[this.tableIndex].includeAreaName = getArea.substring(0, index);//名称
+                    this.tableData[this.tableIndex].includeArea = getArea.substring(index + 4);//id
                     console.log(getArea)
                     console.log(getArea.substring(0, index))
                     console.log(getArea.substring(index + 4));//zipcode
@@ -356,7 +356,7 @@
             },
             //增加制定省市运费设置
             addSetting() {
-                this.tableData.push({checkedName: '', startUnit: '', startPrice: '', nextUnit: '', nextPirce: ''})
+                this.tableData.push({includeAreaName: '', startUnit: '', startPrice: '', nextUnit: '', nextPirce: ''})
             }
         }
     }

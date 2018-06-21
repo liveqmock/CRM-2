@@ -1,6 +1,6 @@
 <template>
     <div class="shipping">
-        <v-breadcrumb :nav="['品牌产品管理','运费模板','添加模板']"></v-breadcrumb>
+        <v-breadcrumb :nav="['品牌产品管理','运费模板','编辑模板']"></v-breadcrumb>
         <div class="container">
             <div class="shipping-box">
                 <el-form :model="form" ref="form" :rules="rules">
@@ -113,7 +113,7 @@
             </div>
         </div>
         <!--选择区域-->
-        <choose-area @getArea='chooseAreaToast' :index="tableIndex" v-if="isShowArea"></choose-area>
+        <choose-area @getArea='chooseAreaToast' :index="tableIndex" :chooseData="chooseData" :preData="preData" v-if="isShowArea"></choose-area>
         <!--平台承担运费弹窗-->
         <div class="mask" v-if="showTips">
             <div class="box">
@@ -173,6 +173,8 @@
                     {label: '4天内', id: 96},
                     {label: '7天内', id: 168},
                 ],
+                chooseData:[],
+                preData:[],
                 form: {
                     name: '',
                     sendDays: 24,
@@ -355,13 +357,15 @@
             },
             //取消
             cancel() {
-                this.$router.path('/shippingTemplate')
+                this.$router.push('/shippingTemplate')
             },
             //编辑区域
             editAddress(index) {
                 let that = this;
                 that.isShowArea = true;
-                this.tableIndex = index;
+                that.tableIndex = index;
+                that.chooseData=that.tableData;
+                that.preData=that.tableData[index];
             },
             //删除制定省市运费设置
             delItem(row, index) {
@@ -370,10 +374,14 @@
             //选择区域
             chooseAreaToast(getArea) {
                 this.isShowArea = false;
-                let index = getArea.indexOf('IDS');
-                this.tableData[this.tableIndex].includeAreaName = getArea.substring(0, index);//名称
-                this.tableData[this.tableIndex].includeArea = getArea.substring(index + 4);//名称
-                console.log(getArea.substring(index + 4));//zipcode
+                if(getArea){
+                    let index = getArea.indexOf('IDS');
+                    this.tableData[this.tableIndex].includeAreaName = getArea.substring(0, index);//名称
+                    this.tableData[this.tableIndex].includeArea = getArea.substring(index + 4);//id
+                    console.log(getArea)
+                    console.log(getArea.substring(0, index))
+                    console.log(getArea.substring(index + 4));//zipcode
+                }
             },
             //增加制定省市运费设置
             addSetting() {

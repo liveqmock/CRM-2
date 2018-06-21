@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-breadcrumb :nav="['会员管理','经销商会员管理','会员详情','TA的账户']"></v-breadcrumb>
+        <v-breadcrumb :nav="['经销商会员管理','会员管理','会员详情','TA的账户']"></v-breadcrumb>
         <div class="accountInfod">
             <ul class="card-box">
                 <li class="Account">

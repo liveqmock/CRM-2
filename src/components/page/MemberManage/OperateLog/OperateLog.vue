@@ -8,7 +8,7 @@
                   v-model="form.beginTime"
                   type="datetime"
                   placeholder="请选择开始时间"
-                  default-time="00:00:00" 
+                  default-time="00:00:00"
                   >
                 </el-date-picker>
               </el-form-item>
@@ -60,7 +60,7 @@ export default {
   },
   data() {
     return {
-      nav: ["会员管理", "经销商会员管理", "会员详情"],
+      nav: ["经销商会员管理", "会员管理", "会员详情"],
       id:'',
       form: {
         beginTime: "",

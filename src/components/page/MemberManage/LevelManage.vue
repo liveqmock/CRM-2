@@ -1,6 +1,6 @@
 <template>
     <div class="level">
-        <v-breadcrumb :nav="['会员管理','经销商层级管理']"></v-breadcrumb>
+        <v-breadcrumb :nav="['经销商会员管理','经销商层级管理']"></v-breadcrumb>
         <div class="table-block">
             <el-button type="primary" v-if="p.addDealerLevel" style="margin-bottom: 20px" @click="addClassify">添加层级</el-button>
             <template>
