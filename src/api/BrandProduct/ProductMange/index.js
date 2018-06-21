@@ -26,5 +26,13 @@ export const findProductAllDataById = '/admin/product/findProductAllDataById';
 export const addSaleSpecValue = '/admin/saleSpecValue/addSaleSpecValue';
 // 删除规格
 export const deleteSaleSpecValue = '/admin/saleSpecValue/deleteSaleSpecValue';
-// 获取产品库存价格
+// 提交产品规格
+export const addProductSpec = '/admin/price/addProductSpec';
+// 获取产品价格
 export const queryProductPriceSaleSpecList = '/admin/price/queryProductPriceSaleSpecList'
+// 保存产品价格
+export const updateProductPrice = '/admin/price/updateProductPrice'
+// 获取库存列表
+export const queryProductStockList = '/admin/price/queryProductStockList'
+// 保存库存信息
+export const updateProductStock = '/admin/price/updateProductStock';

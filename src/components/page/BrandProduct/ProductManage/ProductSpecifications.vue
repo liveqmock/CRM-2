@@ -7,7 +7,7 @@
             <div v-for="(value,index) in specificationArr" :key="index">
                 <div class="small-spe-title">
                     <span>类型：</span>
-                    <div v-if='index>=3' @mouseover="showFirstDelBtn(index)" @mouseout="deleteFirstItem = ''" class="delete-big-tit">
+                    <div v-if='index>=2' @mouseover="showFirstDelBtn(index)" @mouseout="deleteFirstItem = ''" class="delete-big-tit">
                         <div class="del-big-btn" @click="deleteType(index)" v-if='index == deleteFirstItem'>×</div>
                         <el-input v-model="specificationArr[index].type" style="width:70px"></el-input>
                     </div>
@@ -54,8 +54,8 @@
           </el-table-column>
           <el-table-column label="操作" align="center" width="220">
             <template slot-scope="scoped">
-                <el-button type="warning" @click="operateProduct(scoped.row,1)">启用</el-button>
-                <el-button type="danger" @click="operateProduct(scoped.row,0)">停用</el-button>
+                <el-button v-if="scoped.row.status == 2" type="warning" @click="operateProduct(scoped.row,'1')">启用</el-button>
+                <el-button v-else type="danger" @click="operateProduct(scoped.row,'2')">停用</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -91,13 +91,27 @@ export default {
     this.productId = JSON.parse(this.$route.query.releaseProductId || sessionStorage.getItem('productSpecifications'))[1];
     this.secondItemId = JSON.parse(this.$route.query.releaseProductId || sessionStorage.getItem('productSpecifications'))[0];
     this.specificationArr = []; 
+    this.tableData = [];
     this.getProductInfo();
   },
 
   methods: {
     // 提交表单信息
     submitForm(){
-      console.log(this.tableData)
+      let data = {};
+      let specData = [];
+      this.tableData.forEach((v,k)=>{
+        specData.push({specIds:v.id.join(','),spec:v.spec,specImg:v.imgUrl,status:v.status,productId:this.productId,barCode:v.code});
+      })
+      data.specData = JSON.stringify(specData);
+      data.productId = this.productId;
+      this.$axios.post(api.addProductSpec,data)
+      .then((res) => {
+          this.$message.success(res.data.data);
+          this.$router.push({name:'productList'});
+      }).catch((err) => {
+          console.log(err)
+      });
     },
     // 获取产品信息
     getProductInfo(){
@@ -107,8 +121,11 @@ export default {
       this.$axios.post(api.querySaleSpecList,data)
       .then((res) => {
         this.specificationArr = [];
-        res.data.data.forEach((v,k)=>{
-          this.specificationArr.push({type:v.spec,id:v.specId,speArr:v.specValue});
+        res.data.data.spec.forEach((v,k)=>{
+          this.specificationArr.push({type:v.spec,id:v.spec_id,speArr:v.spec_values.split(',')});
+        })
+        res.data.data.specValue.forEach((v,k)=>{
+          this.tableData.push({spec:v.spec,imgUrl:v.spec_img,code:v.bar_code,id:v.spec_ids.split(','),status:v.status})
         })
       }).catch((err) => {
         console.log(err)
@@ -133,8 +150,8 @@ export default {
       .then((res) => {
           this.$message.success('生成成功!');
           this.tableData = [];
-          res.data.data.value.forEach((v,k)=>{
-            this.tableData.push({spec:v.join('-'),imgUrl:'',code:'',id:res.data.data.id[k]})
+          res.data.data.saleSpecValue.forEach((v,k)=>{
+            this.tableData.push({spec:v.specValue.join('-'),imgUrl:'',code:'',id:v.id,status:'1'})
           })
       }).catch((err) => {
           console.log(err);
@@ -182,7 +199,7 @@ export default {
     },
     // 禁用/启用
     operateProduct(row,status){
-      console.log(row)
+      row.status = status;
     }
   }
 };

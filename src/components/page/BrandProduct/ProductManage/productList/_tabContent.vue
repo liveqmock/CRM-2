@@ -136,9 +136,8 @@ export default {
   },
 
   activated() {
-      this.submitForm(1);
+    this.submitForm(1);
     this.getFirstItem();
-    this.submitForm(this.page.currentPage);
   },
 
   mounted(){

@@ -25,6 +25,7 @@
 <script>
 import vBreadcrumb from "@/components/common/Breadcrumb.vue";
 import * as api from "@/api/OperateManage/baseParamsSet.js";
+import * as pApi from "@/privilegeList/OperateManage/baseParamsSet.js";
 export default {
   components: { vBreadcrumb },
 
@@ -65,6 +66,7 @@ export default {
       data.timeGoodsConfirm = this.toBeConfirmTime;
       data.timeReturnSend = this.returnGoodsTime;
       data.timeExpressSend = this.returnDownTime;
+      data.url = pApi.updateSysConfigByTransaction;
       this.btnLoading = true;
       this.$axios
         .post(api.updateSysConfigByTransaction, data)

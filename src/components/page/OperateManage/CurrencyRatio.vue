@@ -28,6 +28,7 @@
 <script>
 import vBreadcrumb from "@/components/common/Breadcrumb.vue";
 import * as api from "@/api/OperateManage/currencyRatioo.js";
+import * as pApi from "@/privilegeList/OperateManage/currencyRatioo.js";
 export default {
   components: { vBreadcrumb },
 
@@ -81,6 +82,7 @@ export default {
       data.tokenCoinB = this.tokenCoinB;
       data.userScoreA = this.userScoreA;
       data.userScoreB = this.userScoreB;
+      data.url = pApi.updateSysConfigByCurrency;
       this.btnLoading = true;
       this.$axios
         .post(api.updateSysConfigByCurrency, data)

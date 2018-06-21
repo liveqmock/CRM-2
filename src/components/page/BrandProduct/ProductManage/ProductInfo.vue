@@ -51,7 +51,9 @@ export default {
     getList(){
       this.$axios.post(api.findProductById,{productId:this.productId})
       .then((res) => {
-        this.productImg = res.data.data.ImgUrl;
+        res.data.data.ImgUrl.forEach((v,k)=>{
+          this.productImg.push(v.original_img)
+        })
         this.productDetail = res.data.data.infoValue;
         this.name = res.data.data.product.name;
         this.productItem = res.data.data.product.firstName+'-'+res.data.data.product.secondName;
