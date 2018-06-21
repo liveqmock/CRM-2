@@ -36,3 +36,9 @@ export const updateProductPrice = '/admin/price/updateProductPrice'
 export const queryProductStockList = '/admin/price/queryProductStockList'
 // 保存库存信息
 export const updateProductStock = '/admin/price/updateProductStock';
+// 产品审核操作
+export const updateProductStatus = '/admin/product/updateProductStatus';
+// 产品上架/下架操作
+export const updateProductShelves = '/admin/product/updateProductShelves';
+// 批量操作
+export const updateBatchProductStatus = '/admin/product/updateBatchProductStatus';

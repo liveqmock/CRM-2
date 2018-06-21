@@ -52,6 +52,16 @@
           </div>
         </div>
       </div>
+      <div class="block">
+        <el-pagination
+            background
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="page.currentPage"
+            layout="total, prev, pager, next, jumper"
+            :total="page.totalPage">
+        </el-pagination>
+      </div>
   </div>
 </template>
 
@@ -79,6 +89,10 @@ export default {
         { id:'1',starColor:'#e7e7e7',isShowPop:false,orderNum: "201806200508", createTime: "2018-12-24 12:12:12",starLevel:'',markTip:'',totalPrice:'9999',postAge:'10',status:'1',productArr:[{name:'Apple/苹果iPhone 8 Plus 64G全网通4G手机',spec:'iphone金色128G',price:'1288',num:'2',people:'张三',origin:'角色A',status:'待自提'}] },
       ],
       markArr: ["red", "skyblue", "deeppink", "green", "purple", "yellow"],
+      page: {
+        currentPage: 1,
+        totalPage: 0
+      }
     };
   },
 
@@ -97,12 +111,22 @@ export default {
     },
     // 订单详情
     orderInfo(row){
-      console.log(row)
+      sessionStorage.setItem('orderInfoId',row.id);
+      this.$router.push({name:'orderInfo',query:{orderInfoId:row.id}});
     },
     // 订单多选框
     orderCheckBox(row){
       console.log(row);
-    }
+    },
+    //分页
+    handleSizeChange(val) {
+      console.log(`每页 ${val} 条`);
+    },
+    handleCurrentChange(val) {
+      console.log(`当前页: ${val}`);
+      this.page.currentPage = val;
+      this.submitForm(val);
+    },
   },
   filters:{
     handleMoney(val){
@@ -113,7 +137,7 @@ export default {
 </script>
 <style lang='less' scoped>
 .order-manage-tab {
-  height: 60vh;
+  width: 100%;
   .tab-title {
     height: 60px;
     line-height: 60px;

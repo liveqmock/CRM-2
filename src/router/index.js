@@ -473,6 +473,12 @@ export default new Router({
                     component: resolve => require(['../components/page/OrderManage/OrderManage/OrderList.vue'], resolve),
                     meta: { title: '订单管理'}
                 },
+                {
+                    name:'orderInfo',
+                    path: '/orderInfo',
+                    component: resolve => require(['../components/page/OrderManage/OrderManage/OrderInfo.vue'], resolve),
+                    meta: { title: '订单管理'}
+                },
             ]
         },
         {

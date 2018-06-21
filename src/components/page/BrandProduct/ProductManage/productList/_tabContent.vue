@@ -69,14 +69,14 @@
                     <el-button @click="inventoryManage(scope.row)" type="primary">库存管理</el-button>
                     <el-button @click="specificationsManage(scope.row)" type="primary">规格管理</el-button>
                     <el-button @click="priceManage(scope.row)" type="primary">价格管理</el-button>
-                    <template v-if='scope.row.status == 1 && name == "auditProduct"'>
-                      <el-button @click="auditProduct(scope.row,1)" type="primary">通过审核</el-button>
-                      <el-button @click="auditProduct(scope.row,0)" type="danger">驳回审核</el-button>
+                    <template v-if='(scope.row.status == 1 || scope.row.status == 3) && name == "auditProduct"'>
+                      <el-button @click="auditProduct(scope.row,2)" type="primary">通过审核</el-button>
+                      <el-button @click="auditProduct(scope.row,3)" type="danger">驳回审核</el-button>
                     </template>
                     <template v-else>
                       <el-button @click="editProduct(scope.row)" type="success">编辑产品</el-button>
-                      <el-button v-if='scope.row.status == 4' @click="productStatus(scope.row)" type="warning">产品下架</el-button>
-                      <el-button v-else-if="scope.row.status == 5" @click="productStatus(scope.row)" type="warning">产品上架</el-button>
+                      <el-button v-if='scope.row.status == 4' @click="productStatus(scope.row,'5')" type="warning">产品下架</el-button>
+                      <el-button v-else-if="scope.row.status == 2 || scope.row.status == 5" @click="productStatus(scope.row,'4')" type="warning">产品上架</el-button>
                     </template>
                     <el-button @click="productInfo(scope.row)" type="primary">查看详情</el-button>
                 </div>
@@ -94,14 +94,23 @@
         </el-pagination>
       </div>
       <div class="operate-table">
-          <el-button>删除</el-button>
-          <el-button>下架</el-button>
+        <el-popover placement="top" width="160" v-model="isShowPop">
+          <p>确定删除吗？</p>
+          <div style="text-align: right; margin: 0">
+            <el-button size="mini" type="text" @click="isShowPop = false">取消</el-button>
+            <el-button @click="batchOperate('6')" type="primary" size="mini">确定</el-button>
+          </div>
+          <el-button slot="reference" @click="isShowPop = true" >删除</el-button>
+        </el-popover>
+          <el-button @click="batchOperate('5')">下架</el-button>
       </div>
+
   </div>
 </template>
 
 <script>
 import * as api from "@/api/BrandProduct/ProductMange/index.js";
+
 export default {
   props: ["name"],
   components: {},
@@ -127,6 +136,7 @@ export default {
       },
       tableData: [],
       tableLoading:false,
+      isShowPop:false,
       multipleSelection: [],
       page: {
         currentPage: 1,
@@ -149,7 +159,7 @@ export default {
     }else if(n== 'downProduct'){
         this.status = '5'
     }else if(n == 'auditProduct'){
-        this.status = '1'
+        this.status = ''
     }else if(n == 'modifyProduct'){
         this.status = '3'
     }
@@ -242,11 +252,29 @@ export default {
     },
     // 产品上架/下架
     productStatus(row, status) {
-      console.log(row);
+      let data = {};
+      data.productId = row.id;
+      data.status = status;
+      this.$axios.post(api.updateProductShelves,data)
+      .then((res) => {
+        this.$message.success(res.data.data);
+        row.status = status;
+      }).catch((err) => {
+        console.log(err)
+      });
     },
     // 通过/不通过审核
     auditProduct(row,status){
-        console.log(row);
+      let data = {};
+      data.productId = row.id;
+      data.status = status;
+      this.$axios.post(api.updateProductStatus,data)
+      .then((res) => {
+        row.status = status;
+        this.$message.success(res.data.data);
+      }).catch((err) => {
+        console.log(err)
+      });
     },
     // 查看详情
     productInfo(row) {
@@ -295,7 +323,21 @@ export default {
     getProItemId(val){
         this.form.firstCategoryId = val[0];
         this.form.secondCategoryId = val[1];
-    }
+    },
+    // 批量操作
+    batchOperate(status){
+      let data = {};
+      data.ids = this.multipleSelection.join(',');
+      data.status = status;
+      this.$axios.post(api.updateBatchProductStatus,data)
+      .then((res) => {
+        this.$message.success(res.data.data);
+        this.isShowPop = false;
+        this.submitForm(this.page.currentPage);
+      }).catch((err) => {
+        console.log(err);
+      });
+    },
   },
   filters: {
     formatPrice(val) {
