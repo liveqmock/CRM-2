@@ -43,7 +43,7 @@
         </el-table-column>
         <el-table-column label="产品售价" align="center" min-width="50">
             <template slot-scope="scope">
-                {{scope.row.original_price | formatPrice}}
+                {{scope.row.original_price == undefined?'0':scope.row.original_price | formatPrice}}
             </template>
         </el-table-column>
         <el-table-column prop="" label="库存" align="center" min-width="50"></el-table-column>

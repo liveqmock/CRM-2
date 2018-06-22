@@ -209,11 +209,18 @@ export default {
   methods: {
     // 提交表单前进行判断
     beforeSubmit(){
+      console.log(parseInt(this.form.weight) >= 0)
       if(this.imgArr.length == 0){
         this.$message.warning('请添加产品图片');
         return false;
       }else if(this.selectedTagArr.length == 0){
         this.$message.warning('请添加产品标签');
+        return false;
+      }else if(!(parseInt(this.form.weight) >= 0)){
+        this.$message.warning('请输入正确的重量');
+        return false;
+      }else if(!(parseInt(this.form.volume) >= 0)){
+        this.$message.warning('请输入正确的体积');
         return false;
       }
       return true;

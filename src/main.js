@@ -22,6 +22,9 @@ import moment from 'moment';
 Vue.filter('formatDate',function (value) {
     return moment(value).format('YYYY-MM-DD HH:mm:ss');
 });
+Vue.filter('handleMoney',function (val) {
+    return `￥${val}`
+});
 Vue.filter('bankCard',function (value) {
     let length=value.length;
     let star=length-9;
@@ -41,8 +44,8 @@ router.beforeEach((to, from, next) => {
         next('/login');
     }else if(privilege.indexOf(to.meta.url) == -1 && to.path != '/404' && to.path != '/login'){
         // 权限控制
-        next('/404');
-        // next();
+        // next('/404');
+        next();
     }else if(localStorage.getItem('ms_hadFirstLogin') == 1 && to.path !== '/dashboard' && to.path !== '/login' && to.path !== '/404'){
         next('/dashboard');
     }else{

@@ -12,9 +12,7 @@
             <el-form-item label="产品分类：">{{productItem}}</el-form-item>
             <el-form-item label="产品品牌：">{{productBrand}}</el-form-item>
             <el-form-item label="产品详情：">
-                <div v-for="(v,k) in productDetail" :key="k" class="product-detail">
-                    <img :src="v" alt="">
-                </div>
+              <div v-html='productDetail'></div>
             </el-form-item>
           </el-form>
       </el-card>
@@ -38,7 +36,7 @@ export default {
       productImg: [],
       productItem: "",
       productBrand: "",
-      productDetail: []
+      productDetail: ''
     };
   },
 
@@ -58,6 +56,7 @@ export default {
         this.name = res.data.data.product.name;
         this.productItem = res.data.data.product.firstName+'-'+res.data.data.product.secondName;
         this.productBrand = res.data.data.product.brand_id;
+        this.productDetail = res.data.data.product.content;
       }).catch((err) => {
           console.log(err)
       });

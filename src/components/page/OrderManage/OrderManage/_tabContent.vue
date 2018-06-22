@@ -20,7 +20,7 @@
             <span @click="orderInfo(v)" style="margin:0 15px 0 15px">订单详情</span>
             <el-popover placement="bottom" width="150" v-model="v.isShowPop" trigger="click">
               <span slot="reference" style="cursor:pointer">标记 &nbsp <span class="star" :style="{color:v.starColor}">★</span></span>
-              <span v-for="(v1,k1) in markArr" :key="k1" @click="changeColor(v1,v)" :style="{color:v1,fontSize:'22px',cursor:'pointer',marginRight:'5px'}">★</span>
+              <span v-for="(v1,k1) in markArr" :key="k1" @click="changeColor(v1,v)" :style="{color:v1.label,fontSize:'22px',cursor:'pointer',marginRight:'5px'}">★</span>
               <el-input v-model="v.markTip" placeholder="请输入备注"></el-input>
             </el-popover>
           </div>
@@ -88,7 +88,7 @@ export default {
         { id:'1',starColor:'#e7e7e7',isShowPop:false,orderNum: "201806200508", createTime: "2018-12-24 12:12:12",starLevel:'',markTip:'',totalPrice:'9999',postAge:'9',status:'1',productArr:[{name:'Apple/苹果iPhone 8 Plus 64G全网通4G手机',spec:'iphone金色128G',price:'1288',num:'2',people:'张三',origin:'角色A',status:'待自提'},{name:'Apple/苹果iPhone 8 Plus 64G全网通4G手机',spec:'iphone金色128G',price:'1288',num:'2',people:'张三',origin:'角色A',status:'待自提'}] },
         { id:'1',starColor:'#e7e7e7',isShowPop:false,orderNum: "201806200508", createTime: "2018-12-24 12:12:12",starLevel:'',markTip:'',totalPrice:'9999',postAge:'10',status:'1',productArr:[{name:'Apple/苹果iPhone 8 Plus 64G全网通4G手机',spec:'iphone金色128G',price:'1288',num:'2',people:'张三',origin:'角色A',status:'待自提'}] },
       ],
-      markArr: ["red", "skyblue", "deeppink", "green", "purple", "yellow"],
+      markArr: [{label:"red",value:'1'}, {label:"skyblue",value:'2'}, {label:"green",value:'3'}, {label:"blue",value:'4'}, {label:"purple",value:'5'}, {label:"black",value:'6'}],
       page: {
         currentPage: 1,
         totalPage: 0
@@ -102,7 +102,7 @@ export default {
   methods: {
     // 修改星级
     changeColor(v1,v) {
-      v.starColor = v1;
+      v.starColor = v1.label;
       v.isShowPop = false;
     },
     // 推送云仓
@@ -127,11 +127,6 @@ export default {
       this.page.currentPage = val;
       this.submitForm(val);
     },
-  },
-  filters:{
-    handleMoney(val){
-      return `￥${val}`
-    }
   }
 };
 </script>
