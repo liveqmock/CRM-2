@@ -26,16 +26,16 @@
                                 <div class="tips">交易完成</div>
                                 <div class="tips" style="margin-top: 30px">
                                     <span>买家已寄出</span><span>物流公司：邮政小包</span><span>物流单号：465165464164651</span><span
-                                    class="blue">查看物流</span></div>
+                                    class="blue" @click="watchLogistics">查看物流</span></div>
                                 <div class="tips" style="margin-top: 10px">
                                     <span>商家已寄出</span><span>物流公司：邮政小包</span><span>物流单号：465165464164651</span><span
-                                    class="blue">查看物流</span></div>
+                                    class="blue" @click="watchLogistics">查看物流</span></div>
                             </div>
                             <div v-else>
                                 <div class="tips">提示：收到买家退货时，请验货后同意退款</div>
                                 <div class="tips" style="margin-left: 40px">如果买家再超时结束前未退货，退货申请将自动关闭</div>
                                 <div class="tips" style="margin-top: 10px" v-if="status==2"><span>买家已寄出</span><span>物流公司：邮政小包</span><span>物流单号：465165464164651</span><span
-                                    class="blue">查看物流</span></div>
+                                    class="blue" @click="watchLogistics">查看物流</span></div>
                                 <div style="margin-top: 30px" v-if="status==2">
                                     <el-button type="danger" @click="reGoodsClick(1)">同意换货</el-button>
                                     <el-button type="primary" @click="reGoodsClick(2)">变更退货</el-button>
@@ -90,7 +90,7 @@
 
             </el-card>
         </div>
-        <!--退货-->
+        <!--退货弹窗-->
         <div v-if="opr==2">
             <v-breadcrumb :nav='nav'></v-breadcrumb>
             <el-card :body-style="{ padding: '28px 50px' }">
@@ -120,13 +120,13 @@
                                 <div class="tips">退还金额：￥90.00元</div>
                                 <div class="tips" style="margin-top: 10px">
                                     <span>买家已寄出</span><span>物流公司：邮政小包</span><span>物流单号：465165464164651</span><span
-                                    class="blue">查看物流</span></div>
+                                    class="blue" @click="watchLogistics">查看物流</span></div>
                             </div>
                             <div v-else>
                                 <div class="tips">提示：收到买家退货时，请验货后同意退款</div>
                                 <div class="tips" style="margin-left: 40px">如果买家再超时结束前未退货，退货申请将自动关闭</div>
                                 <div class="tips" style="margin-top: 10px" v-if="status==2"><span>买家已寄出</span><span>物流公司：邮政小包</span><span>物流单号：465165464164651</span><span
-                                    class="blue">查看物流</span></div>
+                                    class="blue" @click="watchLogistics">查看物流</span></div>
                                 <div style="margin-top: 30px" v-if="status==2">
                                     <el-button type="danger" @click="refundClick(1)">同意退款</el-button>
                                     <el-button type="primary" @click="refundClick(2)">拒绝退款</el-button>
@@ -181,7 +181,7 @@
                 </div>
             </el-card>
         </div>
-        <!--仅退款-->
+        <!--仅退款弹窗-->
         <div v-if="opr==3">
             <v-breadcrumb :nav='nav'></v-breadcrumb>
             <el-card :body-style="{ padding: '28px 50px' }">
@@ -365,19 +365,22 @@
                 <el-button @click="rejectMask=false">取 消</el-button>
             </div>
         </el-dialog>
+        <!--物流详情弹窗-->
+        <v-logistics v-if="isShowLogistics" @msg="logisticsMask"></v-logistics>
     </div>
 </template>
 
 <script>
     import vBreadcrumb from "@/components/common/Breadcrumb.vue";
+    import vLogistics from "@/components/common/logistics.vue";
     import icon from "../../../common/ico.vue";
     export default {
-        components: {vBreadcrumb,icon},
+        components: {vBreadcrumb,icon,vLogistics},
 
         data() {
             return {
                 nav: ["订单管理", "申请操作"],
-                opr: 3,//1换货2退货3仅退款
+                opr: 2,//1换货2退货3仅退款
                 boolFirst: true,
                 boolsec: false,
                 boolThr: false,
@@ -386,14 +389,15 @@
                 day: 1,
                 time: '23:15:45',
                 orderNum: '6652498468464646',
-                status: 3,
-                info: '',
-                btnInf: '',
+                status: 2,//3种售后对应的状态值
+                info: '',//温馨提示信息
+                btnInf: '',//按钮信息
                 tipsMask: false,
                 btnLoading: false,
                 badDebtMask: false,
                 agreeMask: false,
                 rejectMask: false,
+                isShowLogistics: false,
                 form: {
                     reason: '',
                     remark: ''
@@ -446,7 +450,15 @@
                 } else {
                     that.rejectMask = false
                 }
-            }
+            },
+            //查看物流
+            watchLogistics(){
+                this.isShowLogistics=true
+            },
+            // 关闭物流弹窗
+            logisticsMask(msg) {
+                this.isShowLogistics = msg;
+            },
         }
     }
 

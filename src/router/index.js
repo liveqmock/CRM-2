@@ -484,6 +484,12 @@ export default new Router({
                     path: '/afterSaleOpr',
                     component: resolve => require(['../components/page/OrderManage/OrderManage/AfterSaleOpr.vue'], resolve),
                     meta: { title: '申请操作'}
+                },
+                {
+                    name:'logistics',
+                    path: '/logistics',
+                    component: resolve => require(['../components/page/OrderManage/OrderManage/Logistics.vue'], resolve),
+                    meta: { title: '物流详情'}
                 }
             ]
         },
