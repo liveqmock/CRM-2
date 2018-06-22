@@ -11,7 +11,7 @@
     // 编辑供应商
     export const updateSupplier='/admin/supplier/updateSupplier';
     //分页查询供应商列表
-    export const querySupplierPageList='/admin/supplier/querySupplierPageList ';
+    export const querySupplierPageList='/admin/supplier/querySupplierPageList';
     //根据ID查询详情
     export const findSupplierById='/admin/supplier/findSupplierById';
     //停启用供应商

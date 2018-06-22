@@ -80,19 +80,19 @@ export default new Router({
                     name:'shippingTemplate',
                     path: '/shippingTemplate',
                     component: resolve => require(['../components/page/BrandProduct/ShippingTemplate.vue'], resolve),
-                    meta: { title: '运费模板'}
+                    meta: { title: '运费模板',url:'/admin/freightTemplate/queryFreightTemplateList'}
                 },
                 {
                     name:'addTemplate',
                     path: '/addTemplate',
                     component: resolve => require(['../components/page/BrandProduct/ShippingTemplate/AddTemplate.vue'], resolve),
-                    meta: { title: '添加模板'}
+                    meta: { title: '添加模板',url:'/admin/freightTemplate/addFreightTemplate'}
                 },
                 {
                     name:'editTemplate',
                     path: '/editTemplate',
                     component: resolve => require(['../components/page/BrandProduct/ShippingTemplate/EditTemplate.vue'], resolve),
-                    meta: { title: '编辑模板'}
+                    meta: { title: '编辑模板',url:'/admin/freightTemplate/updateFreightTemplateById'}
                 },
                 {
                     name:'giftManage',
@@ -141,13 +141,13 @@ export default new Router({
                     name:'MemberAccount',
                     path: '/MemberAccount',
                     component: resolve => require(['../components/page/MemberManage/MemberManage/MemberAccount.vue'], resolve),
-                    meta: { title: '会员账户',url:'' }
+                    meta: { title: '会员账户',url:'/admin/dealer/queryDealerAccount' }
                 },
                 {
                     name:'MemberCard',
                     path: '/MemberCard',
                     component: resolve => require(['../components/page/MemberManage/MemberManage/MemberCard.vue'], resolve),
-                    meta: { title: '会员银行卡',url:'' }
+                    meta: { title: '会员银行卡',url:'/admin/bindBankInfo/findBindBankInfoBydealerId' }
                 },
                 {
                     name:'memberDetail',
@@ -189,43 +189,43 @@ export default new Router({
                     name:'cashAccountBalance',
                     path: '/cashAccountBalance',
                     component: resolve => require(['../components/page/MemberManage/UserAccount/CashAccountBalance.vue'], resolve),
-                    meta: { title: '现金账户收支明细' }
+                    meta: { title: '现金账户收支明细',url:'/admin/detailBalance/queryDetailBalanceList' }
                 },
                 {
                     name:'tokenAccountBalance',
                     path: '/tokenAccountBalance',
                     component: resolve => require(['../components/page/MemberManage/UserAccount/TokenAccountBalance.vue'], resolve),
-                    meta: { title: '代币账户收支明细' }
+                    meta: { title: '代币账户收支明细',url:'/admin/detailTokencoin/queryDetailTokencoinList' }
                 },
                 {
                     name:'shareAccountBalance',
                     path: '/shareAccountBalance',
                     component: resolve => require(['../components/page/MemberManage/UserAccount/ShareAccountBalance.vue'], resolve),
-                    meta: { title: '分红账户收支明细' }
+                    meta: { title: '分红账户收支明细',url:'/admin/detailBonuspoint/queryDetailBonuspointList' }
                 },
                 {
                     name:'integralAccountBalance',
                     path: '/integralAccountBalance',
                     component: resolve => require(['../components/page/MemberManage/UserAccount/IntegralAccountBalance.vue'], resolve),
-                    meta: { title: '积分账户收支明细' }
+                    meta: { title: '积分账户收支明细',url:'/admin/detailUserscore/queryDetailUserscorePageList' }
                 },
                 {
                     name:'accountRecharge',
                     path: '/accountRecharge',
                     component: resolve => require(['../components/page/MemberManage/AccountRecharge.vue'], resolve),
-                    meta: { title: '账户充值' }
+                    meta: { title: '账户充值',url:'/admin/rechargeRecord/queryRechargeRecordPageList' }
                 },
                 {
                     name:'realNameInfo',
                     path: '/realNameInfo',
                     component: resolve => require(['../components/page/MemberManage/RealNameInfo.vue'], resolve),
-                    meta: { title: '实名信息' }
+                    meta: { title: '实名信息',url:'/admin/dealerRealName/findDealerRealNameInfo' }
                 },
                 {
                     name:'realNameAuthentication',
                     path: '/realNameAuthentication',
                     component: resolve => require(['../components/page/MemberManage/realNameAuthentication.vue'], resolve),
-                    meta: { title: '实名认证审核' }
+                    meta: { title: '实名认证审核',url:'/admin/dealerRealName/queryDealerRealNamePageList' }
                 },
                 {
                     name:'activityParams',
@@ -237,25 +237,25 @@ export default new Router({
                     name:'supplierManage',
                     path: '/supplierManage',
                     component: resolve => require(['../components/page/MemberManage/SupplierManage.vue'], resolve),
-                    meta: { title: '供应商管理' }
+                    meta: { title: '供应商管理',url:'/admin/supplier/querySupplierPageList' }
                 },
                 {
                     name:'supplierDetail',
                     path: '/supplierDetail',
                     component: resolve => require(['../components/page/MemberManage/SupplierManage/SupplierDetail.vue'], resolve),
-                    meta: { title: '供应商详情' }
+                    meta: { title: '供应商详情',url:'/admin/supplier/findSupplierById' }
                 },
                 {
                     name:'addSupplier',
                     path: '/addSupplier',
                     component: resolve => require(['../components/page/MemberManage/SupplierManage/AddSupplier.vue'], resolve),
-                    meta: { title: '添加供应商' }
+                    meta: { title: '添加供应商',url:'/admin/supplier/addSupplier' }
                 },
                 {
                     name:'editSupplier',
                     path: '/editSupplier',
                     component: resolve => require(['../components/page/MemberManage/SupplierManage/EditSupplier.vue'], resolve),
-                    meta: { title: '编辑供应商' }
+                    meta: { title: '编辑供应商',url:'/admin/supplier/updateSupplier' }
                 },
                 {
                     name:'promotionManage',
@@ -458,13 +458,13 @@ export default new Router({
                     name:'advertisingManage',
                     path: '/advertisingManage',
                     component: resolve => require(['../components/page/OperateManage/AdvertisingManage.vue'], resolve),
-                    meta: { title: '广告位管理'}
+                    meta: { title: '广告位管理',url:'/advertisingManage'}
                 },
                 {
                     name:'keyWords',
                     path: '/keyWords',
                     component: resolve => require(['../components/page/OperateManage/AdvertisingManage/KeyWords.vue'], resolve),
-                    meta: { title: '搜索热门搜索关键词'}
+                    meta: { title: '搜索热门搜索关键词',url:'/admin/hotWord/getHotWordsByPage'}
                 },
                 // 订单管理
                 {

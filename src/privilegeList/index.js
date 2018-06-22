@@ -1,5 +1,7 @@
 // 系统首页
         export const dashboard = '/dashboard';
+//广告位管理
+        export const advertisingManage = '/advertisingManage';
 // 授权管理
     // 添加渠道类目
         // 查看渠道类目管理列表
