@@ -33,16 +33,16 @@ Vue.filter('bankCard',function (value) {
 });
 //使用钩子函数对路由进行权限跳转
 router.beforeEach((to, from, next) => {
-    let privilege = JSON.parse(localStorage.getItem('privilegeList')) || [];
     const role = localStorage.getItem('ms_username');
+    let privilege = JSON.parse(localStorage.getItem('privilegeList')) || [];
     if(!role && to.path !== '/login'){
         localStorage.clear();
         sessionStorage.clear();
         next('/login');
     }else if(privilege.indexOf(to.meta.url) == -1 && to.path != '/404' && to.path != '/login'){
         // 权限控制
-        // next('/404');
-        next();
+        next('/404');
+        // next();
     }else if(localStorage.getItem('ms_hadFirstLogin') == 1 && to.path !== '/dashboard' && to.path !== '/login' && to.path !== '/404'){
         next('/dashboard');
     }else{

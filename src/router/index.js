@@ -267,43 +267,43 @@ export default new Router({
                     name:'productList',
                     path: '/productList',
                     component: resolve => require(['../components/page/BrandProduct/ProductManage/ProductList.vue'], resolve),
-                    meta: { title: '产品管理' }
+                    meta: { title: '产品管理',url:'/admin/product/queryProductPageList' }
                 },
                 {
                     name:'releaseProduct',
                     path: '/releaseProduct',
                     component: resolve => require(['../components/page/BrandProduct/ProductManage/ReleaseProduct.vue'], resolve),
-                    meta: { title: '发布产品' }
+                    meta: { title: '发布产品',url:'/admin/product/addProduct' }
                 },
                 {
                     name:'editProduct',
                     path: '/editProduct',
                     component: resolve => require(['../components/page/BrandProduct/ProductManage/EditProduct.vue'], resolve),
-                    meta: { title: '编辑产品' }
+                    meta: { title: '编辑产品',url:'/admin/product/findProductAllDataById' }
                 },
                 {
                     name:'productSpecifications',
                     path: '/productSpecifications',
                     component: resolve => require(['../components/page/BrandProduct/ProductManage/ProductSpecifications.vue'], resolve),
-                    meta: { title: '产品规格' }
+                    meta: { title: '产品规格',url:"/admin/saleSpec/querySaleSpecList" }
                 },
                 {
                     name:'productInfo',
                     path: '/productInfo',
                     component: resolve => require(['../components/page/BrandProduct/ProductManage/ProductInfo.vue'], resolve),
-                    meta: { title: '产品详情' }
+                    meta: { title: '产品详情',url:"/admin/product/findProductById" }
                 },
                 {
                     name:'priceManage',
                     path: '/priceManage',
                     component: resolve => require(['../components/page/BrandProduct/ProductManage/PriceManage.vue'], resolve),
-                    meta: { title: '产品价格管理' }
+                    meta: { title: '产品价格管理',url:"/admin/price/queryProductPriceSaleSpecList" }
                 },
                 {
                     name:'productInventory',
                     path: '/productInventory',
                     component: resolve => require(['../components/page/BrandProduct/ProductManage/ProductInventory.vue'], resolve),
-                    meta: { title: '产品库存管理' }
+                    meta: { title: '产品库存管理',url:"/admin/price/queryProductStockList" }
                 },
 
                 //服务管理

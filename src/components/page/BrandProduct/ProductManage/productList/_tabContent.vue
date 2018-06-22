@@ -1,6 +1,6 @@
 <template>
   <div class="tab-content">
-      <el-button @click="releaseProduct" class="add-product" type="primary">添加产品</el-button>
+      <el-button v-if="p.addProduct" @click="releaseProduct" class="add-product" type="primary">添加产品</el-button>
       <div class="search-pane">
           <el-form :model="form" ref='form' inline label-width="100px">
             <el-form-item prop="name" label="产品名称">
@@ -66,19 +66,21 @@
         <el-table-column label="操作" min-width="220">
             <template slot-scope="scope">
                 <div class="operate">
-                    <el-button @click="inventoryManage(scope.row)" type="primary">库存管理</el-button>
-                    <el-button @click="specificationsManage(scope.row)" type="primary">规格管理</el-button>
-                    <el-button @click="priceManage(scope.row)" type="primary">价格管理</el-button>
-                    <template v-if='(scope.row.status == 1 || scope.row.status == 3) && name == "auditProduct"'>
+                    <el-button v-if='p.queryProductStockList' @click="inventoryManage(scope.row)" type="primary">库存管理</el-button>
+                    <el-button v-if='p.querySaleSpecList' @click="specificationsManage(scope.row)" type="primary">规格管理</el-button>
+                    <el-button v-if='p.queryProductPriceSaleSpecList' @click="priceManage(scope.row)" type="primary">价格管理</el-button>
+                    <template v-if='(scope.row.status == 1 || scope.row.status == 3) && name == "auditProduct" && p.updateProductStatus'>
                       <el-button @click="auditProduct(scope.row,2)" type="primary">通过审核</el-button>
                       <el-button @click="auditProduct(scope.row,3)" type="danger">驳回审核</el-button>
                     </template>
                     <template v-else>
-                      <el-button @click="editProduct(scope.row)" type="success">编辑产品</el-button>
-                      <el-button v-if='scope.row.status == 4' @click="productStatus(scope.row,'5')" type="warning">产品下架</el-button>
-                      <el-button v-else-if="scope.row.status == 2 || scope.row.status == 5" @click="productStatus(scope.row,'4')" type="warning">产品上架</el-button>
+                      <el-button v-if='p.findProductAllDataById' @click="editProduct(scope.row)" type="success">编辑产品</el-button>
+                      <template v-if='p.updateProductShelves'>
+                        <el-button v-if='scope.row.status == 4' @click="productStatus(scope.row,'5')" type="warning">产品下架</el-button>
+                        <el-button v-else-if="scope.row.status == 2 || scope.row.status == 5" @click="productStatus(scope.row,'4')" type="warning">产品上架</el-button>
+                      </template>
                     </template>
-                    <el-button @click="productInfo(scope.row)" type="primary">查看详情</el-button>
+                    <el-button v-if="p.findProductById" @click="productInfo(scope.row)" type="primary">查看详情</el-button>
                 </div>
             </template>
         </el-table-column>
@@ -110,6 +112,8 @@
 
 <script>
 import * as api from "@/api/BrandProduct/ProductMange/index.js";
+import * as pApi from "@/privilegeList/BrandProduct/ProductMange/index.js";
+import utils from '@/utils/index.js';
 
 export default {
   props: ["name"],
@@ -117,26 +121,38 @@ export default {
 
   data() {
     return {
+      // 权限控制
+      p: {
+        addProduct:false,
+        queryProductStockList:false,
+        querySaleSpecList:false,
+        queryProductPriceSaleSpecList:false,
+        findProductAllDataById:false,
+        updateProductShelves:false,
+        findProductById:false,
+        updateProductStatus:false
+      },
+
       itemList: [],
       itemProps: {
         value: "value",
-        children: "children",
+        children: "children"
       },
-      status:'',
+      status: "",
       form: {
         name: "",
         brandId: "",
         barCode: "",
         firstCategoryId: "",
-        secondCategoryId:"",
+        secondCategoryId: "",
         saleMin: "",
         saleMax: "",
         priceMin: "",
         priceMax: ""
       },
       tableData: [],
-      tableLoading:false,
-      isShowPop:false,
+      tableLoading: false,
+      isShowPop: false,
       multipleSelection: [],
       page: {
         currentPage: 1,
@@ -146,42 +162,50 @@ export default {
   },
 
   activated() {
+    this.pControl();
     this.submitForm(1);
-    this.getFirstItem();
   },
 
-  mounted(){
+  mounted() {
     let n = this.name;
-    if(n == 'allProduct'){
-        this.status = ''
-    }else if(n== 'upProduct'){
-        this.status = '4'
-    }else if(n== 'downProduct'){
-        this.status = '5'
-    }else if(n == 'auditProduct'){
-        this.status = ''
-    }else if(n == 'modifyProduct'){
-        this.status = '3'
+    if (n == "allProduct") {
+      this.status = "";
+    } else if (n == "upProduct") {
+      this.status = "4";
+    } else if (n == "downProduct") {
+      this.status = "5";
+    } else if (n == "auditProduct") {
+      this.status = "";
+    } else if (n == "modifyProduct") {
+      this.status = "3";
     }
+    this.pControl();
     this.getFirstItem();
     this.submitForm(1);
   },
 
   methods: {
+    // 权限控制
+    pControl() {
+      for (const k in this.p) {
+        this.p[k] = utils.pc(pApi[k]);
+      }
+    },
     //   提交表单
-    submitForm(val){
-        let data = {};
-        data = this.form;
-        data.page = val;
-        data.status = this.status;
-        this.tableLoading = true;
-        this.$axios
+    submitForm(val) {
+      let data = {};
+      data = this.form;
+      data.page = val;
+      data.status = this.status;
+      data.url = pApi.queryProductPageList;
+      this.tableLoading = true;
+      this.$axios
         .post(api.queryProductPageList, data)
         .then(res => {
-            this.tableData = [];
-            this.tableData = res.data.data.data;
-            this.page.totalPage = res.data.data.resultCount;
-            this.tableLoading = false;
+          this.tableData = [];
+          this.tableData = res.data.data.data;
+          this.page.totalPage = res.data.data.resultCount;
+          this.tableLoading = false;
         })
         .catch(err => {
           console.log(err);
@@ -255,26 +279,30 @@ export default {
       let data = {};
       data.productId = row.id;
       data.status = status;
-      this.$axios.post(api.updateProductShelves,data)
-      .then((res) => {
-        this.$message.success(res.data.data);
-        row.status = status;
-      }).catch((err) => {
-        console.log(err)
-      });
+      this.$axios
+        .post(api.updateProductShelves, data)
+        .then(res => {
+          this.$message.success(res.data.data);
+          row.status = status;
+        })
+        .catch(err => {
+          console.log(err);
+        });
     },
     // 通过/不通过审核
-    auditProduct(row,status){
+    auditProduct(row, status) {
       let data = {};
       data.productId = row.id;
       data.status = status;
-      this.$axios.post(api.updateProductStatus,data)
-      .then((res) => {
-        row.status = status;
-        this.$message.success(res.data.data);
-      }).catch((err) => {
-        console.log(err)
-      });
+      this.$axios
+        .post(api.updateProductStatus, data)
+        .then(res => {
+          row.status = status;
+          this.$message.success(res.data.data);
+        })
+        .catch(err => {
+          console.log(err);
+        });
     },
     // 查看详情
     productInfo(row) {
@@ -286,58 +314,60 @@ export default {
     },
     // 获取一级类目
     getFirstItem() {
-        this.itemList = [];
+      this.itemList = [];
       this.$axios
         .post(api.getCategoryList, { fatherid: 0 })
         .then(res => {
-            res.data.data.data.forEach((v,k)=>{
-                this.itemList.push({label:v.name,value:v.id,children:[]})
-            })
+          res.data.data.data.forEach((v, k) => {
+            this.itemList.push({ label: v.name, value: v.id, children: [] });
+          });
         })
         .catch(err => {
           console.log(err);
         });
     },
     // 获取二级类目
-    handleItemChange(val){
-        let index = 0;
-        this.itemList.forEach((v,k)=>{
-            if(v.value == val[0]){
-                index = k;
-            }
-        })
-        let data ={};
-        data.fatherid = val[0];
-        this.$axios
+    handleItemChange(val) {
+      let index = 0;
+      this.itemList.forEach((v, k) => {
+        if (v.value == val[0]) {
+          index = k;
+        }
+      });
+      let data = {};
+      data.fatherid = val[0];
+      this.$axios
         .post(api.getCategoryList, data)
         .then(res => {
-            res.data.data.data.forEach((v,k)=>{
-                this.itemList[index].children.push({label:v.name,value:v.id});
-            })
+          res.data.data.data.forEach((v, k) => {
+            this.itemList[index].children.push({ label: v.name, value: v.id });
+          });
         })
         .catch(err => {
           console.log(err);
         });
     },
     // 获取一二级类目id
-    getProItemId(val){
-        this.form.firstCategoryId = val[0];
-        this.form.secondCategoryId = val[1];
+    getProItemId(val) {
+      this.form.firstCategoryId = val[0];
+      this.form.secondCategoryId = val[1];
     },
     // 批量操作
-    batchOperate(status){
+    batchOperate(status) {
       let data = {};
-      data.ids = this.multipleSelection.join(',');
+      data.ids = this.multipleSelection.join(",");
       data.status = status;
-      this.$axios.post(api.updateBatchProductStatus,data)
-      .then((res) => {
-        this.$message.success(res.data.data);
-        this.isShowPop = false;
-        this.submitForm(this.page.currentPage);
-      }).catch((err) => {
-        console.log(err);
-      });
-    },
+      this.$axios
+        .post(api.updateBatchProductStatus, data)
+        .then(res => {
+          this.$message.success(res.data.data);
+          this.isShowPop = false;
+          this.submitForm(this.page.currentPage);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
   },
   filters: {
     formatPrice(val) {
@@ -374,7 +404,7 @@ export default {
   .operate-table {
     margin-top: 10px;
   }
-  .el-button+.el-button{
+  .el-button + .el-button {
     margin-left: 0px;
   }
   .block {
