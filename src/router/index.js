@@ -477,8 +477,20 @@ export default new Router({
                     name:'orderInfo',
                     path: '/orderInfo',
                     component: resolve => require(['../components/page/OrderManage/OrderManage/OrderInfo.vue'], resolve),
-                    meta: { title: '订单管理'}
+                    meta: { title: '订单详情'}
                 },
+                {
+                    name:'afterSaleOpr',
+                    path: '/afterSaleOpr',
+                    component: resolve => require(['../components/page/OrderManage/OrderManage/AfterSaleOpr.vue'], resolve),
+                    meta: { title: '申请操作'}
+                },
+                {
+                    name:'logistics',
+                    path: '/logistics',
+                    component: resolve => require(['../components/page/OrderManage/OrderManage/Logistics.vue'], resolve),
+                    meta: { title: '物流详情'}
+                }
             ]
         },
         {

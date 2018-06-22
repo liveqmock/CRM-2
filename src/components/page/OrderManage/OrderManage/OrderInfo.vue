@@ -16,8 +16,8 @@
             <br/>
             <el-button v-if="orderStatus == 2" @click='changeStatus' class="cloud-delivery-btn" type="danger">云仓发货</el-button>
             <el-button v-if="orderStatus == 4" @click='changeStatus' class="cloud-delivery-btn" type="danger">以自提</el-button>
-            <el-button v-if="orderStatus == 5" @click='changeStatus' class="cloud-delivery-btn" type="danger">退款</el-button>
-            <el-button v-if="orderStatus == 5" @click='changeStatus' class="cloud-delivery-btn" type="primary">拒绝退款</el-button>
+            <el-button v-if="orderStatus == 5" @click='refund' class="cloud-delivery-btn" type="danger">退款</el-button>
+            <el-button v-if="orderStatus == 5" @click='refund' class="cloud-delivery-btn" type="primary" style="margin-left:20px">拒绝退款</el-button>
             <p class="preferential-info" @click='isShowPreferential = true'>优惠详情</p>
             <span class="mark">标记</span>
             <span class="star" :style="{color:'skyblue'}">★</span>
@@ -47,8 +47,8 @@
                 <span class="smal-span">提货点：浙江省杭州市萧山区宁围镇飞机场</span>
                 <el-button type="primary" @click="isShowWarehouse = true">更换提货仓</el-button>
             </p>
-            <p v-if='orderStatus == 3 || orderStatus == 6' class="info-title">物流信息</p>
-            <p v-if='orderStatus == 3 || orderStatus == 6' class="info-content">
+            <p v-if='orderStatus == 3 || orderStatus == 6 || orderStatus == 7' class="info-title">物流信息</p>
+            <p v-if='orderStatus == 3 || orderStatus == 6 || orderStatus == 7' class="info-content">
                 <span class="smal-span">物流公司名称：圆通快递</span>
                 <span class="smal-span">运单号：201806221621</span>
                 <span style="color:#33b4ff;cursor:pointer" @click="showLogisticsMsg">查看物流信息</span>
@@ -72,12 +72,14 @@
             <p class="info-content">
                 <span class="content-con">订单号：2018060221131</span>
                 <span class="content-con">创建时间：2018-6-22 11:32:00</span>
-                <span class="content-con">平台支付时间：2018-6-22 11:32:00</span>
-                <span class="content-con">第三方支付时间：2018-6-22 11:32:00</span>
+                <span v-if='orderStatus != 1' class="content-con">平台支付时间：2018-6-22 11:32:00</span>
+                <span v-if='orderStatus != 1' class="content-con">第三方支付时间：2018-6-22 11:32:00</span>
             </p>
             <p class="info-content">
                 <span v-if='orderStatus == 3' class="content-con">发货时间：2018-06-221131</span>
-                <span class="content-con">支付宝（第三方支付）：2018060221131</span>
+                <span v-if='orderStatus == 8' class="content-con">取消时间：2018-06-221131</span>
+                <span v-if='orderStatus != 1' class="content-con">支付宝（第三方支付）：2018060221131</span>
+                <span v-if='orderStatus == 7' class="content-con">确认时间：2018-06-221131</span>
             </p>
             <el-table border :data="tableData" :span-method="spanMethod">
               <el-table-column label="产品名称" align="center" width="500px">
@@ -153,7 +155,7 @@ export default {
       boolFor: false,
       isShowPreferential: false, //优惠活动
       isShowWarehouse: false, // 更换提货仓
-      orderStatus: "5", //订单状态: 1:待支付 2:待发货 3:待确认 4:待自提 5:已冻结 6:退货中 7:已完成 8:已关闭 9:用户删除
+      orderStatus: "7", //订单状态: 1:待支付 2:待发货 3:待确认 4:待自提 5:已冻结 6:退货中 7:已完成 8:已关闭
       markArr: [
         { label: "red", value: "1" },
         { label: "skyblue", value: "2" },
@@ -306,7 +308,9 @@ export default {
       console.log(row.id);
     },
     // 查看物流信息
-    showLogisticsMsg() {}
+    showLogisticsMsg() {},
+    // 退款
+    refund() {}
   }
 };
 </script>

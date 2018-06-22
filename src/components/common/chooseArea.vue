@@ -104,6 +104,7 @@
                 orgIds: [],
                 tempValue: [],
                 orgValue: [],
+                tempIds: [],
             }
         },
         created() {
@@ -208,7 +209,7 @@
                                             }
                                         }
                                     }
-                                    temp.provinceCheck.push(tempprovinceCheck)
+                                    temp.provinceCheck.push(tempprovinceCheck);
                                 }
                                 that.checkAll.push(temp);
                                 let tempArea = {
@@ -218,6 +219,7 @@
                                 };
                                 that.area.push(tempArea);
                             }
+
                         } else {
                             that.$message.warning(res.data.msg)
                         }
@@ -253,15 +255,9 @@
                                 for (let c in that.chooseData) {//根据表格中的数据回显数据的选中和可选效果
                                     if (that.chooseData[c].includeArea) {
                                         this.changeData(that.chooseData[c].includeArea);
-                                        var tempIndex;
-                                        for (let i in that.ids) {
-                                            if (id == that.ids[i]) {
-                                                tempIndex = i;
-                                            }
-                                        }
                                         var includeArea = JSON.stringify(that.tempValue);
                                         if (includeArea.indexOf(v.zipcode) != -1) {
-                                            if (that.checkAll[index].provinceCheck[k].ids.indexOf(v.zipcode) == -1) {
+                                            if (that.checkAll[index].provinceCheck[k].ids.indexOf(v.zipcode) == -1 && that.tempIds.indexOf(v.zipcode) == -1) {
                                                 that.checkAll[index].provinceCheck[k].ids.push(v.zipcode);
                                                 that.checkAll[index].provinceCheck[k].names.push(v.name);
                                                 that.checkAll[index].provinceCheck[k].cityCheck[kk] = true;
@@ -286,6 +282,12 @@
                                 if (that.checkAll[index].provinceCheck[k].ids.indexOf(v.zipcode) == -1 && isChecked == 'checked') {
                                     that.checkAll[index].provinceCheck[k].ids.push(v.zipcode);
                                     that.checkAll[index].provinceCheck[k].names.push(v.name);
+                                }
+                                if(isChecked=='checked'){
+                                    if(!that.checkAll[index].provinceCheck[k].isChecked){
+                                        that.checkAll[index].provinceCheck[k].ids = [];
+                                        that.checkAll[index].provinceCheck[k].names = [];
+                                    }
                                 }
                                 if (isChecked == 'expand') {
                                     for (let k2 in that.checkAll[index].provinceCheck[k].ids) {
@@ -320,7 +322,8 @@
                             if (count == length) {
                                 var tempName = name + ':', tempId = id + ':';
                             } else {
-                                var tempName = name + ':', tempId = '1' + ':';
+                                // var tempName = name + ':', tempId = id + ':';
+                                var tempName = name + ':', tempId = '111111' + ':';
                             }
                             for (let k in that.checkAll[i].provinceCheck[j].names) {
                                 if (k == length - 1) {
@@ -371,19 +374,6 @@
             handleCheckAllChange(val, k, index) {
                 let that = this;
                 that.getCityList(val.zipcode, 'checked', index, k);
-                setTimeout(function () {
-                    if (that.checkAll[index].provinceCheck[k].isChecked) {
-                        that.checkAll[index].provinceCheck[k].checkedCities.forEach(function (v, kk) {
-                            if (that.checkAll[index].provinceCheck[k].ids.indexOf(v.zipcode) == -1) {
-                                that.checkAll[index].provinceCheck[k].names.push(v.name);
-                                that.checkAll[index].provinceCheck[k].ids.push(v.zipcode);
-                            }
-                        });
-                    } else {
-                        that.checkAll[index].provinceCheck[k].ids = [];
-                        that.checkAll[index].provinceCheck[k].names = [];
-                    }
-                }, 100);
                 that.areaCheckedAll(index);
             },
             expandItem(val, k, index) {
@@ -396,9 +386,13 @@
                 let temp = [];
                 that.checkAll[index].provinceCheck[k].ids = value;
                 that.checkAll[index].provinceCheck[k].checkedCities.forEach(function (v) {
-                    temp.push(v.name);
+                    temp.push(v.zipcode);
                 });
-                console.log(value)
+                temp.forEach(function (v1) {
+                    if (value.indexOf(v1) == -1) {
+                        that.tempIds.push(v1)
+                    }
+                });
                 that.checkAll[index].provinceCheck[k].isChecked = checkedCount === temp.length;
                 that.$set(that.checkAll[index].provinceCheck[k], k, that.checkAll[index].provinceCheck[k].isChecked);
                 that.areaCheckedAll(index);
