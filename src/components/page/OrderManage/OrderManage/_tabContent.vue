@@ -23,7 +23,7 @@
                                                                                      :style="{color:v.starColor}">★</span></span>
                         <span v-for="(v1,k1) in markArr" :key="k1" @click="changeColor(v1,v)"
                               :style="{color:v1.label,fontSize:'22px',cursor:'pointer',marginRight:'5px'}">★</span>
-                        <el-input v-model="v.markTip" placeholder="请输入备注"></el-input>
+                        <el-input v-model="v.adminRemark" placeholder="请输入备注"></el-input>
                     </el-popover>
                 </div>
             </div>
@@ -47,20 +47,20 @@
                     </div>
                     <div class="collection"
                          :style="{height:120*v.orderProduct.length+v.orderProduct.length-1+'px',paddingTop:120*v.orderProduct.length/2-30+'px'}">
-                        <span>{{v.totalPrice | handleMoney}}<br>（含运费：{{v.postAge | handleMoney}}）</span>
+                        <span>{{v.price | handleMoney}}<br>（含运费：{{v.freightPrice | handleMoney}}）</span>
                     </div>
                 </div>
                 <div class="right">
                     <div v-for="(value,index) in v.orderProduct" :key="index" class="bar">
                         <div class="shipper">{{value.origin}}</div>
                         <div class="operate">
-                            <el-button v-if='value.status == "4"' type="primary">以自提</el-button>
+                            <el-button v-if='value.status == "4"' type="primary">已自提</el-button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="block">
+        <!-- <div class="block">
             <el-pagination
                 background
                 @size-change="handleSizeChange"
@@ -69,7 +69,7 @@
                 layout="total, prev, pager, next, jumper"
                 :total="page.totalPage">
             </el-pagination>
-        </div>
+        </div> -->
     </div>
 </template>
 
@@ -77,10 +77,17 @@
 import * as api from "@/api/OrderManage/OrderManage/index.js";
 import * as pApi from "@/privilegeList/OrderManage/OrderManage/index.js";
 import utils from "@/utils/index.js";
+import Bus from "./bus.js";
 export default {
-  props: ["name"],
+  props: ["name","formMsg"],
 
   components: {},
+
+  watch:{
+      formMsg(val){
+          console.log(val,123)
+      }
+  },
 
   data() {
     return {
@@ -109,82 +116,20 @@ export default {
       markArr: [
         { label: "red", value: "1" },
         { label: "skyblue", value: "2" },
-        { label: "lightgreen",value: "3" },
+        { label: "lightgreen", value: "3" },
         { label: "orange", value: "4" },
         { label: "purple", value: "5" }
       ],
       tableData: [],
-      tableLoading: false,
-      page: {
-        currentPage: 1,
-        totalPage: 0
-      },
-      form: {
-        name: "",
-        brandId: "",
-        barCode: "",
-        firstCategoryId: "",
-        secondCategoryId: "",
-        saleMin: "",
-        saleMax: "",
-        priceMin: "",
-        priceMax: ""
-      },
-      url: "", //请求地址
-      priUrl: "" //权限地址
     };
   },
-  activated() {
+  created() {
     this.pControl();
-    this.getList(1);
-  },
-  mounted() {
-    console.log(this.name);
-    let n = this.name;
-    if (n == "allOrder") {
-      //所有订单
-      this.url = "";
-      this.status = "";
-    } else if (n == "toBePaid") {
-      //待支付订单
-      this.url = "4";
-      this.status = "待支付";
-    } else if (n == "toBeSend") {
-      //待发货订单
-      this.url = "5";
-      this.status = "待发货";
-    } else if (n == "auditProduct") {
-      //待支付订单
-      this.url = "";
-      this.status = "待支付";
-    } else if (n == "toBeStay") {
-      //待自提订单
-      this.url = api.queryPickUpByCustomerOrderPageList;
-      this.priUrl = pApi.queryPickUpByCustomerOrderPageList;
-      this.status = "待自提";
-    } else if (n == "toBeConfirm") {
-      //待确认订单
-      this.url = "3";
-      this.status = "待确认";
-    } else if (n == "refund") {
-      //退款中订单
-      this.url = "3";
-      this.status = "退款中";
-    } else if (n == "finished") {
-      //已完成订单
-      this.url = "3";
-      this.status = "已完成";
-    } else if (n == "closed") {
-      //已关闭订单
-      this.url = "3";
-      this.status = "已关闭";
-    } else if (n == "freeze") {
-      //已冻结订单
-      this.url = "3";
-      this.status = "已冻结";
-    }
-    this.pControl();
-    this.getList(1);
+    let that = this;
+    Bus.$on("tableMsg", function(msg) {
+        that.tableData.push(...msg);
+        console.log(...msg);
+    });
   },
   methods: {
     // 权限控制
@@ -195,42 +140,23 @@ export default {
     },
     // 获取列表数据
     getList(val) {
-      let data = {};
-      let that = this;
-      data = this.form;
-      data.page = val;
-      data.status = this.status;
-      data.url = this.priUrl;
-      this.tableLoading = true;
-      this.$axios
-        .post(that.url, data)
-        .then(res => {
-          this.tableData = [];
-          for (let i in res.data.data.data[0]) {
-            res.data.data.data[0][i].isShowPop = false;
-            this.tableData.push(res.data.data.data[0][i]);
-          }
-          this.page.totalPage = res.data.data.resultCount;
-          this.tableLoading = false;
-        })
-        .catch(err => {
-          console.log(err);
-          this.tableLoading = false;
-        });
+      this.tableData.push(...res.data.data.data[0][i]);
     },
     // 修改星级
     changeColor(v1, v) {
-        let data = {};
-        data.orderId = v.id;
-        data.star = v1.value;
-        data.remarks = v.markTip == undefined?'':v.markTip;
-        this.$axios.post(api.orderSign,data)
-        .then((res) => {
-            this.$message.success(res.data.data);
-            v.starColor = v1.label;
-            v.isShowPop = false;
-        }).catch((err) => {
-            console.log(res)
+      let data = {};
+      data.orderId = v.id;
+      data.star = v1.value;
+      data.remarks = v.adminRemark;
+      this.$axios
+        .post(api.orderSign, data)
+        .then(res => {
+          this.$message.success(res.data.data);
+          v.starColor = v1.label;
+          v.isShowPop = false;
+        })
+        .catch(err => {
+          console.log(res);
         });
     },
     // 推送云仓
@@ -246,15 +172,6 @@ export default {
     orderCheckBox(row) {
       console.log(row);
     },
-    //分页
-    handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
-    },
-    handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
-      this.page.currentPage = val;
-      this.getList(val);
-    }
   }
 };
 </script>
