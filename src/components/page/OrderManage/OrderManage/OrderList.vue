@@ -11,7 +11,7 @@
                 </el-form-item>
                 <el-form-item prop="stars" label="订单标记">
                     <el-select v-model="form.stars" placeholder="请选择订单标记">
-                      <el-option v-for="(v,k) in markArr" :key="k" :label="v.label" :value="v.value"></el-option>
+                      <el-option v-for="(v,k) in starArr" :key="k" :label="v.label" :value="v.value"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item prop="receiver" label="收货人姓名">
@@ -39,7 +39,7 @@
                     <el-input v-model="form.no" placeholder="请选择提货状态"></el-input>
                 </el-form-item>
                 <el-form-item label=" ">
-                    <el-button type="primary" @click="submitForm">查询</el-button>
+                    <el-button type="primary" @click="submitForm(1)">查询</el-button>
                     <el-button @click="resetForm('form')">重置</el-button>
                 </el-form-item>
             </el-form>
@@ -47,9 +47,9 @@
         <el-card style='margin-top:20px' :body-style="{ padding: '20px 50px' }">
             <div class="btn-group">
                 <el-button type="primary">批量导出</el-button>
-                <el-button type="warning">今日订单</el-button>
-                <el-button type="warning">昨日订单</el-button>
-                <el-button type="warning">最近三个月订单</el-button>
+                <el-button type="warning" @click="orderBtn('today')">今日订单</el-button>
+                <el-button type="warning" @click="orderBtn('yesterday')">昨日订单</el-button>
+                <el-button type="warning" @click="orderBtn('threeMonths')">最近三个月订单</el-button>
             </div>
             <el-tabs v-model="activeName" @tab-click="handleClick">
                 <el-tab-pane style="min-width:1366px" label="全部订单" name="allOrder">
@@ -115,10 +115,10 @@
                     </div>
                 </el-tab-pane>
                 <el-tab-pane label="待支付" name="toBePaid">
-                    <v-tab-content v-if='activeName == "toBePaid"' :name='activeName'></v-tab-content>
+                    
                 </el-tab-pane>
                 <el-tab-pane label="待发货" name="toBeSend">
-                    <v-tab-content v-if='activeName == "toBeSend"' :name='activeName'></v-tab-content>
+                  
                 </el-tab-pane>
                 <el-tab-pane label="待自提" name="toBeStay">
                     <div class="tab-title">
@@ -183,19 +183,19 @@
                     </div>
                 </el-tab-pane>
                 <el-tab-pane label="待确认" name="toBeConfirm">
-                    <v-tab-content v-if='activeName == "toBeConfirm"' :name='activeName'></v-tab-content>
+                    
                 </el-tab-pane>
                 <el-tab-pane label="退款中" name="refund">
-                    <v-tab-content v-if='activeName == "refund"' :name='activeName'></v-tab-content>
+                    
                 </el-tab-pane>
                 <el-tab-pane label="已完成" name="finished">
-                    <v-tab-content v-if='activeName == "finished"' :name='activeName'></v-tab-content>
+                    
                 </el-tab-pane>
                 <el-tab-pane label="已关闭" name="closed">
-                    <v-tab-content v-if='activeName == "closed"' :name='activeName'></v-tab-content>
+                    
                 </el-tab-pane>
                 <el-tab-pane label="已冻结" name="freeze">
-                    <v-tab-content v-if='activeName == "freeze"' :name='activeName'></v-tab-content>
+                    <!-- <v-tab-content v-if='activeName == "freeze"' :name='activeName'></v-tab-content> -->
                 </el-tab-pane>
             </el-tabs>
             <div class="block">
@@ -214,7 +214,6 @@
 
 <script>
 import vBreadcrumb from "@/components/common/Breadcrumb.vue";
-import vTabContent from "./_tabContent.vue";
 import Bus from "./bus.js";
 import * as api from "@/api/OrderManage/OrderManage/index.js";
 import * as pApi from "@/privilegeList/OrderManage/OrderManage/index.js";
@@ -222,8 +221,7 @@ import utils from "@/utils/index.js";
 
 export default {
   components: {
-    vBreadcrumb,
-    vTabContent
+    vBreadcrumb
   },
 
   data() {
@@ -240,6 +238,13 @@ export default {
         operate: "15%",
         minWidth: "100px"
       },
+      starArr: [
+        { label: "红色标记", value: "1" },
+        { label: "蓝色标记", value: "2" },
+        { label: "绿色标记", value: "3" },
+        { label: "黄色标记", value: "4" },
+        { label: "紫色标记", value: "5" }
+      ],
       markArr: [
         { label: "red", value: "1" },
         { label: "skyblue", value: "2" },
@@ -247,8 +252,9 @@ export default {
         { label: "orange", value: "4" },
         { label: "purple", value: "5" }
       ],
-      activeName: "allOrder",
+      activeName: "toBeStay",
       tabName: "",
+      status:'',
       form: {
         orderNum: "",
         productName: "",
@@ -256,7 +262,10 @@ export default {
         recevicePhone: "",
         startTime: "",
         endTime: "",
-        stars: ""
+        stars: "",
+        today: "",
+        yesterday: "",
+        threeMonths: ""
       },
       url: "", //请求地址
       priUrl: "", //权限地址,
@@ -268,6 +277,14 @@ export default {
     };
   },
 
+  activated(){
+      this.pControl();
+      this.url = api.queryPickUpByCustomerOrderPageList;
+      this.priUrl = pApi.queryPickUpByCustomerOrderPageList;
+      this.status = '待自提';
+      this.submitForm(1);
+  },
+
   methods: {
     // 权限控制
     pControl() {
@@ -277,15 +294,16 @@ export default {
     },
     // 提交表单
     submitForm(val) {
-      this.activeName = "allOrder";
+      this.page.currentPage = 1;
       let data = {};
-      let that = this;
+      Object.assign(data, this.form);
       data.page = val;
       data.status = this.status;
       data.url = this.priUrl;
       this.$axios
-        .post(that.url, data)
+        .post(this.url, data)
         .then(res => {
+          console.log(res.data.data);
           this.tableData = [];
           for (let i in res.data.data.data[0]) {
             res.data.data.data[0][i].isShowPop = false;
@@ -296,7 +314,6 @@ export default {
             this.tableData.push(res.data.data.data[0][i]);
           }
           this.page.totalPage = res.data.data.resultCount;
-          Bus.$emit("tableMsg", this.tableData);
         })
         .catch(err => {
           console.log(err);
@@ -314,6 +331,9 @@ export default {
     //  重置表单
     resetForm(formName) {
       this.$refs[formName].resetFields();
+      this.form.today = '';
+      this.form.yesterday = '';
+      this.form.threeMonths = '';
     },
     //  点击tab选项卡
     handleClick(tab) {
@@ -366,7 +386,7 @@ export default {
       }
       this.submitForm(1);
     },
-     // 修改星级
+    // 修改星级
     changeColor(v1, v) {
       let data = {};
       data.orderId = v.id;
@@ -396,6 +416,23 @@ export default {
     orderCheckBox(row) {
       console.log(row);
     },
+    // 订单按钮
+    orderBtn(status) {
+      if (status == "today") {
+        this.form.today = "yes";
+        this.form.yesterday = "";
+        this.form.threeMonths = "";
+      } else if (status == "yesterday") {
+        this.form.today = "";
+        this.form.yesterday = "yes";
+        this.form.threeMonths = "";
+      } else if (status == "threeMonths") {
+        this.form.today = "";
+        this.form.yesterday = "";
+        this.form.threeMonths = "yes";
+      }
+      this.submitForm(1);
+    }
   }
 };
 </script>
