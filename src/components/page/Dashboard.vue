@@ -110,6 +110,9 @@ import icon from "../common/ico";
 import breadcrumb from "../common/Breadcrumb";
 import actAccountPwd from "./Dashboard/actAccountPwd";
 import actAccountCode from './Dashboard/actAccountCode';
+
+import * as api from '../../api/api'
+
 export default {
   components: {
     icon,
@@ -127,6 +130,7 @@ export default {
       if(localStorage.getItem('ms_hadFirstLogin') == 1){
           this.isShowActAccCode = true;
       }
+      this.test()
   },
   methods: {
     //  激活账号弹窗
@@ -136,7 +140,29 @@ export default {
     },
     isShowPwd(msg){
         this.isShowActAccPwd = false;
-    }
+    },
+      //ceshi
+      test(){
+        let that=this;
+        let orderProductList=[{'price_id':148,'num':1},{'price_id':163,'num':2}];
+        let data={
+            orderProductList:JSON.stringify(orderProductList)
+        };
+          that.$axios
+              .post(api.makeSureOrder, data)
+              .then(res => {
+                  console.log(res)
+                  if (res.data.code == 200) {
+                        console.log(res.data.data)
+
+                  } else {
+
+                  }
+              })
+              .catch(err => {
+                  console.log(err)
+              })
+      },
   }
 };
 </script>

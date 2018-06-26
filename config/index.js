@@ -3,12 +3,15 @@
 
 const path = require("path");
 // let baseURL = "http://172.16.10.253";
-let baseURL = "http://172.16.10.9";
+// let baseURL = "http://172.16.10.9";
 // let baseURL = "http://172.16.10.56";
+// let baseURL = "http://172.16.10.53";
+let baseURL = "http://172.16.10.51";
 
 let url_1 = baseURL+':8101';
 let url_2 = baseURL+':8100';
 let url_3 = baseURL+':8188';
+let url_4 = baseURL+':8103';
 
 module.exports = {
     dev: {
@@ -35,6 +38,13 @@ module.exports = {
                 changeOrigin: true,
                 pathRewrite: {
                     "^/securityCode": url_3 + "/securityCode"
+                }
+            },
+            "/order": {
+                target: url_4,
+                changeOrigin: true,
+                pathRewrite: {
+                    "^/order": url_4 + "/order"
                 }
             }
         },

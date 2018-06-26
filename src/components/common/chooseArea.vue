@@ -210,8 +210,12 @@
                                         }
                                     }
                                     temp.provinceCheck.push(tempprovinceCheck);
+                                    if(that.preData.includeArea){
+                                        // that.getCityList(res.data.data[i][j].zipcode,' ',i,j)
+                                    }
                                 }
                                 that.checkAll.push(temp);
+                                console.log(that.checkAll)
                                 let tempArea = {
                                     name: arr[i],
                                     id: i,

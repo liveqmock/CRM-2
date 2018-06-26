@@ -257,3 +257,8 @@ export const getManageList='/mock/5aeac1c6c186102e067af3f3/test/getManageList';
     export const addNotice='/admin/notice/addNotice';
     // 修改公告/通知状态
     export const updateNoticeStatus='/admin/notice/updateNoticeStatus';
+
+
+
+export const makeSureOrder='/order/order/makeSureOrder';
+
