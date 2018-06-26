@@ -35,7 +35,15 @@
       </div>
       <el-table v-loading="tableLoading" border :data="tableData" @selection-change="handleSelectionChange">
         <el-table-column type="selection" align="center"></el-table-column>
-        <el-table-column prop="name" label="产品名称" align="center" min-width="300"></el-table-column>
+        <el-table-column prop="name" label="产品名称" min-width="300">
+          <template slot-scope="scope">
+            <div class="product-img">
+              <img :src="scope.row.img_url">
+            </div>
+            <p class="product-name">{{scope.row.name}}</p>
+            <p class="product-id">产品ID：{{scope.row.prod_code}}</p>
+          </template>
+        </el-table-column>
         <el-table-column label="产品类目" align="center" min-width="120">
           <template slot-scope="scope">
             {{scope.row.firstName}}<br/>{{scope.row.secondName}}
@@ -47,7 +55,7 @@
             </template>
         </el-table-column>
         <el-table-column prop="" label="库存" align="center" min-width="50"></el-table-column>
-        <el-table-column prop="saleNum" label="销售" align="center" min-width="50"></el-table-column>
+        <el-table-column prop="saleNum" label="销量" align="center" min-width="50"></el-table-column>
         <el-table-column label="发布时间/发布人" align="center" min-width="120">
             <template slot-scope="scope">
                 {{scope.row.create_time | formatDate}}<br/>{{`产品编辑:${scope.row.create_admin}`}}
@@ -69,7 +77,7 @@
                     <el-button v-if='p.queryProductStockList' @click="inventoryManage(scope.row)" type="primary">库存管理</el-button>
                     <el-button v-if='p.querySaleSpecList' @click="specificationsManage(scope.row)" type="primary">规格管理</el-button>
                     <el-button v-if='p.queryProductPriceSaleSpecList' @click="priceManage(scope.row)" type="primary">价格管理</el-button>
-                    <template v-if='(scope.row.status == 1 || scope.row.status == 3) && name == "auditProduct" && p.updateProductStatus'>
+                    <template v-if='(scope.row.status == 1 || scope.row.status == 3 || scope.row.status == 5) && name == "auditProduct" && p.updateProductStatus'>
                       <el-button @click="auditProduct(scope.row,2)" type="primary">通过审核</el-button>
                       <el-button @click="auditProduct(scope.row,3)" type="danger">驳回审核</el-button>
                     </template>
@@ -77,7 +85,7 @@
                       <el-button v-if='p.findProductAllDataById' @click="editProduct(scope.row)" type="success">编辑产品</el-button>
                       <template v-if='p.updateProductShelves'>
                         <el-button v-if='scope.row.status == 4' @click="productStatus(scope.row,'5')" type="warning">产品下架</el-button>
-                        <el-button v-else-if="scope.row.status == 2 || scope.row.status == 5" @click="productStatus(scope.row,'4')" type="warning">产品上架</el-button>
+                        <el-button v-else-if="scope.row.status == 2" @click="productStatus(scope.row,'4')" type="warning">产品上架</el-button>
                       </template>
                     </template>
                     <el-button v-if="p.findProductById" @click="productInfo(scope.row)" type="primary">查看详情</el-button>
@@ -410,6 +418,31 @@ export default {
   .block {
     float: right;
     margin-top: 10px;
+  }
+  .product-img{
+    display: inline-block;
+    float: left;
+    width: 80px;
+    height: 80px;
+    border: 1px solid #ddd;
+    overflow: hidden;
+    img{
+      width: 60px;
+      height: 60px;
+      margin: 10px;
+    }
+  }
+  .product-name{
+    float: left;
+    width: 75%;
+    height: auto;
+    margin: 5px 0 0 20px;
+  }
+  .product-id{
+    float: left;
+    width: 75%;
+    height: auto;
+    margin: 20px 0 0 20px;
   }
 }
 </style>

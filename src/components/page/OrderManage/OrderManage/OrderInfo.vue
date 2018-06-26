@@ -10,7 +10,7 @@
             <div :class="{'s-block':true,'s-block-bgcolor':boolFor}"><div class="s-block-content">买家确认收货</div></div>
         </div>
         <div class="top">
-            <span class="activite-status">当前订单状态：{{orderStatus}}</span>
+            <span v-if='orderMsg.status == 4' class="activite-status">当前订单状态：待提货</span>
             <span v-if='orderStatus==1' class="pay-time">订单剩余时间：{{orderFreeTime}}</span>
             <span v-if='orderStatus==3' class="pay-time">订单待完成时间：{{orderFinishTime}}</span>
             <br/>
@@ -20,31 +20,31 @@
             <el-button v-if="orderStatus == 5" @click='refund' class="cloud-delivery-btn" type="primary" style="margin-left:20px">拒绝退款</el-button>
             <p class="preferential-info" @click='isShowPreferential = true'>优惠详情</p>
             <span class="mark">标记</span>
-            <span class="star" :style="{color:'skyblue'}">★</span>
+            <span class="star" :style="{color:orderMsg.star}">★</span>
             <span class="tip">备注：</span>
-            <div class="tip-content">12312asda安徽打开军火库速度很da安徽打开军火库速度很快回答说客家话发生口角da安徽打开军火库速度很快回答说客家话发生口角快回答说客家话发生口角的回复131</div>
+            <div class="tip-content">{{orderMsg.adminRemark}}</div>
         </div>
         <!-- 收货人信息 -->
         <div class="user-info">
             <p class="info-title">买家信息</p>
             <p class="info-content">
-                <span class="smal-span">昵称：张三</span>
-                <span class="smal-span">联系方式：17601056863</span>
+                <span class="smal-span">昵称：{{orderMsg.nickName}}</span>
+                <span class="smal-span">联系方式：{{orderMsg.phone}}</span>
             </p>
             <p class="info-title">收货地址</p>
             <p class="info-content">
-                <span class="smal-span">收货人：张三</span>
-                <span class="smal-span">收货人联系方式：18404713575</span>
+                <span class="smal-span">收货人：{{orderMsg.receiver}}</span>
+                <span class="smal-span">收货人联系方式：{{orderMsg.recevicePhone}}</span>
             </p>
             <p class="info-content">
-                <span class="smal-span">收货地址：浙江省杭州市萧山区</span>
+                <span class="smal-span">收货地址：{{orderMsg.receiveAddress}}</span>
             </p>
             <p class="info-content">
-                <span class="smal-span">买家备注：hahahahahaha</span>
+                <span class="smal-span">买家备注：{{orderMsg.buyerRemark}}</span>
             </p>
             <p v-if='orderStatus == 4' class="info-title">买家自提</p>
             <p v-if='orderStatus == 4' class="info-content">
-                <span class="smal-span">提货点：浙江省杭州市萧山区宁围镇飞机场</span>
+                <span class="smal-span">提货点：{{orderMsg.storehouseName}}</span>
                 <el-button type="primary" @click="isShowWarehouse = true">更换提货仓</el-button>
             </p>
             <p v-if='orderStatus == 3 || orderStatus == 6 || orderStatus == 7' class="info-title">物流信息</p>
@@ -61,7 +61,7 @@
             </p>
         </div>
         <!-- 发货人信息 -->
-        <div class="delivery">
+        <div v-if='orderStatus == 3 || orderStatus == 6 || orderStatus == 7' class="delivery">
             <p class="info-content">
                 <span class="smal-span">发货方：张三</span>
                 <span class="smal-span">联系方式：17601056863</span>
@@ -70,15 +70,15 @@
         <!-- 订单信息 -->
         <div class="order-info">
             <p class="info-content">
-                <span class="content-con">订单号：2018060221131</span>
-                <span class="content-con">创建时间：2018-6-22 11:32:00</span>
-                <span v-if='orderStatus != 1' class="content-con">平台支付时间：2018-6-22 11:32:00</span>
-                <span v-if='orderStatus != 1' class="content-con">第三方支付时间：2018-6-22 11:32:00</span>
+                <span class="content-con">订单号：{{ orderMsg.orderNum }}</span>
+                <span class="content-con">创建时间：{{ orderMsg.createTime | formatDate }}</span>
+                <span v-if='orderStatus != 1' class="content-con">平台支付时间：{{ orderMsg.sysPayTime | formatDate }}</span>
+                <span v-if='orderStatus != 1' class="content-con">第三方支付时间：{{ orderMsg.payTime | formatDate }}</span>
             </p>
             <p class="info-content">
-                <span v-if='orderStatus == 3' class="content-con">发货时间：2018-06-221131</span>
+                <span v-if='orderStatus == 3 || orderStatus == 4' class="content-con">发货时间：{{ orderMsg.deliveryTime | formatDate }}</span>
                 <span v-if='orderStatus == 8' class="content-con">取消时间：2018-06-221131</span>
-                <span v-if='orderStatus != 1' class="content-con">支付宝（第三方支付）：2018060221131</span>
+                <span v-if='orderStatus != 1' class="content-con">支付宝（第三方支付）交易号：{{ orderMsg.tradeNo }}</span>
                 <span v-if='orderStatus == 7' class="content-con">确认时间：2018-06-221131</span>
             </p>
             <el-table border :data="tableData" :span-method="spanMethod">
@@ -93,7 +93,12 @@
               </el-table-column>
               <el-table-column prop="id" label="单价" align="center"></el-table-column>
               <el-table-column prop="id" label="数量" align="center"></el-table-column>
-              <el-table-column prop="id" label="收货人" align="center"></el-table-column>
+              <el-table-column label="收货人" align="center">
+                  <template slot-scope="scope">
+                    <span>收货人：陈帅帅</span><br/>
+                    <span>17601056863</span>
+                  </template>
+              </el-table-column>
               <el-table-column prop="id" label="交易状态" align="center"></el-table-column>
               <el-table-column label="实收款" align="center">
                   <template slot-scope="scope">
@@ -143,28 +148,31 @@
 
 <script>
 import vBreadcrumb from "@/components/common/Breadcrumb.vue";
+import * as api from "@/api/OrderManage/OrderManage/index.js";
+import * as pApi from "@/privilegeList/OrderManage/OrderManage/index.js";
+import utils from "@/utils/index.js";
 export default {
   components: { vBreadcrumb },
 
   data() {
     return {
       nav: ["订单管理", "订单详情"],
+      orderId:'',
       boolFirst: false,
       boolsec: false,
       boolThr: false,
       boolFor: false,
       isShowPreferential: false, //优惠活动
       isShowWarehouse: false, // 更换提货仓
-      orderStatus: "7", //订单状态: 1:待支付 2:待发货 3:待确认 4:待自提 5:已冻结 6:退货中 7:已完成 8:已关闭
+      orderStatus: "4", //订单状态: 1:待支付 2:待发货 3:待确认 4:待自提 5:已冻结 6:退货中 7:已完成 8:已关闭
       markArr: [
         { label: "red", value: "1" },
         { label: "skyblue", value: "2" },
-        { label: "green", value: "3" },
-        { label: "blue", value: "4" },
-        { label: "purple", value: "5" },
-        { label: "black", value: "6" }
+        { label: "lightgreen",value: "3" },
+        { label: "orange", value: "4" },
+        { label: "purple", value: "5" }
       ],
-      tableData: [{ id: 123 }, { id: 234 }],
+      tableData: [],
       warehouseArr: [
         {
           id: "1",
@@ -192,11 +200,31 @@ export default {
         }
       ],
       orderFreeTime: "",
-      orderFinishTime: ""
+      orderFinishTime: "",
+      // 订单信息
+      orderMsg:{
+        status:'',  //订单状态
+        star:'',  //星级
+        adminRemark:'', //备注
+        nickName:'', //昵称
+        phone:'', //联系方式
+        receiver:'',  //收货人
+        recevicePhone:'',  //收货人电话
+        receiveAddress:'',  //收货地址
+        buyerRemark:'', //卖家备注
+        storehouseName:'', //提货点
+        orderNum:'',  //订单号
+        createTime:'', //订单创建时间
+        sysPayTime:'', // 平台支付时间
+        payTime:'', //第三方支付时间
+        deliveryTime:'',  // 发货时间
+        tradeNo:'', //第三方支付交易号
+      }
     };
   },
 
   activated() {
+    this.orderId = this.$route.query.orderInfoId || sessionStorage.getItem('orderInfoId');
     this.getInfo();
     this.orderFreeTimeDown();
     this.orderFinishTimeDown();
@@ -205,6 +233,30 @@ export default {
   methods: {
     //   获取信息
     getInfo() {
+      this.$axios.post(api.getPickUpByCustomerOrderDetail,{orderId:this.orderId})
+      .then((res) => {
+        console.log(res.data.data)
+        this.orderMsg.status = res.data.data.status;
+        this.orderMsg.star = this.markArr[res.data.data.star].label;
+        this.orderMsg.adminRemark = res.data.data.adminRemark;
+        this.orderMsg.nickName = res.data.data.nickname;
+        this.orderMsg.phone = res.data.data.phone;
+        this.orderMsg.receiver = res.data.data.receiver;
+        this.orderMsg.recevicePhone = res.data.data.recevicePhone;
+        this.orderMsg.receiveAddress = `${res.data.data.province}${res.data.data.city}${res.data.data.area}`;
+        this.orderMsg.buyerRemark = res.data.data.buyerRemark;
+        this.orderMsg.storehouseName = res.data.data.storehouseName;
+        this.orderMsg.orderNum = res.data.data.orderNum;
+        this.orderMsg.createTime = res.data.data.createTime;
+        this.orderMsg.sysPayTime = res.data.data.sysPayTime;
+        this.orderMsg.payTime = res.data.data.payTime;
+        this.orderMsg.deliveryTime = res.data.data.deliveryTime;
+        this.orderMsg.tradeNo = res.data.data.tradeNo;
+        this.tableData = [];
+        this.tableData = res.data.data.list;
+      }).catch((err) => {
+        console.log(res)
+      });
       this.getProgressStu(this.orderStatus);
     },
     // 判断进度条状态

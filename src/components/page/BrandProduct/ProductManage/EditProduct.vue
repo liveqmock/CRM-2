@@ -7,6 +7,9 @@
             <el-form-item label="产品名称">
                 <el-input style="width:300px" v-model="form.name" placeholder="请输入产品名称"></el-input>
             </el-form-item>
+            <el-form-item label="产品ID">
+                <el-input style="width:300px" v-model="form.prodCode" placeholder="请输入产品ID"></el-input>
+            </el-form-item>
             <el-form-item label="产品图片">
                 <draggable style="display:inline-block" v-model="imgArr" :move="getdata" @update="datadragEnd">
                     <transition-group>
@@ -137,6 +140,7 @@ export default {
       proCategoryArr: [],
       form: {
         name: "",
+        prodCode:"",
         firstCategoryId: "",
         secCategoryId:"",
         brandId: "",
@@ -230,6 +234,7 @@ export default {
         this.form.supplierId = res.data.data.product.supplier_id;
         this.form.sendfrom = res.data.data.product.sendfrom.toString();
         this.form.name = res.data.data.product.name;
+        this.form.prodCode = res.data.data.product.prod_code;
         this.form.weight = res.data.data.product.weight;
         this.form.volume = res.data.data.product.volume ;
         res.data.data.infoValue.forEach((v,k)=>{
@@ -292,7 +297,7 @@ export default {
       let data = {};
       data = this.form;
       data.id = this.productId;
-      this.$axios.post(api.addProduct,data)
+      this.$axios.post(api.updateProduct,data)
       .then(res=>{
         this.$message.success(res.data.data);
         this.$router.push('/productList');

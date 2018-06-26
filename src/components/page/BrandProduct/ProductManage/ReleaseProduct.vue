@@ -7,6 +7,9 @@
             <el-form-item label="产品名称">
                 <el-input style="width:300px" v-model="form.name" placeholder="请输入产品名称"></el-input>
             </el-form-item>
+            <el-form-item label="产品ID">
+                <el-input style="width:300px" v-model="form.prodCode" placeholder="请输入产品ID"></el-input>
+            </el-form-item>
             <el-form-item label="产品图片">
                 <draggable style="display:inline-block" v-model="imgArr" :move="getdata" @update="datadragEnd">
                     <transition-group>
@@ -135,6 +138,7 @@ export default {
       proCategoryArr: [],
       form: {
         name: "",
+        prodCode:"",
         firstCategoryId: "",
         secCategoryId:"",
         brandId: "",

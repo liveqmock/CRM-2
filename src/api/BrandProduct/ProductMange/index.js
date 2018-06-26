@@ -42,3 +42,5 @@ export const updateProductStatus = '/admin/product/updateProductStatus';
 export const updateProductShelves = '/admin/product/updateProductShelves';
 // 批量操作
 export const updateBatchProductStatus = '/admin/product/updateBatchProductStatus';
+// 编辑产品
+export const updateProduct = '/admin/product/updateProduct';
