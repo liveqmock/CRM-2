@@ -31,4 +31,14 @@ export const getCompletedOrderDetail = '/admin/order/getCompletedOrderDetail';
 // 获取待支付列表
 export const queryUnPaidOrderPageList = '/admin/order/queryUnPaidOrderPageList';
 // 待支付详情
-// export const getCompletedOrderDetail = '/admin/order/getCompletedOrderDetail';
+export const getUnPaidOrderDetail = '/admin/order/getUnPaidOrderDetail';
+
+// 所有订单
+// 获取所有点订单列表
+export const queryAllOrderPageList = '/admin/order/queryAllOrderPageList';
+
+// 已冻结
+// 获取冻结订单列表
+export const queryFreezeOrderPageList = '/admin/order/queryFreezeOrderPageList';
+// 获取冻结订单详情
+export const getFreezeOrderDetail = '/admin/order/getFreezeOrderDetail';

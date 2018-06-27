@@ -10,9 +10,10 @@
             <div :class="{'s-block':true,'s-block-bgcolor':boolFor}"><div class="s-block-content">买家确认收货</div></div>
         </div>
         <div class="top">
+            <span v-if='orderStatus == 1' class="activite-status">当前订单状态：待付款</span> 
+            <span v-if='orderStatus == 2' class="activite-status">当前订单状态：待发货</span>
             <span v-if='orderStatus == 4' class="activite-status">当前订单状态：待提货</span>
             <span v-if='orderStatus == 9 || orderStatus == 7' class="activite-status">当前订单状态：交易完成</span>
-            <span v-if='orderStatus == 2' class="activite-status">当前订单状态：待发货</span>
             <span v-if='orderStatus==1' class="pay-time">订单剩余时间：{{orderFreeTime}}</span>
             <span v-if='orderStatus==3' class="pay-time">订单待完成时间：{{orderFinishTime}}</span>
             <br/>
@@ -63,7 +64,7 @@
             </p>
         </div>
         <!-- 发货人信息 -->
-        <div v-if='orderStatus == 3 || orderStatus == 6 || orderStatus == 7 || orderStatus == 9' class="delivery">
+        <div v-if='orderStatus == 1 || orderStatus == 3 || orderStatus == 6 || orderStatus == 7 || orderStatus == 9' class="delivery">
             <p class="info-content">
                 <span class="smal-span">发货方：张三</span>
                 <span class="smal-span">联系方式：17601056863</span>
@@ -103,6 +104,7 @@
               </el-table-column>
               <el-table-column prop="status" label="交易状态" align="center">
                 <template slot-scope="scope">
+                  <template v-if='scope.row.status == 1'>待支付</template>
                   <template v-if='scope.row.status == 2'>待发货</template>
                   <template v-if='scope.row.status == 4'>待提货</template>
                   <template v-if='scope.row.status == 7'>已完成</template>
@@ -279,20 +281,27 @@ export default {
       switch (n) {
         case "1":
           this.boolFirst = true;
+          this.boolsec = false;
+          this.boolThr = false;
+          this.boolFor = false;
           break;
         case "2":
           this.boolFirst = true;
           this.boolsec = true;
+          this.boolThr = false;
+          this.boolFor = false;
           break;
         case "3":
           this.boolFirst = true;
           this.boolsec = true;
           this.boolThr = true;
+          this.boolFor = false;
           break;
         case "4":
           this.boolFirst = true;
           this.boolsec = true;
           this.boolThr = true;
+          this.boolFor = false;
           this.orderMsg.url = api.pickUpGoods;
           this.orderMsg.sinUrl = api.pickUpOrderProduct;
           break;
@@ -302,6 +311,7 @@ export default {
           this.boolFirst = true;
           this.boolsec = true;
           this.boolThr = true;
+          this.boolFor = false;
           break;
         case "7":
           this.boolFirst = true;
