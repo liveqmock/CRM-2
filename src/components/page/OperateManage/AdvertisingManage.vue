@@ -6,7 +6,7 @@
                 <div class="item blue" @click="toPage(1)">
                     APP首页banner广告位
                 </div>
-                <div class="item yellow">
+                <div class="item yellow" @click="toPage(2)">
                     APP首页产品推荐广告位
                 </div>
                 <div class="item red">
@@ -58,7 +58,7 @@
                         this.$router.push('/appBannerAdv');
                         break;
                     case 2:
-                        this.$router.push();
+                        this.$router.push('/recommendList');
                         break;
                     case 3:
                         this.$router.push();

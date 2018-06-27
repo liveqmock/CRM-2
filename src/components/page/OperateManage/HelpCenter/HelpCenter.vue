@@ -2,15 +2,15 @@
   <div class="help-center">
     <v-breadcrumb :nav="nav"></v-breadcrumb>
     <el-card :body-style="{ padding: '30px 60px' }">
-      <el-button type="primary" @click="addQuestionCate">添加问题类目</el-button>
+      <el-button v-if='p.addHelpType' type="primary" @click="addQuestionCate">添加问题类目</el-button>
       <el-table :data="tableData" border style='margin-top:20px' :height="height">
         <el-table-column prop="id" label="编号" align="center"></el-table-column>
         <el-table-column prop="name" label="问题类目" align="center"></el-table-column>
-        <el-table-column prop="name" label="问题数量" align="center"></el-table-column>
-        <el-table-column label="操作" align="center">
+        <el-table-column prop="problemNum" label="问题数量" align="center"></el-table-column>
+        <el-table-column v-if='operate' label="操作" align="center">
           <template slot-scope="scope">
-            <el-button type="primary" @click="questionList(scope.row)">问题列表</el-button>
-            <el-button type="danger" @click="deleteUser(scope.row)">删除</el-button>
+            <el-button v-if='p.queryHelpQuestionPageList' type="primary" @click="questionList(scope.row)">问题列表</el-button>
+            <el-button v-if='p.deleteHelpType' type="danger" @click="deleteUser(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -40,15 +40,25 @@
 <script>
 import vBreadcrumb from "@/components/common/Breadcrumb.vue";
 import deleteToast from "@/components/common/DeleteToast";
+import * as api from '@/api/OperateManage/HelpCenter/index.js';
+import * as pApi from "@/privilegeList/OperateManage/HelpCenter/index.js";
+import utils from '@/utils/index.js';
 export default {
   components: { vBreadcrumb,deleteToast },
 
   data() {
     return {
       nav: ["运营管理", "帮助中心管理"],
+      // 权限控制
+      p: {
+        addHelpType:false,
+        deleteHelpType:false,
+        queryHelpQuestionPageList:false,
+      },
+      operate:true,
       isShowAddQues:false,
       addQuesTypeBtn:false,
-      tableData: [{id:'1',name:'查看物流'}],
+      tableData: [],
       height:'100vh',
       page: {
         currentPage: 1,
@@ -63,12 +73,29 @@ export default {
   },
   activated(){
     this.height = window.screen.availHeight-400;
+    this.pControl();
     this.getList();
   },
   methods: {
+    // 权限控制
+    pControl() {
+      for (const k in this.p) {
+        this.p[k] = utils.pc(pApi[k]);
+      }
+      if(!this.p.deleteHelpType && !this.p.queryHelpQuestionPageList){
+        this.operate = false;
+      }
+    },
     // 获取数据
     getList(){
-
+      this.$axios.post(api.queryHelpTypePageList,{})
+      .then((res) => {
+        this.tableData = [];
+        this.tableData = res.data.data.data;
+        this.page.totalPage = res.data.data.resultCount
+      }).catch((err) => {
+        console.log(err);
+      });
     },
     // 分页
     handleSizeChange(val) {
@@ -82,13 +109,21 @@ export default {
     // 添加问题类目
     addQuestionCate(){
       this.isShowAddQues = true;
+      this.questionType = '';
     },
     confirmAddQuesType(){
       let that = this;
       this.addQuesTypeBtn = true;
-      setTimeout(function () {  
-        that.addQuesTypeBtn = false;
-      },3000)
+      this.$axios.post(api.addHelpType,{name:this.questionType})
+      .then((res) => {
+        this.$message.success(res.data.data);
+        this.getList(this.page.currentPage);
+        this.addQuesTypeBtn = false;
+        this.isShowAddQues = false;
+      }).catch((err) => {
+        console.log(err);
+        this.isShowAddQues = false;
+      });
     },
     // 问题列表
     questionList(row){
@@ -98,7 +133,7 @@ export default {
     // 删除用户
     deleteUser(row){
       this.delId = row.id;
-      this.delUrl = '';
+      this.delUrl = api.deleteHelpType;
       this.delUri = '';
       this.isShowDelToast = true;
     },

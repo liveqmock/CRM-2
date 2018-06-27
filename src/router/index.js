@@ -428,25 +428,31 @@ export default new Router({
                     name:'helpCenter',
                     path: '/helpCenter',
                     component: resolve => require(['../components/page/OperateManage/HelpCenter/HelpCenter.vue'], resolve),
-                    meta: { title: '帮助中心管理' }
+                    meta: { title: '帮助中心管理',url:"/admin/helpType/queryHelpTypePageList" }
                 },
                 {
                     name:'questionList',
                     path: '/questionList',
                     component: resolve => require(['../components/page/OperateManage/HelpCenter/QuestionList.vue'], resolve),
-                    meta: { title: '问题列表' }
+                    meta: { title: '问题列表',url:"/admin/helpQuestion/queryHelpQuestionPageList" }
                 },
                 {
                     name:'addQuestion',
                     path: '/addQuestion',
                     component: resolve => require(['../components/page/OperateManage/HelpCenter/AddQuestion.vue'], resolve),
-                    meta: { title: '添加问题' }
+                    meta: { title: '添加问题',url:"/admin/helpQuestion/addHelpQuestion" }
+                },
+                {
+                    name:'editQuestion',
+                    path: '/editQuestion',
+                    component: resolve => require(['../components/page/OperateManage/HelpCenter/EditQuestion.vue'], resolve),
+                    meta: { title: '编辑问题',url:"/admin/helpQuestion/updateHelpQuestion" }
                 },
                 {
                     name:'questionInfo',
                     path: '/questionInfo',
                     component: resolve => require(['../components/page/OperateManage/HelpCenter/QuestionInfo.vue'], resolve),
-                    meta: { title: '问题详情' }
+                    meta: { title: '问题详情',url:"/admin/helpQuestion/deleteHelpQuestion" }
                 },
                 {
                     name:'currencyRatio',
@@ -471,6 +477,18 @@ export default new Router({
                     path: '/appBannerAdv',
                     component: resolve => require(['../components/page/OperateManage/AdvertisingManage/AppBannerAdv.vue'], resolve),
                     meta: { title: 'app首页Banner广告位'}
+                },
+                {
+                    name:'recommendList',
+                    path: '/recommendList',
+                    component: resolve => require(['../components/page/OperateManage/AdvertisingManage/RecommendList.vue'], resolve),
+                    meta: { title: '推荐位管理'}
+                },
+                {
+                    name:'recommendMange',
+                    path: '/recommendMange',
+                    component: resolve => require(['../components/page/OperateManage/AdvertisingManage/RecommendMange.vue'], resolve),
+                    meta: { title: '推荐产品管理'}
                 },
                 {
                     name:'keyWords',

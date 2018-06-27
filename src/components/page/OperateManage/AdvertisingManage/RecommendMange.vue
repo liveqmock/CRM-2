@@ -1,26 +1,26 @@
 <template>
   <div class="app-banner-adv">
-    <v-breadcrumb :nav="['运营管理','广告位管理','APP首页banner广告位']"></v-breadcrumb>
+    <v-breadcrumb :nav="['运营管理','推荐产品管理']"></v-breadcrumb>
     <el-card :body-style="{ padding: '20px 40px' }">
-      <el-button @click="addBanImg" type="primary" style="margin-bottom:20px">添加banner图片</el-button>
-      <el-table border :data="tableData">
-        <el-table-column prop="id" label="编号" align="center"></el-table-column>
-        <el-table-column label="图片" align="center">
-          <template slot-scope="scope">
-            <img class="img" :src="scope.row.img">            
-          </template>
-        </el-table-column>
-        <el-table-column prop="id" label="链接" align="center"></el-table-column>
-        <el-table-column prop="id" label="备注" align="center"></el-table-column>
-        <el-table-column prop="id" label="投放时间" align="center"></el-table-column>
-        <el-table-column label="操作" align="center">
-          <template slot-scope="scope">
-            <el-button @click='editBanImg(scope.row)' type="primary">编辑</el-button>
-            <el-button type="warning">删除</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-      <div class="block">
+        <el-button @click="addBanImg" type="primary" style="margin-bottom:20px">新增产品</el-button>
+        <el-table border :data="tableData">
+          <el-table-column prop="id" label="编号" align="center"></el-table-column>
+          <el-table-column label="图片" align="center">
+            <template slot-scope="scope">
+              <img class="img" :src="scope.row.img">            
+            </template>
+          </el-table-column>
+          <el-table-column prop="id" label="链接" align="center"></el-table-column>
+          <el-table-column prop="id" label="备注" align="center"></el-table-column>
+          <el-table-column prop="id" label="位置编号" align="center"></el-table-column>
+          <el-table-column label="操作" align="center">
+            <template slot-scope="scope">
+              <el-button @click='editBanImg(scope.row)' type="primary">编辑</el-button>
+              <el-button type="warning">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <div class="block">
           <el-pagination
               background
               @size-change="handleSizeChange"
@@ -46,8 +46,8 @@
         <el-form-item prop="tip" label="备注说明">
             <el-input class="input-style" placeholder="请输入备注说明" v-model="form.tip"></el-input>
         </el-form-item>
-        <el-form-item prop="time" label="备注说明">
-          <el-date-picker class="input-style" v-model="form.time" type="datetimerange" range-separator="至" start-placeholder="开始时间" end-placeholder="结束时间"></el-date-picker>
+        <el-form-item prop="no" label="位置编号">
+          <el-input class="input-style" v-model="form.no"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -70,13 +70,13 @@ export default {
       diaTitle:'添加Banner图片',
       formLabelWidth: "130px",
       tableData: [{ id: 1,img:'src/assets/images/avatar.jpg' }],
-      form: { img: "" ,idUrl:"",tip:"",time:""},
+      form: { img: "" ,idUrl:"",tip:"",no:""},
       rules:{img:[{ required: true, message: ' ', trigger: 'blur' }],idUrl:[{ required: true, message: '请输入指向链接/ID', trigger: 'blur' }]},
       page: {
         currentPage: 1,
         totalPage: 0
       }
-    };
+   };
   },
 
   activated() {
@@ -113,7 +113,7 @@ export default {
     handleAvatarSuccess(res) {
       this.form.img = res.data.imageUrl;
     },
-     //分页
+    //分页
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
     },

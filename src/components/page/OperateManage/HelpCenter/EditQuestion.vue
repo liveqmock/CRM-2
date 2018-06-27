@@ -32,9 +32,10 @@ export default {
 
   data() {
     return {
-      nav: ["运营管理", "帮助中心管理", "问题管理", "添加问题"],
+      nav: ["运营管理", "帮助中心管理", "问题管理", "编辑问题"],
       height: "100vh",
       questionTypeId:'',
+      questionId:'',
       form: {
         questionTitle: "",
         content: ""
@@ -58,7 +59,7 @@ export default {
           ]
         }
       },
-      uploadData: {}
+      uploadData: {},
     };
   },
   computed: {
@@ -69,8 +70,10 @@ export default {
   activated() {
     this.height = window.screen.availHeight - 400;
     this.questionTypeId = this.$route.query.questionTypeId || sessionStorage.getItem('questionTypeId');
+    this.questionId = this.$route.query.questionId || sessionStorage.getItem('questionId');
     this.form.questionTitle = '';
     this.form.content = '';
+    this.getQuesInfo();
   },
   mounted() {
     // 为图片ICON绑定事件 getModule 为编辑器的内部属性
@@ -120,19 +123,31 @@ export default {
       }
       this.uploadType = "image";
     },
+    // 获取问题信息
+    getQuesInfo(){
+      this.$axios.post(api.findHelpQuestionById,{id:this.questionId})
+      .then((res) => {
+        this.form.questionTitle = res.data.data.title || '';
+        this.form.content = res.data.data.content || '';
+      }).catch((err) => {
+        console.log(err);
+      });
+    },
+    // 提交表单
     submitForm(){
       let data = {};
       data.title = this.form.questionTitle;
       data.content = this.form.content;
       data.typeid = this.questionTypeId;
-      this.$axios.post(api.addHelpQuestion,data)
+      data.id = this.questionId;
+      this.$axios.post(api.updateHelpQuestion,data)
       .then((res) => {
         this.$message.success(res.data.data);
         this.$router.push('/questionList');
       }).catch((err) => {
         console.log(err);
       });
-    }
+    },
   }
 };
 </script>
