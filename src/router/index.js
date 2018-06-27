@@ -478,6 +478,12 @@ export default new Router({
                     component: resolve => require(['../components/page/OperateManage/AdvertisingManage/KeyWords.vue'], resolve),
                     meta: { title: '搜索热门搜索关键词',url:'/admin/hotWord/getHotWordsByPage'}
                 },
+                {
+                    name:'allKeyWords',
+                    path: '/allKeyWords',
+                    component: resolve => require(['../components/page/OperateManage/AllKeyWords.vue'], resolve),
+                    meta: { title: '搜索关键词',url:'/admin/hotWord/getAllWordsByPage'}
+                },
                 // 订单管理
                 {
                     name:'orderList',
