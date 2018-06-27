@@ -11,7 +11,7 @@
         </div>
         <div class="top">
             <span v-if='orderStatus == 4' class="activite-status">当前订单状态：待提货</span>
-            <span v-if='orderStatus == 9' class="activite-status">当前订单状态：交易完成</span>
+            <span v-if='orderStatus == 9 || orderStatus == 7' class="activite-status">当前订单状态：交易完成</span>
             <span v-if='orderStatus == 2' class="activite-status">当前订单状态：待发货</span>
             <span v-if='orderStatus==1' class="pay-time">订单剩余时间：{{orderFreeTime}}</span>
             <span v-if='orderStatus==3' class="pay-time">订单待完成时间：{{orderFinishTime}}</span>
@@ -169,6 +169,7 @@ export default {
   data() {
     return {
       nav: ["订单管理", "订单详情"],
+      detailUrl:'',
       orderId:'',
       boolFirst: false,
       boolsec: false,
@@ -215,6 +216,7 @@ export default {
   activated() {
     // 获取订单信息
     this.orderId = this.$route.query.orderInfoId || sessionStorage.getItem('orderInfoId');
+    this.detailUrl = this.$route.query.orderInfoUrl || sessionStorage.getItem('orderInfoUrl');
     this.getInfo();
     // 获取提货仓列表
     this.getStoreList();
@@ -226,7 +228,7 @@ export default {
   methods: {
     //  获取信息
     getInfo() {
-      this.$axios.post(api.getPickUpByCustomerOrderDetail,{orderId:this.orderId})
+      this.$axios.post(this.detailUrl,{orderId:this.orderId})
       .then((res) => {
         this.orderMsg.status = res.data.data.status;
         // pickedUp: 1：发货 2：自提

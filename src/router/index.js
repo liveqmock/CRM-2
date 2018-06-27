@@ -467,6 +467,12 @@ export default new Router({
                     meta: { title: '广告位管理',url:'/advertisingManage'}
                 },
                 {
+                    name:'appBannerAdv',
+                    path: '/appBannerAdv',
+                    component: resolve => require(['../components/page/OperateManage/AdvertisingManage/AppBannerAdv.vue'], resolve),
+                    meta: { title: 'app首页Banner广告位'}
+                },
+                {
                     name:'keyWords',
                     path: '/keyWords',
                     component: resolve => require(['../components/page/OperateManage/AdvertisingManage/KeyWords.vue'], resolve),

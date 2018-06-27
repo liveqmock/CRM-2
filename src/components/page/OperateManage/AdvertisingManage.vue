@@ -3,7 +3,7 @@
         <v-breadcrumb :nav="['运营管理','广告位管理']"></v-breadcrumb>
         <div class="advertising">
             <div class="row">
-                <div class="item blue">
+                <div class="item blue" @click="toPage(1)">
                     APP首页banner广告位
                 </div>
                 <div class="item yellow">
@@ -55,7 +55,7 @@
             toPage(id) {
                 switch(id) {
                     case 1:
-                        this.$router.push();
+                        this.$router.push('/appBannerAdv');
                         break;
                     case 2:
                         this.$router.push();

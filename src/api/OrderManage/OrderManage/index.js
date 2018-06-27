@@ -1,11 +1,11 @@
-// 待自提订单
-export const queryPickUpByCustomerOrderPageList = '/admin/order/queryPickUpByCustomerOrderPageList';
-// 获取订单详情
-export const getPickUpByCustomerOrderDetail = '/admin/order/getPickUpByCustomerOrderDetail';
 // 星星标记和备注
 export const orderSign = '/admin/order/orderSign';
 
 // 待提货
+// 待自提订单
+export const queryPickUpByCustomerOrderPageList = '/admin/order/queryPickUpByCustomerOrderPageList';
+// 获取待提货订单详情
+export const getPickUpByCustomerOrderDetail = '/admin/order/getPickUpByCustomerOrderDetail';
 // 获取提货仓列表
 export const queryStoreHouseList = '/admin/order/queryStoreHouseList';
 // 更换提货仓
@@ -18,3 +18,17 @@ export const pickUpOrderProduct = '/admin/order/pickUpOrderProduct';
 // 待发货
 // 获取待发货列表
 export const queryUnSendOutOrderPageList = '/admin/order/queryUnSendOutOrderPageList';
+// 待发货详情
+export const getUnSendOutOrderDetail = '/admin/order/getUnSendOutOrderDetail';
+
+// 已完成
+// 获取已完成列表
+export const queryCompletedOrderPageList = '/admin/order/queryCompletedOrderPageList';
+// 已完成详情
+export const getCompletedOrderDetail = '/admin/order/getCompletedOrderDetail';
+
+// 待支付
+// 获取待支付列表
+export const queryUnPaidOrderPageList = '/admin/order/queryUnPaidOrderPageList';
+// 待支付详情
+// export const getCompletedOrderDetail = '/admin/order/getCompletedOrderDetail';

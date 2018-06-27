@@ -117,7 +117,67 @@
                     </template>
                 </el-tab-pane>
                 <el-tab-pane label="待支付" name="toBePaid">
-                    
+                  <template v-if='activeName == "toBePaid"'>
+                    <div class="tab-title">
+                      <span class="spec" :style="{width:w.name,minWidth:w.minWidth}">产品名称</span>
+                      <span class="spec" :style="{width:w.price,minWidth:w.minWidth}">单价</span>
+                      <span class="spec" :style="{width:w.num,minWidth:w.minWidth}">数量</span>
+                      <span class="spec" :style="{width:w.consignee,minWidth:w.minWidth}">收货人</span>
+                      <span class="spec" :style="{width:w.status,minWidth:w.minWidth}">交易状态</span>
+                      <span class="spec" :style="{width:w.collection,minWidth:w.minWidth}">实收款</span>
+                      <span class="spec" :style="{width:w.shipper,minWidth:w.minWidth}">发货方</span>
+                      <span class="spec" :style="{width:w.operate,minWidth:w.minWidth}">操作</span>
+                    </div>
+                    <div v-for="(v,k) in tableData" :key="k" class="tab-wrap">
+                      <div class="tab-content-title">
+                          <el-checkbox @change="orderCheckBox(v)"></el-checkbox>
+                          <span>订单号：{{v.orderNum}}</span>
+                          <span style="margin-left:30px">创建时间：{{v.orderCreateTime|formatDate}}</span>
+                          <div class="operate-btn-group">
+                              <span @click="orderInfo(v)" style="margin:0 15px 0 15px">订单详情</span>
+                              <el-popover placement="bottom" width="150" v-model="v.isShowPop" trigger="click">
+                                  <span slot="reference" style="cursor:pointer">标记 &nbsp <span class="star"
+                                                                                              :style="{color:v.starColor}">★</span></span>
+                                  <span v-for="(v1,k1) in markArr" :key="k1" @click="changeColor(v1,v)"
+                                      :style="{color:v1.label,fontSize:'22px',cursor:'pointer',marginRight:'5px'}">★</span>
+                                  <el-input v-model="v.adminRemark" placeholder="请输入备注"></el-input>
+                              </el-popover>
+                          </div>
+                      </div>
+                      <div class="tab-content">
+                          <div class="left">
+                              <div v-for="(value,index) in v.orderProduct" :key="index" class="bar">
+                                  <div class="name">
+                                      <img :src="value.imgUrl" alt="">
+                                      <span class="pro-name">{{value.productName}}</span>
+                                      <span class="pro-spec">{{value.spec}}</span>
+                                  </div>
+                                  <div class="price">{{value.price}}</div>
+                                  <div class="num">{{value.num}}</div>
+                                  <div class="consignee">{{value.receiver}}</div>
+                              </div>
+                          </div>
+                          <div class="center">
+                              <div class="status"
+                                  :style="{height:120*v.orderProduct.length+v.orderProduct.length-1+'px',lineHeight:120*v.orderProduct.length+v.orderProduct.length-1+'px'}">
+                                  <template>{{status}}</template>
+                              </div>
+                              <div class="collection"
+                                  :style="{height:120*v.orderProduct.length+v.orderProduct.length-1+'px',paddingTop:120*v.orderProduct.length/2-30+'px'}">
+                                  <span>{{v.price | handleMoney}}<br>（含运费：{{v.freightPrice | handleMoney}}）</span>
+                              </div>
+                          </div>
+                          <div class="right">
+                              <div v-for="(value,index) in v.orderProduct" :key="index" class="bar">
+                                  <div class="shipper">{{value.origin}}</div>
+                                  <div class="operate">
+                                      <el-button @click="changeStatus('/admin/order/pickUpOrderProduct',value)" v-if='value.status == "4"' type="primary">已自提</el-button>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                    </div>
+                  </template>
                 </el-tab-pane>
                 <el-tab-pane label="待发货" name="toBeSend">
                   <template v-if='activeName == "toBeSend"'>
@@ -253,7 +313,67 @@
                     
                 </el-tab-pane>
                 <el-tab-pane label="已完成" name="finished">
-                    
+                  <template v-if='activeName == "finished"'>
+                    <div class="tab-title">
+                        <span class="spec" :style="{width:w.name,minWidth:w.minWidth}">产品名称</span>
+                        <span class="spec" :style="{width:w.price,minWidth:w.minWidth}">单价</span>
+                        <span class="spec" :style="{width:w.num,minWidth:w.minWidth}">数量</span>
+                        <span class="spec" :style="{width:w.consignee,minWidth:w.minWidth}">收货人</span>
+                        <span class="spec" :style="{width:w.status,minWidth:w.minWidth}">交易状态</span>
+                        <span class="spec" :style="{width:w.collection,minWidth:w.minWidth}">实收款</span>
+                        <span class="spec" :style="{width:w.shipper,minWidth:w.minWidth}">发货方</span>
+                        <span class="spec" :style="{width:w.operate,minWidth:w.minWidth}">操作</span>
+                    </div>
+                    <div v-for="(v,k) in tableData" :key="k" class="tab-wrap">
+                        <div class="tab-content-title">
+                            <el-checkbox @change="orderCheckBox(v)"></el-checkbox>
+                            <span>订单号：{{v.orderNum}}</span>
+                            <span style="margin-left:30px">创建时间：{{v.orderCreateTime|formatDate}}</span>
+                            <div class="operate-btn-group">
+                                <span @click="orderInfo(v)" style="margin:0 15px 0 15px">订单详情</span>
+                                <el-popover placement="bottom" width="150" v-model="v.isShowPop" trigger="click">
+                                    <span slot="reference" style="cursor:pointer">标记 &nbsp <span class="star"
+                                                                                                :style="{color:v.starColor}">★</span></span>
+                                    <span v-for="(v1,k1) in markArr" :key="k1" @click="changeColor(v1,v)"
+                                        :style="{color:v1.label,fontSize:'22px',cursor:'pointer',marginRight:'5px'}">★</span>
+                                    <el-input v-model="v.adminRemark" placeholder="请输入备注"></el-input>
+                                </el-popover>
+                            </div>
+                        </div>
+                        <div class="tab-content">
+                            <div class="left">
+                                <div v-for="(value,index) in v.orderProduct" :key="index" class="bar">
+                                    <div class="name">
+                                        <img :src="value.imgUrl" alt="">
+                                        <span class="pro-name">{{value.productName}}</span>
+                                        <span class="pro-spec">{{value.spec}}</span>
+                                    </div>
+                                    <div class="price">{{value.price}}</div>
+                                    <div class="num">{{value.num}}</div>
+                                    <div class="consignee">{{value.receiver}}</div>
+                                </div>
+                            </div>
+                            <div class="center">
+                                <div class="status"
+                                    :style="{height:120*v.orderProduct.length+v.orderProduct.length-1+'px',lineHeight:120*v.orderProduct.length+v.orderProduct.length-1+'px'}">
+                                    <template>{{status}}</template>
+                                </div>
+                                <div class="collection"
+                                    :style="{height:120*v.orderProduct.length+v.orderProduct.length-1+'px',paddingTop:120*v.orderProduct.length/2-30+'px'}">
+                                    <span>{{v.price | handleMoney}}<br>（含运费：{{v.freightPrice | handleMoney}}）</span>
+                                </div>
+                            </div>
+                            <div class="right">
+                                <div v-for="(value,index) in v.orderProduct" :key="index" class="bar">
+                                    <div class="shipper">{{value.origin}}</div>
+                                    <div class="operate">
+                                        <el-button @click="changeStatus('/admin/order/pickUpOrderProduct',value)" v-if='value.status == "4"' type="primary">已自提</el-button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                  </template>
                 </el-tab-pane>
                 <el-tab-pane label="已关闭" name="closed">
                     
@@ -332,6 +452,7 @@ export default {
       },
       url: "", //请求地址
       priUrl: "", //权限地址,
+      detailUrl:"", //订单详情地址
       tableData: [],
       page: {
         currentPage: 1,
@@ -413,7 +534,9 @@ export default {
         this.status = "";
       } else if (n == "toBePaid") {
         //待支付订单
-        this.url = "4";
+        this.url = api.queryUnPaidOrderPageList;
+        this.priUrl = pApi.queryUnPaidOrderPageList;
+        this.detailUrl = api.getPickUpByCustomerOrderDetail;
         this.status = "待支付";
       } else if (n == "toBeSend") {
         //待发货订单
@@ -421,14 +544,12 @@ export default {
         this.status = "待发货";
         this.url = api.queryUnSendOutOrderPageList;
         this.priUrl = pApi.queryUnSendOutOrderPageList;
-      } else if (n == "auditProduct") {
-        //待支付订单
-        this.url = "";
-        this.status = "待支付";
+        this.detailUrl = api.getUnSendOutOrderDetail;
       } else if (n == "toBeStay") {
         //待自提订单
         this.url = api.queryPickUpByCustomerOrderPageList;
         this.priUrl = pApi.queryPickUpByCustomerOrderPageList;
+        this.detailUrl = api.getPickUpByCustomerOrderDetail;
         this.status = "待自提";
       } else if (n == "toBeConfirm") {
         //待确认订单
@@ -440,7 +561,9 @@ export default {
         this.status = "退款中";
       } else if (n == "finished") {
         //已完成订单
-        this.url = "3";
+        this.url = api.queryCompletedOrderPageList;
+        this.priUrl = pApi.queryCompletedOrderPageList;
+        this.detailUrl = api.getCompletedOrderDetail;
         this.status = "已完成";
       } else if (n == "closed") {
         //已关闭订单
@@ -477,7 +600,8 @@ export default {
     // 订单详情
     orderInfo(row) {
       sessionStorage.setItem("orderInfoId", row.id);
-      this.$router.push({ name: "orderInfo", query: { orderInfoId: row.id } });
+      sessionStorage.setItem("orderInfoUrl", this.detailUrl);
+      this.$router.push({ name: "orderInfo", query: { orderInfoId: row.id,orderInfoUrl:this.detailUrl } });
     },
     // 订单多选框
     orderCheckBox(row) {
