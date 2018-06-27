@@ -10,7 +10,7 @@
         <el-table-column prop="name" label="反馈没用" align="center"></el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
-            <el-button type="primary">查看详情</el-button>
+            <el-button @click='showQuestionInfo(scope.row)' type="primary">查看详情</el-button>
             <el-button type="warning">编辑</el-button>
             <el-button type="danger">删除</el-button>
           </template>
@@ -71,6 +71,11 @@ export default {
     // 添加问题
     addQuestion(){
         this.$router.push({name:'addQuestion'});
+    },
+    // 查看问题详情
+    showQuestionInfo(row){
+      sessionStorage.setItem('questionInfo',row.id);
+      this.$router.push({name:'questionInfo',query:{'questionInfo':row.id}});
     }
   }
 };

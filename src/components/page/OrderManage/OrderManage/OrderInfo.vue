@@ -12,6 +12,7 @@
         <div class="top">
             <span v-if='orderStatus == 4' class="activite-status">当前订单状态：待提货</span>
             <span v-if='orderStatus == 9' class="activite-status">当前订单状态：交易完成</span>
+            <span v-if='orderStatus == 2' class="activite-status">当前订单状态：待发货</span>
             <span v-if='orderStatus==1' class="pay-time">订单剩余时间：{{orderFreeTime}}</span>
             <span v-if='orderStatus==3' class="pay-time">订单待完成时间：{{orderFinishTime}}</span>
             <br/>
@@ -102,7 +103,9 @@
               </el-table-column>
               <el-table-column prop="status" label="交易状态" align="center">
                 <template slot-scope="scope">
+                  <template v-if='scope.row.status == 2'>待发货</template>
                   <template v-if='scope.row.status == 4'>待提货</template>
+                  <template v-if='scope.row.status == 7'>已完成</template>
                 </template>
               </el-table-column>
               <el-table-column label="实收款" align="center">
@@ -126,7 +129,7 @@
               </el-table-column>
               <el-table-column label="操作" align="center">
                   <template slot-scope="scope">
-                      <el-button v-if='scope.row.status == 4' @click='changeStatus(orderMsg.url)' type="primary">已提货</el-button>
+                      <el-button v-if='scope.row.status == 4' @click='changeSingStatus(orderMsg.sinUrl,scope.row)' type="primary">已提货</el-button>
                   </template>
               </el-table-column>
             </el-table>
@@ -185,17 +188,10 @@ export default {
       warehouseArr: [],
       orderFreeTime: "",
       orderFinishTime: "",
-      form: {
-        orderNum: "",
-        productName: "",
-        receiver: "",
-        recevicePhone: "",
-        startTime: "",
-        endTime: "",
-      },
       // 订单信息
       orderMsg:{
-        url:'', // 按钮状态
+        url:'', // 按钮状态(批量)
+        sinUrl:'', //按钮状态(单个)
         status:'',  //订单状态
         star:'',  //星级
         adminRemark:'', //备注
@@ -232,7 +228,6 @@ export default {
     getInfo() {
       this.$axios.post(api.getPickUpByCustomerOrderDetail,{orderId:this.orderId})
       .then((res) => {
-        console.log(res.data.data)
         this.orderMsg.status = res.data.data.status;
         // pickedUp: 1：发货 2：自提
         if(res.data.data.pickedUp == 1 && res.data.data.status==7){
@@ -297,6 +292,7 @@ export default {
           this.boolsec = true;
           this.boolThr = true;
           this.orderMsg.url = api.pickUpGoods;
+          this.orderMsg.sinUrl = api.pickUpOrderProduct;
           break;
         case "5":
           break;
@@ -321,7 +317,7 @@ export default {
     },
     // 合并单元格
     spanMethod({ row, column, rowIndex, columnIndex }) {
-      if (columnIndex == 4 || columnIndex == 5 || columnIndex == 6) {
+      if (columnIndex == 5 || columnIndex == 6) {
         if (rowIndex == 0) {
           return {
             rowspan: this.tableData.length,
@@ -374,9 +370,19 @@ export default {
         that.orderFinishTime = `${hour}:${minute}:${second}`;
       }, 1000);
     },
-    // 更改订单状态
+    // 更改订单状态(批量)
     changeStatus(url) {
       this.$axios.post(url,{orderId:this.orderId})
+      .then((res) => {
+        this.$message.success(res.data.data);
+        this.getInfo();
+      }).catch((err) => {
+        console.log(err);
+      });
+    },
+    // 已提货（单个）
+    changeSingStatus(url,row){
+      this.$axios.post(url,{orderProductId:row.id})
       .then((res) => {
         this.$message.success(res.data.data);
         this.getInfo();

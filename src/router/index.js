@@ -443,6 +443,12 @@ export default new Router({
                     meta: { title: '添加问题' }
                 },
                 {
+                    name:'questionInfo',
+                    path: '/questionInfo',
+                    component: resolve => require(['../components/page/OperateManage/HelpCenter/QuestionInfo.vue'], resolve),
+                    meta: { title: '问题详情' }
+                },
+                {
                     name:'currencyRatio',
                     path: '/currencyRatio',
                     component: resolve => require(['../components/page/OperateManage/CurrencyRatio.vue'], resolve),

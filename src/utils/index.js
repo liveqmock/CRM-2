@@ -1,4 +1,5 @@
 var md5 = require('js-md5');
+var moment = require('moment');
 let encryptData = function (data) {
     var tmpData = {};
     for (var k in tmpData) {
@@ -106,6 +107,10 @@ let permissionControl = function (per) {
         return false;
     }
 }
+// 格式化时间
+let formatTime = function(value){
+    return value == ''?'':moment(value).format('YYYY-MM-DD HH:mm:ss');
+}
 
 
 
@@ -114,3 +119,4 @@ module.exports.cleanFormData = cleanFormData;
 module.exports.handleCity = handleCity;
 module.exports.handleCityIndex = handleCityIndex;
 module.exports.pc = permissionControl;
+module.exports.formatTime = formatTime;
