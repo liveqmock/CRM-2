@@ -349,9 +349,9 @@
                     let index = getArea.indexOf('IDS');
                     this.tableData[this.tableIndex].includeAreaName = getArea.substring(0, index);//名称
                     this.tableData[this.tableIndex].includeArea = getArea.substring(index + 4);//id
-                    console.log(getArea)
-                    console.log(getArea.substring(0, index))
-                    console.log(getArea.substring(index + 4));//zipcode
+                    // console.log(getArea)
+                    // console.log(getArea.substring(0, index))
+                    // console.log(getArea.substring(index + 4));//zipcode
                 }
             },
             //增加制定省市运费设置

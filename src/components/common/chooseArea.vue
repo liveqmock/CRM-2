@@ -58,6 +58,7 @@
 
 <script>
     import * as api from '../../api/BrandProduct/ShippingTemplate/index'
+    import index from "../../router";
 
     export default {
         components: {},
@@ -105,13 +106,35 @@
                 tempValue: [],
                 orgValue: [],
                 tempIds: [],
+                checkedNames: [],//点击过的省的名称
+                preNames: [],//选中表格行的省的名称
+                preIds: []//选中表格行的省的id
             }
         },
         created() {
-            this.getProvinceListGroupByDistrict();
-            console.log(this.chooseData)
+            let that = this;
+            that.getProvinceListGroupByDistrict();
+            // console.log(that.preData)
+            that.preNames = that.getFirstValue(that.preData.includeAreaName);
+            setTimeout(function () {
+                that.preIds = that.getFirstValue(that.preData.includeArea);
+            }, 100)
         },
+
         methods: {
+            getFirstValue(first) {
+                let that = this;
+                that.tempValue = [];
+                that.ids = [];
+                that.orgIds = [];
+                that.orgValue = [];
+                // that.preNames = [];
+                // that.preIds = [];
+                if (first) {
+                    that.changeData(first);
+                    return that.ids;
+                }
+            },
             //
             changeData(str) {
                 this.changeStr(str);
@@ -210,12 +233,9 @@
                                         }
                                     }
                                     temp.provinceCheck.push(tempprovinceCheck);
-                                    if(that.preData.includeArea){
-                                        // that.getCityList(res.data.data[i][j].zipcode,' ',i,j)
-                                    }
                                 }
                                 that.checkAll.push(temp);
-                                console.log(that.checkAll)
+                                // console.log(that.checkAll)
                                 let tempArea = {
                                     name: arr[i],
                                     id: i,
@@ -230,10 +250,11 @@
                     })
                     .catch(err => {
                         console.log(err);
-                    })
+                    });
+
             },
             //获取省对应的市
-            getCityList(id, isChecked, index, k) {
+            getCityList(id, isChecked, index, k, name) {
                 let that = this;
                 that.ids = [];
                 that.tempValue = [];
@@ -287,8 +308,8 @@
                                     that.checkAll[index].provinceCheck[k].ids.push(v.zipcode);
                                     that.checkAll[index].provinceCheck[k].names.push(v.name);
                                 }
-                                if(isChecked=='checked'){
-                                    if(!that.checkAll[index].provinceCheck[k].isChecked){
+                                if (isChecked == 'checked') {
+                                    if (!that.checkAll[index].provinceCheck[k].isChecked) {
                                         that.checkAll[index].provinceCheck[k].ids = [];
                                         that.checkAll[index].provinceCheck[k].names = [];
                                     }
@@ -311,11 +332,29 @@
                     })
                     .catch(err => {
                         console.log(err);
+                    });
+                if(that.preNames){
+                    that.preNames.forEach(function (v, k) {
+                        if (v == name) {
+                            if (that.preNames.indexOf(v) == -1) {
+                                that.preNames.splice(k, 1);
+                                that.preIds.splice(k, 1);
+                            }
+                        }
                     })
+                }
             },
             //区域选择操作
             closeToask(opr) {
                 let that = this;
+                if (that.preNames) {
+                    for (let p in that.preNames) {
+                        that.checkNames.push(that.getValueByIndex(that.preData.includeAreaName, that.preNames[p]))
+                    }
+                    for (let p in that.preIds) {
+                        that.checkIds.push(that.getValueByIndex(that.preData.includeArea,that.preIds[p]))
+                    }
+                }
                 for (let i in that.checkAll) {
                     for (let j in that.checkAll[i].provinceCheck) {
                         let length = that.checkAll[i].provinceCheck[j].names.length;
@@ -323,12 +362,12 @@
                             let count = that.checkAll[i].provinceCheck[j].count;
                             let name = that.checkAll[i].provinceCheck[j].name;
                             let id = that.checkAll[i].provinceCheck[j].zipcode;
-                            if (count == length) {
-                                var tempName = name + ':', tempId = id + ':';
-                            } else {
-                                // var tempName = name + ':', tempId = id + ':';
-                                var tempName = name + ':', tempId = '111111' + ':';
-                            }
+                            var tempName = name + ':', tempId = id + ':';
+                            // if (count == length) {
+                            //     var tempName = name + ':', tempId = id + ':';
+                            // } else {
+                            //     var tempName = name + ':', tempId = '111111' + ':';
+                            // }
                             for (let k in that.checkAll[i].provinceCheck[j].names) {
                                 if (k == length - 1) {
                                     tempName += that.checkAll[i].provinceCheck[j].names[k];
@@ -349,7 +388,23 @@
                     that.$emit("getArea", false);
                 }
             },
-
+            getValueByIndex(str, name) {
+                if(str.indexOf(name)!=-1){
+                    let index0 = str.indexOf(name);
+                    let index, newStr, temStr, temIndex,tempIndex;
+                    tempIndex=parseInt(parseInt(index0) + 1 + parseInt(name.length));
+                    newStr = str.substring(tempIndex);
+                    if (newStr.indexOf(':') != -1) {
+                        index = newStr.indexOf(':');
+                        tempIndex=parseInt(index)+tempIndex;
+                        temStr = str.substring(index0, tempIndex);
+                        temIndex = temStr.lastIndexOf(',');
+                        return temStr.substring(0,temIndex)
+                    } else {
+                        return str.substring(index0)
+                    }
+                }
+            },
             //区域全选
             handleAllProvince(value, index) {
                 let that = this;
@@ -377,12 +432,12 @@
             //省对应的全选操作
             handleCheckAllChange(val, k, index) {
                 let that = this;
-                that.getCityList(val.zipcode, 'checked', index, k);
+                that.getCityList(val.zipcode, 'checked', index, k, val.name);
                 that.areaCheckedAll(index);
             },
             expandItem(val, k, index) {
                 this.expandId = val.zipcode;
-                this.getCityList(val.zipcode, 'expand', index, k);
+                this.getCityList(val.zipcode, 'expand', index, k, val.name);
             },
             handleCheckedCitiesChange(value, k, index) {
                 let checkedCount = value.length;
