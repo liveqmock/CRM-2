@@ -8,11 +8,11 @@
         <p class="small-title">交易纬度</p>
         <el-button @click="showShareBonus = true" type="success">分红奖励</el-button>
         <el-button @click="showTotalTrans = true" type="success">交易额达标奖励</el-button>
-        <el-button @click="showShareBonus = true" type="success">连续交易额达标</el-button>
-        <el-button @click="showShareBonus = true" type="success">连续交易频率达标</el-button>
-        <el-button @click="showShareBonus = true" type="success">单笔订单交易额</el-button>
+        <el-button @click="showContinTrad = true" type="success">连续交易额达标</el-button>
+        <el-button @click="showContinFrequ = true" type="success">连续交易频率达标</el-button>
+        <el-button @click="showSingleOrder = true" type="success">单笔订单交易额</el-button>
         <p class="small-title">成员纬度</p>
-        <el-button type="success">人数达标奖励</el-button>
+        <el-button @click="showMemberUpStand = true" type="success">人数达标奖励</el-button>
     </el-card>
     <!-- 设置升级经验值 -->
     <el-dialog title="所需经验值设置" :visible.sync="showExperienceValue" width="25%" open="cleanData">
@@ -85,6 +85,68 @@
             <el-button @click="showTotalTrans = false">取 消</el-button>
         </span>
     </el-dialog>
+    <!-- 连续交易额达标 -->
+    <el-dialog title="经验值设置" :visible.sync="showContinTrad" width="25%" open="cleanData">
+        <p style="font-size:16px;font-weight:700;margin-left:30px">每周交易额达到：</p>
+        <p class="dialog-item">
+            <span class="dialog-title">交易额</span>
+            <el-input class="dialog-inp" v-model="form.continueTradMoney" placeholder="请输入数值"></el-input>元
+        </p>
+        <p class="dialog-item">
+            <span class="dialog-title">获得经验值</span>
+            <el-input class="dialog-inp" v-model="form.continueTradExp" placeholder="请输入数值"></el-input>分
+        </p>
+        <span slot="footer">
+            <el-button type="primary" @click="showContinTrad = false">确 定</el-button>
+            <el-button @click="showContinTrad = false">取 消</el-button>
+        </span>
+    </el-dialog>
+    <!-- 连续交易频率达标 -->
+    <el-dialog title="经验值设置" :visible.sync="showContinFrequ" width="25%" open="cleanData">
+        <p style="font-size:16px;font-weight:700;margin-left:30px">每周交易频次达到：</p>
+        <p class="dialog-item">
+            <span class="dialog-title">交易频次</span>
+            <el-input class="dialog-inp" v-model="form.continueFreqNum" placeholder="请输入数值"></el-input>次
+        </p>
+        <p class="dialog-item">
+            <span class="dialog-title">获得经验值</span>
+            <el-input class="dialog-inp" v-model="form.continueFreqExp" placeholder="请输入数值"></el-input>分
+        </p>
+        <span slot="footer">
+            <el-button type="primary" @click="showContinFrequ = false">确 定</el-button>
+            <el-button @click="showContinFrequ = false">取 消</el-button>
+        </span>
+    </el-dialog>
+    <!-- 单笔订单交易额 -->
+    <el-dialog title="经验值设置" :visible.sync="showSingleOrder" width="25%" open="cleanData">
+        <p class="dialog-item">
+            <span class="dialog-title">单笔订单交易额</span>
+            <el-input class="dialog-inp" v-model="form.singleOrderMoney" placeholder="请输入数值"></el-input>元
+        </p>
+        <p class="dialog-item">
+            <span class="dialog-title">获得经验值</span>
+            <el-input class="dialog-inp" v-model="form.singleOrderExp" placeholder="请输入数值"></el-input>分
+        </p>
+        <span slot="footer">
+            <el-button type="primary" @click="showSingleOrder = false">确 定</el-button>
+            <el-button @click="showSingleOrder = false">取 消</el-button>
+        </span>
+    </el-dialog>
+    <!-- 人数达标奖励 -->
+    <el-dialog title="经验值设置" :visible.sync="showMemberUpStand" width="25%" open="cleanData">
+        <p class="dialog-item">
+            <span class="dialog-title">每增加</span>
+            <el-input class="dialog-inp" v-model="form.memberAddNum" placeholder="请输入数值"></el-input>人
+        </p>
+        <p class="dialog-item">
+            <span class="dialog-title">获得经验值</span>
+            <el-input class="dialog-inp" v-model="form.memberUpStanExp" placeholder="请输入数值"></el-input>分
+        </p>
+        <span slot="footer">
+            <el-button type="primary" @click="showMemberUpStand = false">确 定</el-button>
+            <el-button @click="showMemberUpStand = false">取 消</el-button>
+        </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -101,6 +163,10 @@ export default {
       showNecessaryConf: false,
       showShareBonus: false,
       showTotalTrans:false,
+      showContinTrad:false,
+      showContinFrequ:false,
+      showSingleOrder:false,
+      showMemberUpStand:false,
       form: {
         // 设置升级经验值
         experienceValue: "",
@@ -120,7 +186,19 @@ export default {
         shareBousExp: "",
         // 交易额达标奖励
         totalTransAdd:'',
-        totalTransExp:''
+        totalTransExp:'',
+        // 连续交易额达标
+        continueTradMoney:'',
+        continueTradExp:'',
+        // 连续交易频率达标
+        continueFreqNum:'',
+        continueFreqExp:'',
+        // 单笔订单交易额
+        singleOrderMoney:'',
+        singleOrderExp:'',
+        // 人数达标奖励
+        memberAddNum:'',
+        memberUpStanExp:''
       },
       shopId: ""
     };

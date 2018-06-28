@@ -14,7 +14,7 @@
             <el-table-column label="操作" align="center" minWidth="350">
                 <template slot-scope="scope">
                     <el-button @click="shopPromotion(scope.row)" type="primary">晋级设置</el-button>
-                    <el-button type="success">阶级设置</el-button>
+                    <el-button @click="shopDemotion(scope.row)" type="success">降级设置</el-button>
                     <el-button type="warning">编辑</el-button>
                     <el-button type="danger">删除</el-button>
                 </template>
@@ -107,6 +107,11 @@ export default {
     shopPromotion(row){
         sessionStorage.setItem('promotionShopId',row.id);
         this.$router.push({name:'promotionShop',query:{'promotionShopId':row.id}})
+    },
+    // 店铺降级
+    shopDemotion(row){
+        sessionStorage.setItem('demotionShopId',row.id);
+        this.$router.push({name:'demotionShop',query:{'demotionShopId':row.id}})
     }
   }
 };

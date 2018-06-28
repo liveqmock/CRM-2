@@ -125,6 +125,18 @@ export default new Router({
                     component: resolve => require(['../components/page/SpellShopManage/ShopLevel/PromotionShop.vue'], resolve),
                     meta: { title: '店铺晋升设置'}
                 },
+                {
+                    name:'demotionShop',
+                    path: '/demotionShop',
+                    component: resolve => require(['../components/page/SpellShopManage/ShopLevel/DemotionShop.vue'], resolve),
+                    meta: { title: '店铺降级设置'}
+                },
+                {
+                    name:'shopList',
+                    path: '/shopList',
+                    component: resolve => require(['../components/page/SpellShopManage/ShopManage/ShopList.vue'], resolve),
+                    meta: { title: '店铺列表'}
+                },
                 // 会员管理
                 {
                     name:'levelManage',

@@ -137,6 +137,10 @@
                                 index: "shopLevelSet",
                                 title: "店铺等级设置"
                             },
+                            {
+                                index: "shopList",
+                                title: "店铺管理"
+                            },
                         ]
                     },
                     {
