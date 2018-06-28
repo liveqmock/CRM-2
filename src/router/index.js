@@ -112,6 +112,19 @@ export default new Router({
                     component: resolve => require(['../components/page/BrandProduct/GiftManage/EditGift.vue'], resolve),
                     meta: { title: '编辑礼包'}
                 },
+                // 拼店店铺管理
+                {
+                    name:'shopLevelSet',
+                    path: '/shopLevelSet',
+                    component: resolve => require(['../components/page/SpellShopManage/ShopLevel/ShopLevelSet.vue'], resolve),
+                    meta: { title: '店铺等级设置'}
+                },
+                {
+                    name:'promotionShop',
+                    path: '/promotionShop',
+                    component: resolve => require(['../components/page/SpellShopManage/ShopLevel/PromotionShop.vue'], resolve),
+                    meta: { title: '店铺晋升设置'}
+                },
                 // 会员管理
                 {
                     name:'levelManage',

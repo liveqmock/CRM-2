@@ -179,7 +179,7 @@ export default {
       boolFor: false,
       isShowPreferential: false, //优惠活动
       isShowWarehouse: false, // 更换提货仓
-      orderStatus: "", //订单状态: 1:待支付 2:待发货 3:待确认 4:待自提 5:已冻结 6:退货中 7:正常已完成 8:已关闭 9:自提已完成
+      orderStatus: "", //订单状态: 1:待支付 2:待发货 3:待确认 4:待自提 5:确认收货 6:退款（关闭） 7:正常已完成 8:已关闭 9:用户删除 10:超时关闭
       markArr: [
         { label: "red", value: "1" },
         { label: "skyblue", value: "2" },
@@ -218,7 +218,6 @@ export default {
   activated() {
     // 获取订单信息
     this.orderId = this.$route.query.orderInfoId || sessionStorage.getItem('orderInfoId');
-    this.detailUrl = this.$route.query.orderInfoUrl || sessionStorage.getItem('orderInfoUrl');
     this.getInfo();
     // 获取提货仓列表
     this.getStoreList();
@@ -230,8 +229,9 @@ export default {
   methods: {
     //  获取信息
     getInfo() {
-      this.$axios.post(this.detailUrl,{orderId:this.orderId})
+      this.$axios.post(api.getOrderDetail,{orderId:this.orderId})
       .then((res) => {
+        console.log(res.data)
         this.orderMsg.status = res.data.data.status;
         // pickedUp: 1：发货 2：自提
         if(res.data.data.pickedUp == 1 && res.data.data.status==7){
@@ -314,6 +314,12 @@ export default {
           this.boolFor = false;
           break;
         case "7":
+          this.boolFirst = true;
+          this.boolsec = true;
+          this.boolThr = true;
+          this.boolFor = true;
+          break;
+        case "9":
           this.boolFirst = true;
           this.boolsec = true;
           this.boolThr = true;

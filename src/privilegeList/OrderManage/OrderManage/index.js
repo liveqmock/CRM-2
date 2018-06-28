@@ -6,7 +6,9 @@ export const queryUnSendOutOrderPageList = '/admin/order/queryUnSendOutOrderPage
 export const queryCompletedOrderPageList = '/admin/order/queryCompletedOrderPageList';
 // 待支付
 export const queryUnPaidOrderPageList = '/admin/order/queryUnPaidOrderPageList';
-// 获取所有点订单列表
+// 所有订单
 export const queryAllOrderPageList = '/admin/order/queryAllOrderPageList';
-// 获取冻结订单列表
+// 冻结订单
 export const queryFreezeOrderPageList = '/admin/order/queryFreezeOrderPageList';
+// 已关闭
+export const queryClosedOrderPageList = '/admin/order/queryClosedOrderPageList'

@@ -2,7 +2,7 @@
     <div class="product-list">
         <v-breadcrumb :nav='nav'></v-breadcrumb>
         <el-card :body-style="{ padding: '20px 20px'}">
-            <el-form :model="form" ref="form" inline label-width="100px">
+            <el-form :model="form" ref="form" inline label-width="120px">
                 <el-form-item prop="orderNum" label="订单编号">
                     <el-input v-model="form.orderNum" placeholder="请输入订单编号"></el-input>
                 </el-form-item>
@@ -519,7 +519,6 @@ export default {
       },
       url: "", //请求地址
       priUrl: "", //权限地址,
-      detailUrl:"", //订单详情地址
       tableData: [],
       page: {
         currentPage: 1,
@@ -664,26 +663,8 @@ export default {
     },
     // 订单详情
     orderInfo(row) {
-        if(row.status == 1){
-            this.detailUrl = api.getUnPaidOrderDetail;
-        }else if(row.status == 2){
-            this.detailUrl = api.getUnSendOutOrderDetail;
-        }else if(row.status == 3){
-            this.detailUrl = '';
-        }else if(row.status == 4){
-            this.detailUrl = api.getPickUpByCustomerOrderDetail;
-        }else if(row.status == 5){
-            this.detailUrl = '';
-        }else if(row.status == 6){
-            this.detailUrl = '';
-        }else if(row.status == 7){
-            this.detailUrl = api.getCompletedOrderDetail;
-        }else if(row.status == 8){
-            this.detailUrl = api.getFreezeOrderDetail;
-        }
       sessionStorage.setItem("orderInfoId", row.id);
-      sessionStorage.setItem("orderInfoUrl", this.detailUrl);
-      this.$router.push({ name: "orderInfo", query: { orderInfoId: row.id,orderInfoUrl:this.detailUrl } });
+      this.$router.push({ name: "orderInfo", query: { orderInfoId: row.id } });
     },
     // 订单多选框
     orderCheckBox(row) {
@@ -727,6 +708,9 @@ export default {
   .el-tabs__item.is-active,
   .el-tabs__item:hover {
     color: #ff1e30;
+  }
+  .el-input--small .el-input__inner{
+      width: 220px;
   }
   .btn-group {
     margin-bottom: 10px;

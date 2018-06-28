@@ -129,6 +129,17 @@
                         ]
                     },
                     {
+                        icon: "icon-dianpu",
+                        index: "拼店店铺管理",
+                        title: "拼店店铺管理",
+                        subs: [
+                            {
+                                index: "shopLevelSet",
+                                title: "店铺等级设置"
+                            },
+                        ]
+                    },
+                    {
                         icon: "icon-huiyuanzhanghaoguanli",
                         index: "6",
                         title: "经销商会员管理",
