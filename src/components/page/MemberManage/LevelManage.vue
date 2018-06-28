@@ -12,6 +12,18 @@
                             {{scope.row.level}}级
                         </template>
                     </el-table-column>
+                    <el-table-column label="能否参加拼店" align="center">
+                        <template slot-scope="scope">
+                            <template v-if="scope.row.allowGroupStore == 1">是</template>
+                            <template v-if="scope.row.allowGroupStore == 2">否</template>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="能否创建店铺" align="center">
+                        <template slot-scope="scope">
+                            <template v-if="scope.row.allowCreateStore == 1">是</template>
+                            <template v-if="scope.row.allowCreateStore == 2">否</template>
+                        </template>
+                    </el-table-column>
                     <el-table-column prop="remark" label="备注说明" align="center"></el-table-column>
                     <el-table-column label="是否自动晋级" width="120" align="center">
                         <template slot-scope="scope">
@@ -54,6 +66,18 @@
                     <el-input v-model="addForm.level" auto-complete="off" placeholder="请输入数值"></el-input>
                     <span>级</span>
                 </el-form-item>
+                <el-form-item label="能否参加拼店">
+                    <el-radio-group v-model="addForm.allowGroupStore">
+                        <el-radio label="1">是</el-radio>
+                        <el-radio label="2">否</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+                <el-form-item label="能否创建店铺">
+                    <el-radio-group v-model="addForm.allowCreateStore">
+                        <el-radio label="1">是</el-radio>
+                        <el-radio label="2">否</el-radio>
+                    </el-radio-group>
+                </el-form-item>
                 <el-form-item label="是否晋级">
                     <el-radio-group v-model="addForm.autoUp">
                         <el-radio label="1">是</el-radio>
@@ -77,6 +101,18 @@
                 <el-form-item prop="level" label="层级">
                     <el-input v-model="form.level" auto-complete="off" placeholder="请输入数值"></el-input>
                     <span>级</span>
+                </el-form-item>
+                <el-form-item label="能否参加拼店">
+                    <el-radio-group v-model="form.allowGroupStore">
+                        <el-radio label="1">是</el-radio>
+                        <el-radio label="2">否</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+                <el-form-item label="能否创建店铺">
+                    <el-radio-group v-model="form.allowCreateStore">
+                        <el-radio label="1">是</el-radio>
+                        <el-radio label="2">否</el-radio>
+                    </el-radio-group>
                 </el-form-item>
                 <el-form-item label="是否晋级">
                     <el-radio-group v-model="form.autoUp">
@@ -158,12 +194,16 @@
                     name: '',
                     level: '',
                     autoUp: '1',
+                    allowGroupStore: '1',
+                    allowCreateStore: '1',
                     remark: ''
                 },
                 addForm: {
                     name: '',
                     level: '',
                     autoUp: '1',
+                    allowGroupStore: '1',
+                    allowCreateStore: '1',
                     remark: ''
                 },
                 rules:{},
@@ -244,6 +284,8 @@
                 this.addForm.name='';
                 this.addForm.level='';
                 this.addForm.autoUp='1';
+                this.addForm.allowGroupStore='1';
+                this.addForm.allowCreateStore='1';
                 this.addForm.remark='';
             },
             //编辑
@@ -251,6 +293,8 @@
                 this.title = '编辑层级';
                 this.editMask = true;
                 row.autoUp=row.autoUp.toString();
+                row.allowGroupStore=row.allowGroupStore.toString();
+                row.allowCreateStore=row.allowCreateStore.toString();
                 this.form = row;
                 this.id = row.id;
                 this.isUp =true;
@@ -266,6 +310,8 @@
                     return
                 }
                 data.autoUp=this[formName].autoUp;
+                data.allowGroupStore=this[formName].allowGroupStore;
+                data.allowCreateStore=this[formName].allowCreateStore;
                 data.remark=this[formName].remark;
                 if (!this.isUp) {
                     url = api.addDealerLevel;
