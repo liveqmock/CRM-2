@@ -136,8 +136,8 @@
                   <template slot-scope="scope">
                     <el-button v-if='scope.row.status == 8 && (scope.row.return_type== 1 || scope.row.return_type== 2)' @click='changeSingStatus(1,scope.row)' type="primary">退款成功</el-button>
                     <el-button v-if='scope.row.status == 4 || scope.row.status == 5' @click='changeSingStatus(2,scope.row)' type="primary">买家申请退款</el-button>
-                    <el-button v-if='scope.row.status == 2' type="primary">已自提</el-button>
-                    <el-button v-if='scope.row.status == 6' @click='changeSingStatus(scope.row)' type="primary">买家申请退换</el-button>
+                    <el-button v-if='scope.row.status == 2' type="primary" @click='changeSingStatus(3,scope.row)'>已自提</el-button>
+                    <el-button v-if='scope.row.status == 6' @click='changeSingStatus(4,scope.row)' type="primary">买家申请退换</el-button>
                     <el-button v-if='scope.row.status == 8 && scope.row.return_type== 3' @click='changeSingStatus(scope.row)' type="primary">退换成功</el-button>
                     <template v-if='scope.row.status == 3 || scope.row.status == 8'>已提货</template>
                   </template>
@@ -178,9 +178,13 @@ export default {
 
   data() {
     return {
+      // 权限控制
+      p: {
+        pickUpGoods: false
+      },
       nav: ["订单管理", "订单详情"],
-      detailUrl:'',
-      orderId:'',
+      detailUrl: "",
+      orderId: "",
       boolFirst: false,
       boolsec: false,
       boolThr: false,
@@ -191,7 +195,7 @@ export default {
       markArr: [
         { label: "red", value: "1" },
         { label: "skyblue", value: "2" },
-        { label: "lightgreen",value: "3" },
+        { label: "lightgreen", value: "3" },
         { label: "orange", value: "4" },
         { label: "purple", value: "5" }
       ],
@@ -199,34 +203,36 @@ export default {
       warehouseArr: [],
       orderFreeTime: "",
       orderFinishTime: "",
-      orderFreePayTime:'',
+      orderFreePayTime: "",
       // 订单信息
-      orderMsg:{
-        url:'', // 按钮状态(批量)
-        sinUrl:'', //按钮状态(单个)
-        status:'',  //订单状态
-        star:'',  //星级
-        adminRemark:'', //备注
-        nickName:'', //昵称
-        phone:'', //联系方式
-        receiver:'',  //收货人
-        recevicePhone:'',  //收货人电话
-        receiveAddress:'',  //收货地址
-        buyerRemark:'', //卖家备注
-        storehouseName:'', //提货点
-        orderNum:'',  //订单号
-        createTime:'', //订单创建时间
-        sysPayTime:'', // 平台支付时间
-        payTime:'', //第三方支付时间
-        deliveryTime:'',  // 发货时间
-        tradeNo:'', //第三方支付交易号
+      orderMsg: {
+        url: "", // 按钮状态(批量)
+        sinUrl: "", //按钮状态(单个)
+        status: "", //订单状态
+        star: "", //星级
+        adminRemark: "", //备注
+        nickName: "", //昵称
+        phone: "", //联系方式
+        receiver: "", //收货人
+        recevicePhone: "", //收货人电话
+        receiveAddress: "", //收货地址
+        buyerRemark: "", //卖家备注
+        storehouseName: "", //提货点
+        orderNum: "", //订单号
+        createTime: "", //订单创建时间
+        sysPayTime: "", // 平台支付时间
+        payTime: "", //第三方支付时间
+        deliveryTime: "", // 发货时间
+        tradeNo: "" //第三方支付交易号
       }
     };
   },
 
   activated() {
     // 获取订单信息
-    this.orderId = this.$route.query.orderInfoId || sessionStorage.getItem('orderInfoId');
+    this.orderId =
+      this.$route.query.orderInfoId || sessionStorage.getItem("orderInfoId");
+    this.pControl();
     this.getInfo();
     // 获取提货仓列表
     this.getStoreList();
@@ -235,56 +241,82 @@ export default {
   },
 
   methods: {
+    // 权限控制
+    pControl() {
+      for (const k in this.p) {
+        this.p[k] = utils.pc(pApi[k]);
+      }
+    },
     //  获取信息
     getInfo() {
-      this.$axios.post(api.getOrderDetail,{orderId:this.orderId,url:pApi.getOrderDetail})
-      .then((res) => {
-        this.orderMsg.status = res.data.data.status;
-        // pickedUp: 1：发货 2：自提
-        // if(res.data.data.pickedUp == 1 && res.data.data.status==7){
-        //   this.orderStatus = 7;
-        // }else if(res.data.data.pickedUp == 2 && res.data.data.status==7){
-        //   this.orderStatus = 9;
-        // }else{
-        //   this.orderStatus = res.data.data.status;
-        // }
-        this.orderStatus = res.data.data.status;
-        this.getProgressStu(this.orderStatus.toString());
-        this.orderMsg.star = res.data.data.star==null?'':this.markArr[res.data.data.star-1].label;
-        this.orderMsg.adminRemark = res.data.data.adminRemark;
-        this.orderMsg.nickName = res.data.data.nickname;
-        this.orderMsg.phone = res.data.data.phone;
-        this.orderMsg.receiver = res.data.data.receiver;
-        this.orderMsg.recevicePhone = res.data.data.recevicePhone;
-        this.orderMsg.receiveAddress = `${res.data.data.province == undefined?"":res.data.data.province}${res.data.data.city}${res.data.data.area}`;
-        this.orderMsg.buyerRemark = res.data.data.buyerRemark;
-        this.orderMsg.storehouseName = `${res.data.data.storehouseProvince == undefined?"":res.data.data.storehouseProvince}${res.data.data.storehouseCity}${res.data.data.storehouseArea}${res.data.data.storehouseAddress}`;
-        this.orderMsg.orderNum = res.data.data.orderNum;
-        this.orderMsg.createTime = res.data.data.createTime;
-        this.orderMsg.sysPayTime = res.data.data.sysPayTime;
-        this.orderMsg.payTime = res.data.data.payTime;
-        this.orderMsg.deliveryTime = res.data.data.deliveryTime;
-        this.orderMsg.tradeNo = res.data.data.tradeNo;
-        this.orderFreePayTime = res.data.data.createTime;
-        this.tableData = [];
-        res.data.data.list.forEach((v,k)=>{
-          v.totalPrice = res.data.data.totalPrice;
-          v.freightPrice = res.data.data.freightPrice;
-          v.tokenCoin = res.data.data.tokenCoin == null?'0':res.data.data.tokenCoin;
-          v.balance = res.data.data.balance == null?'0':res.data.data.balance;
-          v.userScore = res.data.data.userScore == null?'0':res.data.data.userScore;
-          v.type = res.data.data.payType;
-          v.amounts = res.data.data.amounts == null?'0':res.data.data.amounts;
-          this.tableData.push(v);
+      this.$axios
+        .post(api.getOrderDetail, {
+          orderId: this.orderId,
+          url: pApi.getOrderDetail
         })
-        this.orderFreeTimeDown(this.orderFreePayTime);
-      }).catch((err) => {
-        console.log(res)
-      });
+        .then(res => {
+          this.orderMsg.status = res.data.data.status;
+          // pickedUp: 1：发货 2：自提
+          // if(res.data.data.pickedUp == 1 && res.data.data.status==7){
+          //   this.orderStatus = 7;
+          // }else if(res.data.data.pickedUp == 2 && res.data.data.status==7){
+          //   this.orderStatus = 9;
+          // }else{
+          //   this.orderStatus = res.data.data.status;
+          // }
+          this.orderStatus = res.data.data.status;
+          this.getProgressStu(this.orderStatus.toString());
+          this.orderMsg.star =
+            res.data.data.star == null
+              ? ""
+              : this.markArr[res.data.data.star - 1].label;
+          this.orderMsg.adminRemark = res.data.data.adminRemark;
+          this.orderMsg.nickName = res.data.data.nickname;
+          this.orderMsg.phone = res.data.data.phone;
+          this.orderMsg.receiver = res.data.data.receiver;
+          this.orderMsg.recevicePhone = res.data.data.recevicePhone;
+          this.orderMsg.receiveAddress = `${
+            res.data.data.province == undefined ? "" : res.data.data.province
+          }${res.data.data.city}${res.data.data.area}`;
+          this.orderMsg.buyerRemark = res.data.data.buyerRemark;
+          this.orderMsg.storehouseName = `${
+            res.data.data.storehouseProvince == undefined
+              ? ""
+              : res.data.data.storehouseProvince
+          }${res.data.data.storehouseCity}${res.data.data.storehouseArea}${
+            res.data.data.storehouseAddress
+          }`;
+          this.orderMsg.orderNum = res.data.data.orderNum;
+          this.orderMsg.createTime = res.data.data.createTime;
+          this.orderMsg.sysPayTime = res.data.data.sysPayTime;
+          this.orderMsg.payTime = res.data.data.payTime;
+          this.orderMsg.deliveryTime = res.data.data.deliveryTime;
+          this.orderMsg.tradeNo = res.data.data.tradeNo;
+          this.orderFreePayTime = res.data.data.createTime;
+          this.tableData = [];
+          res.data.data.list.forEach((v, k) => {
+            v.totalPrice = res.data.data.totalPrice;
+            v.freightPrice = res.data.data.freightPrice;
+            v.tokenCoin =
+              res.data.data.tokenCoin == null ? "0" : res.data.data.tokenCoin;
+            v.balance =
+              res.data.data.balance == null ? "0" : res.data.data.balance;
+            v.userScore =
+              res.data.data.userScore == null ? "0" : res.data.data.userScore;
+            v.type = res.data.data.payType;
+            v.amounts =
+              res.data.data.amounts == null ? "0" : res.data.data.amounts;
+            this.tableData.push(v);
+          });
+          this.orderFreeTimeDown(this.orderFreePayTime);
+        })
+        .catch(err => {
+          console.log(res);
+        });
     },
     //  重置表单
     resetForm(formName) {
-        this.$refs[formName].resetFields();
+      this.$refs[formName].resetFields();
     },
     // 判断进度条状态
     getProgressStu(n) {
@@ -410,35 +442,53 @@ export default {
     },
     // 更改订单状态(批量)
     changeStatus(url) {
-      this.$axios.post(url,{orderId:this.orderId})
-      .then((res) => {
-        this.$message.success(res.data.data);
-        this.getInfo();
-      }).catch((err) => {
-        console.log(err);
-      });
+      this.$axios
+        .post(url, { orderId: this.orderId, url: pApi.pickUpGoods })
+        .then(res => {
+          this.$message.success(res.data.data);
+          this.getInfo();
+        })
+        .catch(err => {
+          console.log(err);
+        });
     },
     // 更改订单状态（单个）
-    changeSingStatus(status,row){
-      sessionStorage.setItem('afterSaleOprId',row.id);
-      if(status == 2){
-        this.$router.push({name:'afterSaleOpr',query:{'afterSaleOprId':row.id}});
+    changeSingStatus(status, row) {
+      sessionStorage.setItem("afterSaleOprId", row.id);
+      if (status == 2) {
+        //买家申请退款
+        this.$router.push({
+          name: "afterSaleOpr",
+          query: { afterSaleOprId: row.id }
+        });
+      } else if (status == 3) {
+        this.$axios
+          .post(api.pickUpOrderProduct, { orderProductId: row.id, url: pApi.pickUpOrderProduct })
+          .then(res => {
+            this.$message.success(res.data.data);
+            this.getInfo();
+          })
+          .catch(err => {
+            console.log(err);
+          });
       }
     },
     // 查看物流信息
     showLogisticsMsg() {},
     // 获取提货仓列表
-    getStoreList(){
+    getStoreList() {
       this.warehouseArr = [];
-      this.$axios.post(api.queryStoreHouseList,{})
-      .then((res) => {
-        res.data.data.forEach((v,k)=>{
-          v.active = false;
-          this.warehouseArr.push(v);
+      this.$axios
+        .post(api.queryStoreHouseList, {})
+        .then(res => {
+          res.data.data.forEach((v, k) => {
+            v.active = false;
+            this.warehouseArr.push(v);
+          });
         })
-      }).catch((err) => {
-        console.log(err)
-      });
+        .catch(err => {
+          console.log(err);
+        });
     },
     // 更换提货仓
     changeWarehouse(row) {
@@ -446,14 +496,22 @@ export default {
         v.active = false;
       });
       row.active = true;
-      this.$axios.post(api.changeStoreHouse,{orderId:this.orderId,storeHouseId:row.id})
-      .then((res) => {
-        this.$message.success(res.data.data);
-        this.orderMsg.storehouseName = row.province==undefined?'':row.province +row.city+row.area+row.address
-      }).catch((err) => {
-        console.log(err)
-      });
-    },
+      this.$axios
+        .post(api.changeStoreHouse, {
+          orderId: this.orderId,
+          storeHouseId: row.id
+        })
+        .then(res => {
+          this.$message.success(res.data.data);
+          this.orderMsg.storehouseName =
+            row.province == undefined
+              ? ""
+              : row.province + row.city + row.area + row.address;
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
   }
 };
 </script>
