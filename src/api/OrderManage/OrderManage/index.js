@@ -33,9 +33,11 @@ export const queryUnPaidOrderPageList = '/admin/order/queryUnPaidOrderPageList';
 // 获取所有点订单列表
 export const queryAllOrderPageList = '/admin/order/queryAllOrderPageList';
 
-// 已冻结
-// 获取冻结订单列表
-export const queryFreezeOrderPageList = '/admin/order/queryFreezeOrderPageList';
-
 // 已关闭
 export const queryClosedOrderPageList = '/admin/order/queryClosedOrderPageList'
+
+// 待确认
+export const queryWaitReceivingOrderPageList = '/admin/order/queryWaitReceivingOrderPageList'
+
+// 待处理订单
+export const queryPendingOrderPageList = '/admin/order/queryPendingOrderPageList'

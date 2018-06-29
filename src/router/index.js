@@ -137,6 +137,12 @@ export default new Router({
                     component: resolve => require(['../components/page/SpellShopManage/ShopManage/ShopList.vue'], resolve),
                     meta: { title: '店铺列表'}
                 },
+                {
+                    name:'shopInfo',
+                    path: '/shopInfo',
+                    component: resolve => require(['../components/page/SpellShopManage/ShopManage/ShopInfo.vue'], resolve),
+                    meta: { title: '店铺详情'}
+                },
                 // 会员管理
                 {
                     name:'levelManage',
@@ -532,13 +538,19 @@ export default new Router({
                     name:'orderList',
                     path: '/orderList',
                     component: resolve => require(['../components/page/OrderManage/OrderManage/OrderList.vue'], resolve),
-                    meta: { title: '订单管理'}
+                    meta: { title: '订单管理',url:'/orderManage'}
+                },
+                {
+                    name:'undealOrder',
+                    path: '/undealOrder',
+                    component: resolve => require(['../components/page/OrderManage/OrderManage/UndealOrder.vue'], resolve),
+                    meta: { title: '待处理订单',url:'/admin/order/queryPendingOrderPageList'}
                 },
                 {
                     name:'orderInfo',
                     path: '/orderInfo',
                     component: resolve => require(['../components/page/OrderManage/OrderManage/OrderInfo.vue'], resolve),
-                    meta: { title: '订单详情'}
+                    meta: { title: '订单详情',url:'/admin/order/getOrderDetail'}
                 },
                 {
                     name:'afterSaleOpr',

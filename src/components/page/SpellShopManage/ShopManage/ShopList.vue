@@ -54,7 +54,7 @@
           <el-table-column prop="id" label="状态" align="center"></el-table-column>
           <el-table-column label="操作" align="center">
               <template slot-scope="scope">
-                  <el-button type="primary">查看详情</el-button>
+                  <el-button @click="showInfo(scope.row)" type="primary">查看详情</el-button>
               </template>
           </el-table-column>
         </el-table>
@@ -112,6 +112,11 @@ export default {
       this.page.currentPage = val;
       this.submitForm(val);
     },
+    // 查看店铺详情
+    showInfo(row){
+      sessionStorage.setItem('shopInfoId',row.id);
+      this.$router.push({name:'shopInfo',query:{'shopInfoId':row.id}})
+    }
   }
 };
 </script>

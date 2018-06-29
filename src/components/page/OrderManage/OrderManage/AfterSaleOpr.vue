@@ -380,7 +380,8 @@
         data() {
             return {
                 nav: ["订单管理", "申请操作"],
-                opr: 2,//1换货2退货3仅退款
+                productId:'',
+                opr: 3,//1换货2退货3仅退款
                 boolFirst: true,
                 boolsec: false,
                 boolThr: false,
@@ -406,6 +407,8 @@
         },
 
         activated() {
+            this.productId = this.$route.query.afterSaleOprId || sessionStorage.getItem('afterSaleOprId');
+            console.log(this.productId)
             this.getInfo();
         },
 
