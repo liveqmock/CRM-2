@@ -70,7 +70,7 @@
     import icon from "../../../common/ico";
     import vBreadcrumb from '../../../common/Breadcrumb.vue';
     import vChoosearea from '../../../common/chooseClassify.vue';
-    import vChoosebrand from '../../../common/chooseBrand.vue';
+    import vChoosebrand from '../../../common/SupplierChooseBrand.vue';
     import region from '../../../common/Region';
     import * as api from '../../../../api/MemberManage/SupplierManage/index'
     import * as pApi from '../../../../privilegeList/MemberManage/SupplierManage/index.js';

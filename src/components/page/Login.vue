@@ -62,7 +62,7 @@ export default {
       code: true,
       codeTime: 5,
       form1: {
-        phone: "17601056863",
+        phone: "18667159736",
         password: "123456789"
       },
       form2: {
