@@ -202,6 +202,9 @@
                     return
                 }
                 if(that.form.country==1){
+                    this.form.provinceId = this.address[0];
+                    this.form.cityId = this.address[1];
+                    this.form.areaId = this.address[2];
                     if(!that.form.provinceId||!that.form.cityId||!that.form.areaId){
                         that.$message.warning('请输入省市区!');
                         return
@@ -240,7 +243,7 @@
                     .then(res => {
                         that.btnLoading = false;
                         if (res.data.code == 200) {
-                            that.$message.success(res.data.data);
+                            that.$message.success(res.data.msg);
                             setTimeout(function () {
                                 that.$router.push('/supplierManage')
                             }, 1000)

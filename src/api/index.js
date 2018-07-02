@@ -26,7 +26,7 @@ axios.interceptors.request.use(config => {
     // }
     if (config.url != '/commonAPI/ossClient/aliyunOSSUploadImage') {
         if (config.data.url == undefined) {
-            receiveData.url = config.url;
+            receiveData.url = '/dashboard';
         }
     }
     if (config.method == 'post') {
