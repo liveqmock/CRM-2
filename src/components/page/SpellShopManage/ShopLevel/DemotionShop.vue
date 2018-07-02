@@ -23,12 +23,10 @@
     <!-- 人数不足条件 -->
     <el-dialog title="人数不足条件" :visible.sync="showMemberNoEnough" width="25%" open="cleanData">
         <p class="dialog-item">
-            <span class="dialog-title">人数减少</span>
-            <el-input class="dialog-inp" v-model="form.memberReduce" placeholder="请输入数值"></el-input>人
+            <span style="margin-left:30px">人数每减少1人，则扣除</span>
         </p>
         <p class="dialog-item">
-            <span class="dialog-title">扣除经验值</span>
-            <el-input class="dialog-inp" v-model="form.memberReducExp" placeholder="请输入数值"></el-input>分
+            <el-input class="dialog-inp" style="margin-left:30px" v-model="form.memberReducExp" placeholder="请输入数值"></el-input>分
         </p>
         <span slot="footer">
             <el-button type="primary" @click="showMemberNoEnough = false">确 定</el-button>

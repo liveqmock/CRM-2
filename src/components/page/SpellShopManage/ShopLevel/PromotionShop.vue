@@ -58,8 +58,7 @@
     <!-- 分红奖励 -->
     <el-dialog title="经验值设置" :visible.sync="showShareBonus" width="25%" open="cleanData">
         <p class="dialog-item">
-            <span class="dialog-title">完成分红</span>
-            <el-input class="dialog-inp" v-model="form.shareBousNum" placeholder="请输入数值"></el-input>次
+            <span style="margin-left:30px">达成分红次数1次，则获得</span>
         </p>
         <p class="dialog-item">
             <span class="dialog-title">获得经验值</span>
@@ -73,8 +72,7 @@
     <!-- 交易额达标奖励 -->
     <el-dialog title="经验值设置" :visible.sync="showTotalTrans" width="25%" open="cleanData">
         <p class="dialog-item">
-            <span class="dialog-title">总交易额增加</span>
-            <el-input class="dialog-inp" v-model="form.totalTransAdd" placeholder="请输入数值"></el-input>次
+            <span style="margin-left:30px">总交易额增加1元，则增加</span>
         </p>
         <p class="dialog-item">
             <span class="dialog-title">获得经验值</span>
@@ -135,8 +133,7 @@
     <!-- 人数达标奖励 -->
     <el-dialog title="经验值设置" :visible.sync="showMemberUpStand" width="25%" open="cleanData">
         <p class="dialog-item">
-            <span class="dialog-title">每增加</span>
-            <el-input class="dialog-inp" v-model="form.memberAddNum" placeholder="请输入数值"></el-input>人
+            <span style="margin-left:30px">每增加1人则获得</span>
         </p>
         <p class="dialog-item">
             <span class="dialog-title">获得经验值</span>
@@ -182,10 +179,8 @@ export default {
         shareOutBonusNum: "",
         selectedShareOutBonusNum: "",
         // 分红奖励
-        shareBousNum: "",
         shareBousExp: "",
         // 交易额达标奖励
-        totalTransAdd:'',
         totalTransExp:'',
         // 连续交易额达标
         continueTradMoney:'',
@@ -197,7 +192,6 @@ export default {
         singleOrderMoney:'',
         singleOrderExp:'',
         // 人数达标奖励
-        memberAddNum:'',
         memberUpStanExp:''
       },
       shopId: ""

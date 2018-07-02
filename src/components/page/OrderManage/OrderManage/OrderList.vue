@@ -26,7 +26,7 @@
                 <el-form-item prop="endTime" label="下单结束时间">
                   <el-date-picker v-model="form.endTime" type="datetime" placeholder="请选择结束时间"></el-date-picker>
                 </el-form-item>
-                <el-form-item prop="shutDownStatus" label="关闭状态">
+                <el-form-item prop="closeReason" label="关闭状态">
                     <el-select v-model="form.closeReason" placeholder="请选择">
                       <el-option label="暂不选择" value=""></el-option>
                       <el-option label="已关闭（超时关闭）" value="1"></el-option>
@@ -34,7 +34,7 @@
                       <el-option label="已关闭（退款关闭）" value="3"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item prop="pickUp" label="完成类型">
+                <el-form-item prop="finishType" label="完成类型">
                     <el-select v-model="form.finishType" placeholder="请选择">
                       <el-option label="暂不选择" value=""></el-option>
                       <el-option label="已完成（快递收货）" value="1"></el-option>
