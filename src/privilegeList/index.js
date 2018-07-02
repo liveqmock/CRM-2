@@ -130,7 +130,10 @@
         export const updateDealerLevel='/admin/dealerLevel/updateDealerLevel';
         // 根据id删除
         export const deleteDealerLevelById='/admin/dealerLevel/deleteDealerLevelById';
-
+        // 晋级设置
+        export const promotionManage = '/promotionManage';
+        // 降级设置
+        export const degradeManage = '/degradeManage';
 //经销商加盟管理
         //经销商列表接口
         export const getInvitePageList='/admin/invite/queryInvitePageList';
