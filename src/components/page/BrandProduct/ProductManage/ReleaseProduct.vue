@@ -100,7 +100,7 @@ import draggable from "vuedraggable";
 import Quill from "quill";
 import icon from "@/components/common/ico";
 import * as api from "@/api/BrandProduct/ProductMange/index.js";
-import * as pApi from "@/privilegeList/index.js";
+import * as pApi from "@/privilegeList/BrandProduct/ProductMange/index.js";
 import utils from "@/utils/index.js";
 export default {
   components: {
@@ -248,6 +248,7 @@ export default {
       this.form.originalImg = JSON.stringify(tmpOriUrl);
       let data = {};
       data = this.form;
+      data.url = pApi.addProduct;
       this.$axios.post(api.addProduct,data)
       .then(res=>{
         this.$message.success(res.data.data);
@@ -368,6 +369,7 @@ export default {
       if(!tmp){
         let data = {};
         data.name = this.tagName;
+        data.url = pApi.addProduct;
         this.$axios.post(api.addTagLibrary,data)
         .then(res=>{
           this.$message.success('添加成功!');
@@ -395,7 +397,7 @@ export default {
     getFirstItem() {
         this.itemList = [];
       this.$axios
-        .post(api.getCategoryList, { fatherid: 0 })
+        .post(api.getCategoryList, { fatherid: 0 ,url:pApi.addProduct})
         .then(res => {
             res.data.data.data.forEach((v,k)=>{
                 this.itemList.push({label:v.name,value:v.id,children:[]})
@@ -415,6 +417,7 @@ export default {
         })
         let data ={};
         data.fatherid = val[0];
+        data.url = pApi.addProduct;
         this.itemList[index].children = [];
         this.$axios
         .post(api.getCategoryList, data)
@@ -435,7 +438,7 @@ export default {
       this.form.secCategoryId = val[1];
       this.brandArr = [];
       this.$axios
-        .post(api.queryCategoryBrandCid, {cId:id})
+        .post(api.queryCategoryBrandCid, {cId:id,url:pApi.addProduct})
         .then(res => {
             res.data.data.forEach((v,k)=>{
               this.brandArr.push({label:v.name,value:v.id})
@@ -453,6 +456,7 @@ export default {
       data.firstCategoryId = this.form.firstCategoryId;
       data.secCategoryId = this.form.secCategoryId;
       data.brandId = this.form.brandId;
+      data.url = pApi.addProduct;
       this.$axios
         .post(api.querySupplierBrandPageList, data)
         .then(res => {
@@ -468,7 +472,7 @@ export default {
     getFreightTemplate(){
       this.freightTemplateArr = [];
       this.$axios
-        .post(api.getFreightTemplateList, {})
+        .post(api.getFreightTemplateList, {url:pApi.addProduct})
         .then(res => {
             res.data.data.forEach((v,k)=>{
               this.freightTemplateArr.push({label:v.name,value:v.id})
@@ -482,7 +486,7 @@ export default {
     getAllTags(){
       this.tagArr = [];
        this.$axios
-        .post(api.queryTagLibraryList, {})
+        .post(api.queryTagLibraryList, {url:pApi.addProduct})
         .then(res => {
             res.data.data.forEach((v,k)=>{
               this.tagArr.push({label:v.name,value:v.id})

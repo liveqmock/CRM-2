@@ -479,7 +479,7 @@ export default {
     getStoreList() {
       this.warehouseArr = [];
       this.$axios
-        .post(api.queryStoreHouseList, {})
+        .post(api.queryStoreHouseList, {url:pApi.getOrderDetail})
         .then(res => {
           res.data.data.forEach((v, k) => {
             v.active = false;
@@ -499,7 +499,8 @@ export default {
       this.$axios
         .post(api.changeStoreHouse, {
           orderId: this.orderId,
-          storeHouseId: row.id
+          storeHouseId: row.id,
+          url:pApi.getOrderDetail
         })
         .then(res => {
           this.$message.success(res.data.data);

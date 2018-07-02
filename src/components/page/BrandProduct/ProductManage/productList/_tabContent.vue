@@ -287,6 +287,7 @@ export default {
       let data = {};
       data.productId = row.id;
       data.status = status;
+      data.url = pApi.updateProductShelves;
       this.$axios
         .post(api.updateProductShelves, data)
         .then(res => {
@@ -302,6 +303,7 @@ export default {
       let data = {};
       data.productId = row.id;
       data.status = status;
+      data.url = pApi.updateProductStatus;
       this.$axios
         .post(api.updateProductStatus, data)
         .then(res => {
@@ -324,7 +326,7 @@ export default {
     getFirstItem() {
       this.itemList = [];
       this.$axios
-        .post(api.getCategoryList, { fatherid: 0 })
+        .post(api.getCategoryList, { fatherid: 0,url: pApi.queryProductPageList})
         .then(res => {
           res.data.data.data.forEach((v, k) => {
             this.itemList.push({ label: v.name, value: v.id, children: [] });
@@ -344,6 +346,7 @@ export default {
       });
       let data = {};
       data.fatherid = val[0];
+      data.url = pApi.queryProductPageList;
       this.$axios
         .post(api.getCategoryList, data)
         .then(res => {
@@ -365,6 +368,7 @@ export default {
       let data = {};
       data.ids = this.multipleSelection.join(",");
       data.status = status;
+      data.url = pApi.updateBatchProductStatus;
       this.$axios
         .post(api.updateBatchProductStatus, data)
         .then(res => {

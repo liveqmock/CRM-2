@@ -1,7 +1,7 @@
 {
   "name": "vue-manage-system",
-  "version": "3.1.0",
-  "description": "基于Vue.js 2.x系列 + element-ui 内容管理系统解决方案",
+  "version": "v1.0.0",
+  "description": "CRM",
   "author": "wuchengji",
   "private": true,
   "scripts": {

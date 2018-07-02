@@ -69,6 +69,7 @@
 <script>
 import vBreadcrumb from "@/components/common/Breadcrumb.vue";
 import * as api from "@/api/BrandProduct/ProductMange/index.js";
+import * as pApi from "@/privilegeList/BrandProduct/ProductMange/index.js";
 export default {
   components: {
     vBreadcrumb
@@ -105,6 +106,7 @@ export default {
       })
       data.specData = JSON.stringify(specData);
       data.productId = this.productId;
+      data.url = pApi.querySaleSpecList;
       this.$axios.post(api.addProductSpec,data)
       .then((res) => {
           this.$message.success(res.data.data);
@@ -118,6 +120,7 @@ export default {
       let data = {};
       data.secCategoryId = this.secondItemId;
       data.productId = this.productId;
+      data.url = pApi.querySaleSpecList;
       this.$axios.post(api.querySaleSpecList,data)
       .then((res) => {
         this.specificationArr = [];
@@ -146,6 +149,7 @@ export default {
       data.saleSpecValue = JSON.stringify(tmp);
       data.secCategoryId = this.secondItemId;
       data.productId = this.productId;
+      data.url = pApi.querySaleSpecList;
       this.$axios.post(api.addSaleSpecValue,data)
       .then((res) => {
           this.$message.success('生成成功!');

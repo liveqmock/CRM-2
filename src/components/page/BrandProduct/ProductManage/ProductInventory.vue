@@ -24,6 +24,7 @@
 <script>
 import vBreadcrumb from "@/components/common/Breadcrumb.vue";
 import * as api from "@/api/BrandProduct/ProductMange/index.js";
+import * as pApi from "@/privilegeList/BrandProduct/ProductMange/index.js";
 export default {
   components: {
     vBreadcrumb
@@ -73,7 +74,7 @@ export default {
     getInfo() {
       this.tableData = [];
       this.$axios
-        .post(api.queryProductStockList, { productId: this.productId })
+        .post(api.queryProductStockList, { productId: this.productId,url:pApi.queryProductStockList })
         .then(res => {
           res.data.data.forEach((v, k) => {
             this.tableData.push(v);
@@ -90,6 +91,7 @@ export default {
       data.id = row.id;
       data.stock = row.stock;
       data.stock_unit = this.unit;
+      data.url=pApi.queryProductStockList;
       this.$axios
         .post(api.updateProductStock, data)
         .then(res => {

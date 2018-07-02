@@ -16,3 +16,5 @@ export const updateProductShelves = '/admin/product/updateProductShelves';
 export const findProductById = '/admin/product/findProductById';
 // 产品审核
 export const updateProductStatus = '/admin/product/updateProductStatus';
+// 批量操作
+export const updateBatchProductStatus = '/admin/product/updateBatchProductStatus';

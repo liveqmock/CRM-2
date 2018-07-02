@@ -58,6 +58,7 @@
 <script>
 import vBreadcrumb from "@/components/common/Breadcrumb.vue";
 import * as api from "@/api/BrandProduct/ProductMange/index.js";
+import * as pApi from "@/privilegeList/BrandProduct/ProductMange/index.js";
 export default {
   components: {
     vBreadcrumb
@@ -81,7 +82,7 @@ export default {
     // 获取产品信息
     getProductInfo(){
       this.tableData = [];
-      this.$axios.post(api.queryProductPriceSaleSpecList,{productId:this.productId})
+      this.$axios.post(api.queryProductPriceSaleSpecList,{productId:this.productId,url:pApi.queryProductPriceSaleSpecList})
       .then((res) => {
         res.data.data.forEach((v,k)=>{
           this.tableData.push(v)
@@ -103,6 +104,7 @@ export default {
       data.v4 = row.v4;
       data.min_payment = row.min_payment;
       data.group_price = row.group_price;
+      data.url = pApi.queryProductPriceSaleSpecList;
       this.$axios.post(api.updateProductPrice,data)
       .then((res) => {
           this.$message.success(res.data.data);
