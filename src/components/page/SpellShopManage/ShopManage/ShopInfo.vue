@@ -59,7 +59,7 @@
               <img v-if='avatar == ""' src="../../../../assets/images/avatar.jpg" alt="">
               <img v-else :src="avatar" alt="">
             </el-upload>
-            <p style="margin-top:10px"><el-button type="primary">拼店账户</el-button></p>
+            <p style="margin-top:10px"><el-button @click="spellShopAcc" type="primary">拼店账户</el-button></p>
             <p style="margin-top:10px"><el-button type="primary">成员管理</el-button></p>
             <p style="margin-top:10px"><el-button type="primary">店铺公告管理</el-button></p>
           </div>
@@ -149,7 +149,7 @@ export default {
   activated() {
     this.shopId =
       this.$route.query.shopInfoId || sessionStorage.getItem("shopInfoId");
-    console.log(this.shopId);
+      console.log(this.shopId);
   },
 
   methods: {
@@ -162,6 +162,10 @@ export default {
     // 上传成功
     uploadSuccess(res){
       this.avatar = res.data.imageUrl;
+    },
+    // 拼店账户
+    spellShopAcc(){
+      this.$router.push({name:'spellShopAccount'})
     }
   }
 };

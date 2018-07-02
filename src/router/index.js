@@ -143,6 +143,12 @@ export default new Router({
                     component: resolve => require(['../components/page/SpellShopManage/ShopManage/ShopInfo.vue'], resolve),
                     meta: { title: '店铺详情'}
                 },
+                {
+                    name:'spellShopAccount',
+                    path: '/spellShopAccount',
+                    component: resolve => require(['../components/page/SpellShopManage/ShopManage/SpellShopAccount.vue'], resolve),
+                    meta: { title: '拼店账户'}
+                },
                 // 会员管理
                 {
                     name:'levelManage',
