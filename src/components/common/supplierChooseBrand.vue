@@ -141,7 +141,6 @@
                 if (item.checked && that.brandIds.indexOf(id) == -1) {
                     that.brandIds.push(id);
                     that.brandNames.push(name);
-
                 } else {
                     for (let i in that.brandIds) {
                         if (id == that.brandIds[i]) {
