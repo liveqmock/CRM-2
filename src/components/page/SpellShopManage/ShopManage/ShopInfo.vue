@@ -60,8 +60,8 @@
               <img v-else :src="avatar" alt="">
             </el-upload>
             <p style="margin-top:10px"><el-button @click="spellShopAcc" type="primary">拼店账户</el-button></p>
-            <p style="margin-top:10px"><el-button type="primary">成员管理</el-button></p>
-            <p style="margin-top:10px"><el-button type="primary">店铺公告管理</el-button></p>
+            <p style="margin-top:10px"><el-button @click="memberManage" type="primary">成员管理</el-button></p>
+            <p style="margin-top:10px"><el-button @click="shopAnnouncement" type="primary">店铺公告管理</el-button></p>
           </div>
         </div>
         <hr style="border:none;height:1px;background-color:#e2e2e2"/>
@@ -78,6 +78,7 @@
             <div class="shop-left">
               <p class="shop-msg">
                 <span>店铺拼店分红总额：￥52000000000</span>
+                <span style="color:red">(已经交易的加上现阶段未分红的总额)</span>
               </p>
             </div>
           </div>
@@ -158,7 +159,9 @@ export default {
     // 店铺转让
     shopTransfer(){},
     // 查看分红详情
-    shareBoneMsg(){},
+    shareBoneMsg(){
+      this.$router.push({name:'shareBonusInfo'})
+    },
     // 上传成功
     uploadSuccess(res){
       this.avatar = res.data.imageUrl;
@@ -166,6 +169,14 @@ export default {
     // 拼店账户
     spellShopAcc(){
       this.$router.push({name:'spellShopAccount'})
+    },
+    // 成员管理
+    memberManage(){
+      this.$router.push({name:'shopMemberManage'})
+    },
+    // 店铺公告
+    shopAnnouncement(){
+      this.$router.push({name:'shopAnnouncement'})
     }
   }
 };

@@ -149,6 +149,30 @@ export default new Router({
                     component: resolve => require(['../components/page/SpellShopManage/ShopManage/SpellShopAccount.vue'], resolve),
                     meta: { title: '拼店账户'}
                 },
+                {
+                    name:'shopMemberManage',
+                    path: '/shopMemberManage',
+                    component: resolve => require(['../components/page/SpellShopManage/ShopManage/MemberManage.vue'], resolve),
+                    meta: { title: '成员管理'}
+                },
+                {
+                    name:'shareBonusInfo',
+                    path: '/shareBonusInfo',
+                    component: resolve => require(['../components/page/SpellShopManage/ShopManage/ShareBonusInfo.vue'], resolve),
+                    meta: { title: '分红详情'}
+                },
+                {
+                    name:'shareBonusCom',
+                    path: '/shareBonusCom',
+                    component: resolve => require(['../components/page/SpellShopManage/ShopManage/ShareBonusCom.vue'], resolve),
+                    meta: { title: '分红详情'}
+                },
+                {
+                    name:'shopAnnouncement',
+                    path: '/shopAnnouncement',
+                    component: resolve => require(['../components/page/SpellShopManage/ShopManage/ShopAnnouncement.vue'], resolve),
+                    meta: { title: '店铺公告'}
+                },
                 // 会员管理
                 {
                     name:'levelManage',

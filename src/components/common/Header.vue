@@ -1,7 +1,7 @@
 <template>
     <div class="header">
         <transition name="bounce">
-            <div v-if="isShowTitle" class="logo">后台管理系统</div>
+            <div v-if="isShowTitle" class="logo">欢迎进入后台管理系统</div>
         </transition>
         <!-- 折叠按钮 -->
         <div class="collapse-btn" :class="{'btn-color':!isShowTitle}" @click="collapseChage">
@@ -160,6 +160,7 @@ export default {
   text-align: center;
   line-height: 70px;
   background-color: #fb1f30;
+  font-size: 16px;
 }
 .header-right {
   float: right;

@@ -5,6 +5,7 @@ import router from './router';
 import axios from './api/index.js';
 import ElementUI from 'element-ui';
 import vueQuillEditor from 'vue-quill-editor' // 引入富文本工具
+import echarts from 'echarts'
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
@@ -16,6 +17,7 @@ Vue.use(ElementUI, { size: 'small' });
 Vue.use(Vue=>{
     Vue.prototype.$axios = axios;
 })
+Vue.prototype.$echarts = echarts;
 
 // 全局过滤器
 import moment from 'moment';
