@@ -322,7 +322,13 @@ export default new Router({
                     name:'promotionManage',
                     path: '/promotionManage',
                     component: resolve => require(['../components/page/MemberManage/PromotionManage.vue/PromotionManage.vue'], resolve),
-                    meta: { title: '晋升设置' }
+                    meta: { title: '晋升设置',url:'/promotionManage' }
+                },
+                {
+                    name:'degradeManage',
+                    path: '/degradeManage',
+                    component: resolve => require(['../components/page/MemberManage/DegradeManage.vue/DegradeManage.vue'], resolve),
+                    meta: { title: '降级设置',url:'/degradeManage' }
                 },
                 {
                     name:'productList',
@@ -562,6 +568,12 @@ export default new Router({
                     path: '/allKeyWords',
                     component: resolve => require(['../components/page/OperateManage/AllKeyWords.vue'], resolve),
                     meta: { title: '搜索关键词',url:'/admin/hotWord/getAllWordsByPage'}
+                },
+                {
+                    name:'deliveryAddress',
+                    path: '/deliveryAddress',
+                    component: resolve => require(['../components/page/OperateManage/DeliveryAddress.vue'], resolve),
+                    meta: { title: '提货地址设置',url:'/admin/storeHouse/queryStoreHouseList'}
                 },
                 // 订单管理
                 {

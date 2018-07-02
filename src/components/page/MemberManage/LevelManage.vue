@@ -33,8 +33,8 @@
                     </el-table-column>
                     <el-table-column v-if="isShowOperate" label="操作" align="center">
                         <template slot-scope="scope">
-                            <el-button type="primary" size="small" @click="upSet(scope.$index,scope.row)">晋级设置</el-button>
-                            <el-button type="warning" size="small" @click="downSet(scope.$index,scope.row)">降级设置</el-button>
+                            <el-button type="primary" size="small" v-if="p.promotionManage" @click="upSet(scope.$index,scope.row)">晋级设置</el-button>
+                            <el-button type="warning" size="small" v-if="p.degradeManage" @click="downSet(scope.$index,scope.row)">降级设置</el-button>
                             <!--<el-button type="primary" size="small" @click="priceLevel(scope.$index,scope.row)">价格阶层</el-button>-->
                             <el-button type="warning" v-if="p.updateDealerLevel" size="small" @click="editItem(scope.$index,scope.row)">编辑
                             </el-button>
@@ -177,7 +177,9 @@
                 p:{
                     addDealerLevel:false,
                     updateDealerLevel:false,
-                    deleteDealerLevelById:false
+                    deleteDealerLevelById:false,
+                    degradeManage:false,
+                    promotionManage:false
                 },
                 isShowOperate:true,
 
@@ -233,7 +235,7 @@
                 for (const k in this.p) {
                     this.p[k] = utils.pc(pApi[k]);
                 }
-                if (!this.p.updateDealerLevel&&!this.p.deleteDealerLevelById) {
+                if (!this.p.updateDealerLevel&&!this.p.deleteDealerLevelById&&!this.p.promotionManage&&!this.p.degradeManage) {
                     this.isShowOperate = false;
                 }
             },
@@ -342,14 +344,16 @@
                     });
             },
 
-            // //晋级设置
-            // upSet(index,row){
-            //     this.$router.push({ path: "/secondClassify", query: { params: row } });
-            // },
-            // //降级设置
-            // downSet(index,row){
-            //
-            // },
+            //晋级设置
+            upSet(index,row){
+                sessionStorage.setItem('MemberRow',JSON.stringify(row));
+                this.$router.push({ path: "/promotionManage", query: { MemberRow: JSON.stringify(row) } });
+            },
+            //降级设置
+            downSet(index,row){
+                sessionStorage.setItem('MemberRow',JSON.stringify(row));
+                this.$router.push({ path: "/degradeManage", query: { MemberRow: JSON.stringify(row) } });
+            },
             // //价格阶层
             // priceLevel(index,row){
             //

@@ -218,6 +218,10 @@
                                 index: "allKeyWords",
                                 title: "搜索关键词"
                             },
+                            {
+                                index: "deliveryAddress",
+                                title: "提货地址设置"
+                            },
                         ]
                     },
                     {

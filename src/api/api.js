@@ -190,7 +190,10 @@ export const getManageList='/mock/5aeac1c6c186102e067af3f3/test/getManageList';
     export const getList='/admin/brand/getList';
     //发起——根据品牌获取品类
     export const getProductCategoryList='/admin/productCategory/queryProductCategoryByBrandId';
-
+    // 晋级设置
+    export const promotionManage = '/promotionManage';
+    // 降级设置
+    export const degradeManage = '/degradeManage';
 //经销商加盟管理
     // 发起经销商接口
     export const addInvite='/admin/invite/addInvite';
