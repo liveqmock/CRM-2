@@ -32,7 +32,7 @@
                             <img :src="scope.row.original_img" alt="">
                         </template>
                     </el-table-column>
-                    <!--<el-table-column prop="name" label="产品数" width="180"></el-table-column>-->
+                    <el-table-column prop="num" label="产品数" width="180"></el-table-column>
                     <el-table-column label="状态" width="180" align="center">
                         <template slot-scope="scope">
                             <template v-if="scope.row.status == 1">启用</template>

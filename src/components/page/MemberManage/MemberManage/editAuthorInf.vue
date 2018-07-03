@@ -86,7 +86,7 @@
             this.permit.level = this.permit.level_id;
             this.oldId = this.permit.id;
             this.permit.d_type = this.permit.d_type.toString();
-            this.permit.pickedUp = this.permit.pickedUp.toString();
+            this.permit.pickedUp = this.permit.picked_up.toString();
         },
         methods: {
             //获取用户层级列表

@@ -51,21 +51,21 @@
                         <img class="img" v-if="dealer.head_img" :src="dealer.head_img" alt="">
                         <img class="img" v-else src="../../../../assets/images/logo.png" alt="">
                     </div>
-                    <div>
-                    <el-button type="primary" @click="toLowerAgent">下级代理({{dealer.sub_level_num}})</el-button>
-                    </div>
-                    <div>
-                    <el-button type="primary" @click="toMemberTree" style="margin-left: 0">查看会员树状图</el-button>
-                    </div>
-                    <div>
-                    <el-button type="primary" @click="toOperateLog" style="margin-left: 0">用户操作日志</el-button>
-                    </div>
-                    <div>
-                    <el-button type="primary" @click="toAccount" style="margin-left: 0">他的账户</el-button>
-                    </div>
-                    <div>
-                    <el-button type="primary" style="margin-left: 0">实名信息</el-button>
-                    </div>
+                    <!--<div>-->
+                    <!--<el-button type="primary" @click="toLowerAgent">下级代理({{dealer.sub_level_num}})</el-button>-->
+                    <!--</div>-->
+                    <!--<div>-->
+                    <!--<el-button type="primary" @click="toMemberTree" style="margin-left: 0">查看会员树状图</el-button>-->
+                    <!--</div>-->
+                    <!--<div>-->
+                    <!--<el-button type="primary" @click="toOperateLog" style="margin-left: 0">用户操作日志</el-button>-->
+                    <!--</div>-->
+                    <!--<div>-->
+                    <!--<el-button type="primary" @click="toAccount" style="margin-left: 0">他的账户</el-button>-->
+                    <!--</div>-->
+                    <!--<div>-->
+                    <!--<el-button type="primary" style="margin-left: 0">实名信息</el-button>-->
+                    <!--</div>-->
                     <div>
                         <el-button type="primary" @click="btnClicked('/lowerMemberManage')">下级代理({{dealer.sub_level_num}})</el-button>
                     </div>
@@ -73,13 +73,13 @@
                         <el-button type="primary" v-if="p.findDealerTreeById"  @click="btnClicked('/memberTree')" style="margin-left: 0">查看会员树状图</el-button>
                     </div>
                     <div>
-                        <!--<el-button type="primary" @click="btnClicked('/operateLog')" style="margin-left: 0">用户操作日志</el-button>-->
+                        <el-button type="primary" @click="btnClicked('/operateLog')" style="margin-left: 0">用户操作日志</el-button>
                     </div>
                     <div>
                         <el-button type="primary" v-if="p.queryDealerAccount" @click="btnClicked('/memberAccount')" style="margin-left: 0">他的账户</el-button>
                     </div>
                     <div>
-                        <el-button type="primary" v-if="p.findDealerRealnameInfo" @click="btnClicked('/realNameInfo')" style="margin-left: 0">实名信息</el-button>
+                        <el-button type="primary" v-if="p.findDealerRealnameInfo_1" @click="btnClicked('/realNameInfo')" style="margin-left: 0">实名信息</el-button>
                     </div>
                 </div>
                 <div class="clearfix"></div>
@@ -224,7 +224,7 @@
                     updateDealerPermitById: false,
                     findDealerTreeById:false,
                     queryDealerAccount:false,
-                    findDealerRealnameInfo:false,
+                    findDealerRealnameInfo_1:false,
                 },
 
                 dealer: {},
@@ -245,6 +245,7 @@
             JSON.parse(sessionStorage.getItem("memberDetail"));
         this.getDetail();
         this.pControl();
+        console.log(this.id)
     },
     methods: {
         // 权限控制
@@ -316,16 +317,16 @@
             this.$router.push('/memberManage')
         },
         //跳到下级代理页面
-//            toLowerAgent() {
-//                sessionStorage.setItem('memberId', that.id);
-//                this.$router.push({path: '/lowerMemberManage'})
-//            },
-        //跳到会员树状图页面
-//            toMemberTree() {
-//                let that = this;
-//                sessionStorage.setItem('memberId', that.id);
-//                this.$router.push({path: '/memberTree', query: {'memberId': that.id}})
-//            },
+        //    toLowerAgent() {
+        //        sessionStorage.setItem('memberId', that.id);
+        //        this.$router.push({path: '/lowerMemberManage'})
+        //    },
+        // 跳到会员树状图页面
+        //    toMemberTree() {
+        //        let that = this;
+        //        sessionStorage.setItem('memberId', that.id);
+        //        this.$router.push({path: '/memberTree', query: {'memberId': that.id}})
+        //    },
         //修改基础信息
         updateBasicInf() {
             this.isShowEditBasic = true;
@@ -335,17 +336,17 @@
             this.isShowEditAuthor = true;
         },
         //跳到用户日志
-//            toOperateLog(){
-//                let id=this.id;
-//                sessionStorage.setItem('memberId',id);
-//                this.$router.push({path:'/operateLog',query: {'memberId': id}})
-//            },
+        //    toOperateLog(){
+        //        let id=this.id;
+        //        sessionStorage.setItem('memberId',id);
+        //        this.$router.push({path:'/operateLog',query: {'memberId': id}})
+        //    },
         //跳到他的账户
-//            toAccount(){
-//                let id=this.id;
-//                sessionStorage.setItem('memberId',id);
-//                this.$router.push({path:'/memberAccount',query: {'memberId': id}})
-//            },
+        //    toAccount(){
+        //        let id=this.id;
+        //        sessionStorage.setItem('memberId',id);
+        //        this.$router.push({path:'/memberAccount',query: {'memberId': id}})
+        //    },
         btnClicked(page){
             let id=this.id;
             sessionStorage.setItem('memberId',id);

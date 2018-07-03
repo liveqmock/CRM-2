@@ -60,7 +60,7 @@
     import { getUserId, myMixinTable } from '../../../JS/commom.js';
     import * as api from '../../../api/api.js';
     import * as pApi from '../../../privilegeList/index.js';
-
+    import utils from '../../../utils/index.js'
     export default {
         components: {
             vBreadcrumb

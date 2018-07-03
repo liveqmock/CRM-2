@@ -57,7 +57,7 @@
                                        @click="detailItem(scope.$index,scope.row)">详情
                             </el-button>
                             <template v-if="scope.row.status==2">
-                                <el-button type="primary" v-if="p.findSupplierById" size="small"
+                                <el-button type="primary" v-if="p.updateSupplier" size="small"
                                            @click="editItem(scope.$index,scope.row)">编辑
                                 </el-button>
                             </template>
@@ -126,6 +126,7 @@
                 // 权限控制
                 p: {
                     addSupplier: false,
+                    updateSupplier: false,
                     updateSupplierDeleteById: false,
                     findSupplierById: false
                 },

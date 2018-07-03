@@ -33,18 +33,18 @@
                     </div>
                     <span class="spanBtn" @click="btnClicked(2)">收支明细</span>
                 </li>
-                <li class="UserBonus">
-                    <div class="card-title">
-                        <icon class="ico" ico='icon-xianjindai'/>
-                        分红账户（点）
-                    </div>
-                    <div class="card-content">
-                        <div class="card-amout">
-                            分红点数：{{accountInfo.bonus_point}}
-                        </div>
-                    </div>
-                    <span class="spanBtn"  @click="btnClicked(3)">收支明细</span>
-                </li>
+                <!--<li class="UserBonus">-->
+                    <!--<div class="card-title">-->
+                        <!--<icon class="ico" ico='icon-xianjindai'/>-->
+                        <!--分红账户（点）-->
+                    <!--</div>-->
+                    <!--<div class="card-content">-->
+                        <!--<div class="card-amout">-->
+                            <!--分红点数：{{accountInfo.bonus_point}}-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--<span class="spanBtn"  @click="btnClicked(3)">收支明细</span>-->
+                <!--</li>-->
                 <li class="userIntegral">
                     <div class="card-title">
                         <icon class="ico" ico='icon-youhuiquan'/>
@@ -124,15 +124,14 @@
                 let data={
                     url:pApi.queryDealerAccount,
                     id:id
-                }
+                };
                 this.$axios.post(api.queryDealerAccount, data)
                     .then(res => {
-                      console.log(res)
-//                        if (res.data.code == 200) {
-//                         this.accountInfo = res.data.data
-//                        } else {
-//                            this.$message.warning(res.data.msg);
-//                        }
+                       if (res.data.code == 200) {
+                        this.accountInfo = res.data.data
+                       } else {
+                           this.$message.warning(res.data.msg);
+                       }
                 }).catch(err => {
                     console.log(err);
                 })

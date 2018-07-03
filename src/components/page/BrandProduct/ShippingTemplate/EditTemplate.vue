@@ -218,7 +218,7 @@
                 let that = this;
                 let data = {
                     id: that.id,
-                    url:pApi.findFreightTemplateById
+                    // url:pApi.findFreightTemplateById
                 };
                 that.loading = true;
                 that.$axios
