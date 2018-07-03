@@ -2,17 +2,17 @@
     <div class="organize-mange">
         <breadcrumb :nav='nav'></breadcrumb>
         <el-card>
-            <el-button @click="operateDepartment('add')" type="primary" class='add'>添加部门</el-button>
+            <el-button v-if='p.addDepartment' @click="operateDepartment('add')" type="primary" class='add'>添加部门</el-button>
             <el-table border :data="tableData">
                 <el-table-column prop="id" label="部门编号" align="center" min-width="150"></el-table-column>
                 <el-table-column prop="name" label="部门名称" align="center" min-width="150"></el-table-column>
                 <el-table-column prop="manager" label="负责人" align="center" min-width="150"></el-table-column>
                 <el-table-column label="操作" align="center" min-width="250">
                     <template slot-scope="scope">
-                        <el-button @click="operateDepartment('edit',scope.row)" type="primary">编辑</el-button>
+                        <el-button v-if='p.updateDepartment' @click="operateDepartment('edit',scope.row)" type="primary">编辑</el-button>
                         <el-button @click="goToJobMange(scope.row)" type="warning">岗位管理</el-button>
                     </template>
-                </el-table-column>
+                </el-table-column> 
             </el-table>
         </el-card>
         <el-dialog :title="dialogTitle" :visible.sync="isShowDialog" width="30%">
@@ -78,9 +78,6 @@ export default {
     pControl() {
       for (const k in this.p) {
         this.p[k] = utils.pc(pApi[k]);
-      }
-      if(!this.p.updateAdminUser && !this.p.resetPassword && !this.p.showAdminLog && !this.p.updateAdminUserStatus){
-        this.isShowOperate = false;
       }
     },
     // 获取数据

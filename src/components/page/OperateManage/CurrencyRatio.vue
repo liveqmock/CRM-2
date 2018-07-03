@@ -90,7 +90,7 @@ export default {
       this.$axios
         .post(api.updateSysConfigByCurrency, data)
         .then(res => {
-          this.$message.success(res.data.data);
+          this.$message.success(res.data.msg);
           this.btnLoading = false;
         })
         .catch(err => {

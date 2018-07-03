@@ -6,6 +6,8 @@
           <div class="currency-wrap">
               <span class="currency-small-title">订单取消倒计时时间设置</span><br/>
               <el-input v-model="orderCancleTime" class="input-sty"></el-input><span class="point">分钟</span><br />
+              <span class="currency-small-title">支付超时退款时间设置</span><br/>
+              <el-input v-model="payOvertime" class="input-sty"></el-input><span class="point">分钟</span><br />
               <span class="currency-small-title">待确认收货时间设置</span><br/>
               <el-input v-model="toBeConfirmTime" class="input-sty"></el-input><span class="point">天</span><br />
               <span class="currency-small-title">默认用户退货发货时间</span><br/>
@@ -36,7 +38,8 @@ export default {
       orderCancleTime: "",
       toBeConfirmTime: "",
       returnGoodsTime: "",
-      returnDownTime: ""
+      returnDownTime: "",
+      payOvertime:""
     };
   },
 
@@ -50,10 +53,11 @@ export default {
       this.$axios
         .post(api.findSysConfig, {})
         .then(res => {
-            this.orderCancleTime = res.data.data.time_order_cancel;
-            this.toBeConfirmTime = res.data.data.time_goods_confirm;
-            this.returnGoodsTime = res.data.data.time_return_send;
-            this.returnDownTime = res.data.data.time_express_send;
+            this.orderCancleTime = res.data.data.timeOrderCancel;
+            this.toBeConfirmTime = res.data.data.timeGoodsConfirm;
+            this.returnGoodsTime = res.data.data.timeReturnSend;
+            this.returnDownTime = res.data.data.timeExpressSend;
+            this.payOvertime = res.data.data.payOvertime;
         })
         .catch(err => {
           console.log(err);
@@ -71,7 +75,7 @@ export default {
       this.$axios
         .post(api.updateSysConfigByTransaction, data)
         .then(res => {
-          this.$message.success(res.data.data);
+          this.$message.success(res.data.msg);
           this.btnLoading = false;
         })
         .catch(err => {
