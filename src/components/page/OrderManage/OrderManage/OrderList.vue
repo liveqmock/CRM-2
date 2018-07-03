@@ -34,8 +34,8 @@
                       <el-option label="已关闭（退款关闭）" value="3"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item prop="finishType" label="完成类型">
-                    <el-select v-model="form.finishType" placeholder="请选择">
+                <el-form-item prop="pickUp" label="完成类型">
+                    <el-select v-model="form.pickUp" placeholder="请选择">
                       <el-option label="暂不选择" value=""></el-option>
                       <el-option label="已完成（快递收货）" value="1"></el-option>
                       <el-option label="已完成（买家自提）" value="2"></el-option>

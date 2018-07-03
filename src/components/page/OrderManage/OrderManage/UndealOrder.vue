@@ -34,14 +34,14 @@
                       <el-option label="已关闭（退款关闭）" value="3"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item prop="finishType" label="完成类型">
+                <el-form-item prop="pickUp" label="完成类型">
                     <el-select v-model="form.pickUp" placeholder="请选择">
                       <el-option label="暂不选择" value=""></el-option>
                       <el-option label="已完成（快递收货）" value="1"></el-option>
                       <el-option label="已完成（买家自提）" value="2"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item prop="finishType" label="申请类型">
+                <el-form-item prop="applyForType" label="申请类型">
                     <el-select v-model="form.applyForType" placeholder="请选择">
                       <el-option label="全部" value=""></el-option>
                       <el-option label="申请退款（退款退货）" value="1"></el-option>
@@ -50,7 +50,7 @@
                       <el-option label="退换成功" value="4"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item prop="finishType" label="售后状态">
+                <el-form-item prop="serviceStatus" label="售后状态">
                     <el-select v-model="form.serviceStatus" placeholder="请选择">
                       <el-option label="全部" value=""></el-option>
                       <el-option label="申请售后" value="1"></el-option>

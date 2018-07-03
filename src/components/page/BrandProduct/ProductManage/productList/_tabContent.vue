@@ -299,6 +299,7 @@ export default {
         .then(res => {
           this.$message.success(res.data.data);
           row.status = status;
+          this.submitForm(this.page.currentPage)
         })
         .catch(err => {
           console.log(err);
@@ -315,6 +316,7 @@ export default {
         .then(res => {
           row.status = status;
           this.$message.success(res.data.data);
+          this.submitForm(this.page.currentPage)
         })
         .catch(err => {
           console.log(err);
