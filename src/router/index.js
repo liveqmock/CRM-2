@@ -531,7 +531,13 @@ export default new Router({
                     name:'baseParamsSet',
                     path: '/baseParamsSet',
                     component: resolve => require(['../components/page/OperateManage/BaseParamsSet.vue'], resolve),
-                    meta: { title: '基础参数设置',url:'/admin/sysConfig/updateSysConfigByTransaction'}
+                    meta: { title: '交易基础参数设置',url:'/admin/sysConfig/updateSysConfigByTransaction'}
+                },
+                {
+                    name:'groupBaseParamsSet',
+                    path: '/groupBaseParamsSet',
+                    component: resolve => require(['../components/page/OperateManage/GroupBaseParamsSet.vue'], resolve),
+                    meta: { title: '拼店基础参数设置',url:'/admin/sysConfig/updateSysConfigByTransaction'}
                 },
                 {
                     name:'advertisingManage',

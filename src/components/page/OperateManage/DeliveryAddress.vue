@@ -50,7 +50,7 @@
         <el-dialog title="编辑提货点" :visible.sync="editMask">
             <el-form v-model="form" label-width="100px">
                 <el-form-item label="详细地址" class=" address-area">
-                    <el-select v-model="addForm.country" class="small-inp" @change="changeArea">
+                    <el-select v-model="form.country" class="small-inp" @change="changeArea">
                         <el-option label="中国" value="1">中国</el-option>
                         <el-option label="海外" value="2">海外</el-option>
                     </el-select>
@@ -80,13 +80,14 @@
     import vBreadcrumb from '../../common/Breadcrumb.vue';
     import icon from '../../common/ico.vue';
     import region from '../../common/Region';
+    import deleteToast from "../../common/DeleteToast";
     import * as api from '../../../api/OperateManage/DeliveryAddress';
     import utils from '../../../utils/index.js'
     import * as pApi from '../../../privilegeList/OperateManage/DeliveryAddress';
 
     export default {
         components: {
-            vBreadcrumb, icon,region
+            vBreadcrumb, icon,region,deleteToast
         },
         data() {
             return {
@@ -130,9 +131,6 @@
         created() {
             let winHeight = window.screen.availHeight - 520;
             this.height = winHeight;
-            let reginArr=[];
-            reginArr.push(this.form.provinceCode,this.form.cityCode,this.form.areaCode);
-            this.address=reginArr;
             this.pControl();
         },
         activated() {
@@ -149,6 +147,7 @@
             // 获取省市区
             getRegion(msg) {
                 this.address = msg;
+                console.log(this.address)
             },
             //获取列表
             getList() {
@@ -179,23 +178,35 @@
                 this.addForm.contacts='';
                 this.addForm.telephone='';
                 this.addForm.country='1';
+                this.address='';
                 this.itype = "add";
+                this.areaDisabled=true
             },
             //详细地址选择
             changeArea() {
                 if(this.itype=='add'){
-                    this.areaDisabled = this.addForm.country === 1;
+                    this.areaDisabled = this.addForm.country == 1;
                 }else{
-                    this.areaDisabled = this.form.country === 1;
+                    this.areaDisabled = this.form.country == 1;
                 }
             },
             //编辑
             editItem(row) {
                 this.editMask = true;
-                row.country = row.status.toString();
+                row.country = row.country.toString();
                 this.form = row;
                 this.itemId = row.id;
                 this.itype = "edit";
+                if(row.country==1){
+                    this.areaDisabled=true;
+                    let reginArr=[];
+                    reginArr.push(Number(this.form.provinceCode),Number(this.form.cityCode),Number(this.form.areaCode));
+                    this.address=reginArr;
+                    console.log(this.address)
+                }else{
+                    this.areaDisabled=false;
+                    this.address=''
+                }
             },
             //添加修改确定
             addOrEdit(formName) {
@@ -203,6 +214,21 @@
                 let data = {};
                 data.contacts = this[formName].contacts;
                 data.telephone = this[formName].telephone;
+                data.country = this[formName].country;
+                data.provinceCode = this.address[0];
+                data.cityCode = this.address[1];
+                data.areaCode = this.address[2];
+                data.address = this[formName].address;
+                if(data.country==1){
+                    if(!this.address[0]||!this.address[1]||!this.address[2]){
+                        this.$message.warning('请选择省市区!');
+                        return
+                    }
+                }
+                if(!data.address){
+                    this.$message.warning('请输入详细地址!');
+                    return
+                }
                 if(!data.contacts){
                     this.$message.warning('请输入联系人!');
                     return
@@ -213,7 +239,6 @@
                 }
                 if (this.itype == "add") {
                     url = api.addStoreHouse;
-                    data.fatherid = this.id;
                     data.url = pApi.addStoreHouse;
                 } else {
                     url = api.updateStoreHouse;
@@ -225,7 +250,7 @@
                     .post(url, data)
                     .then(res => {
                         if (res.data.code == 200) {
-                            this.$message.success(res.data.data);
+                            this.$message.success(res.data.msg);
                             this.btnLoading = false;
                             this.addMask = false;
                             this.editMask = false;

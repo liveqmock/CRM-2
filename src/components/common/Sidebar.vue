@@ -208,7 +208,7 @@
                             },
                             {
                                 index: "baseParamsSet",
-                                title: "基础参数设置"
+                                title: "交易基础参数设置"
                             },
                             {
                                 index: "advertisingManage",
@@ -221,6 +221,10 @@
                             {
                                 index: "deliveryAddress",
                                 title: "提货地址设置"
+                            },
+                            {
+                                index: "groupBaseParamsSet",
+                                title: "拼店基础参数设置"
                             },
                         ]
                     },

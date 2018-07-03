@@ -337,7 +337,7 @@
                       </div>
                   </template>
                 </el-tab-pane>
-                <el-tab-pane v-if='p.queryWaitReceivingOrderPageList' v-loading="tabLoading" label="待确认" name="toBeConfirm">  
+                <el-tab-pane v-if='p.queryWaitReceivingOrderPageList' v-loading="tabLoading" label="待确认" name="toBeConfirm">
                     <template v-if='activeName == "toBeConfirm"'>
                       <div class="tab-title">
                           <span class="spec" :style="{width:w.name,minWidth:w.minWidth}">产品名称</span>
@@ -403,7 +403,7 @@
                               </div>
                           </div>
                       </div>
-                  </template>                 
+                  </template>
                 </el-tab-pane>
                 <el-tab-pane v-if='p.queryCompletedOrderPageList' v-loading="tabLoading" label="已完成" name="finished">
                   <template v-if='activeName == "finished"'>
@@ -473,7 +473,7 @@
                     </div>
                   </template>
                 </el-tab-pane>
-                <el-tab-pane v-if='p.queryClosedOrderPageList' v-loading="tabLoading" label="已关闭" name="closed">  
+                <el-tab-pane v-if='p.queryClosedOrderPageList' v-loading="tabLoading" label="已关闭" name="closed">
                     <template v-if='activeName == "closed"'>
                     <div class="tab-title">
                         <span class="spec" :style="{width:w.name,minWidth:w.minWidth}">产品名称</span>
@@ -539,7 +539,7 @@
                             </div>
                         </div>
                     </div>
-                  </template>               
+                  </template>
                 </el-tab-pane>
             </el-tabs>
             <div class="block">
@@ -667,14 +667,14 @@ export default {
         .post(this.url, data)
         .then(res => {
           this.tabLoading = false;
-          for (let i in res.data.data.data[0]) {
-            res.data.data.data[0][i].isShowPop = false;
-            res.data.data.data[0][i].starColor =
-              this.markArr[res.data.data.data[0][i].stars] == undefined
+          for (let i in res.data.data.data) {
+            res.data.data.data[i].isShowPop = false;
+            res.data.data.data[i].starColor =
+              this.markArr[res.data.data.data[i].stars] == undefined
                 ? "#ccc"
-                : this.markArr[res.data.data.data[0][i].stars - 1].label;
-                res.data.data.data[0][i].price = res.data.data.data[0][i].price == null?'0':res.data.data.data[0][i].price;
-            this.tableData.push(res.data.data.data[0][i]);
+                : this.markArr[res.data.data.data[i].stars - 1].label;
+                res.data.data.data[i].price = res.data.data.data[i].price == null?'0':res.data.data.data[i].price;
+            this.tableData.push(res.data.data.data[i]);
           }
           this.page.totalPage = res.data.data.resultCount;
           this.form.today = "";
