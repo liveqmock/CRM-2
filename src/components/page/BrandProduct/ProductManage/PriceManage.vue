@@ -110,6 +110,7 @@ export default {
       data.min_payment = row.min_payment;
       data.group_price = row.group_price;
       data.url = pApi.queryProductPriceSaleSpecList;
+      data.productId = this.productId;
       this.$axios.post(api.updateProductPrice,data)
       .then((res) => {
           this.$message.success(res.data.data);

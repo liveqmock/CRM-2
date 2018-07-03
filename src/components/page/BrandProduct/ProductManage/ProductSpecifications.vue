@@ -101,9 +101,17 @@ export default {
     submitForm(){
       let data = {};
       let specData = [];
-      this.tableData.forEach((v,k)=>{
+      let flag = false;
+      this.tableData.map((v,k)=>{
+        if(v.code == ''){
+          flag =true;
+        }
         specData.push({specIds:v.id.join(','),spec:v.spec,specImg:v.imgUrl,status:v.status,productId:this.productId,barCode:v.code});
       })
+      if(flag){
+        this.$message.warning('请输入条形码');
+        return;
+      }
       data.specData = JSON.stringify(specData);
       data.productId = this.productId;
       data.url = pApi.querySaleSpecList;

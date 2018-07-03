@@ -33,6 +33,7 @@ export default {
   data() {
     return {
       nav: ["品牌产品管理", "产品管理", "产品库存管理"],
+      productId:'',
       btnLoading: false,
       btnStyle:'primary',
       unit: "1",
