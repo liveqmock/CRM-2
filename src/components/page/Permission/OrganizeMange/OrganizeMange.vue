@@ -40,6 +40,7 @@
 import breadcrumb from "../../../common/Breadcrumb";
 import * as api from "../../../../api/api.js";
 import * as pApi from "../../../../privilegeList/index.js";
+import utils from "../../../../utils/index.js";
 export default {
   components: {
     breadcrumb
@@ -103,6 +104,7 @@ export default {
     // 添加/编辑部门
     operateDepartment(type,row){
         this.formType = type;
+        utils.cleanFormData(this.diaForm);
         if(type == 'add'){
             this.dialogTitle = '添加部门';
             this.isShowDialog = true;
