@@ -127,7 +127,7 @@ export default {
       data.typeid = this.questionTypeId;
       this.$axios.post(api.addHelpQuestion,data)
       .then((res) => {
-        this.$message.success(res.data.data);
+        this.$message.success(res.data.msg);
         this.$router.push('/questionList');
       }).catch((err) => {
         console.log(err);

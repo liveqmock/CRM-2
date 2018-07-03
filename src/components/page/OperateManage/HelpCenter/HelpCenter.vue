@@ -116,7 +116,7 @@ export default {
       this.addQuesTypeBtn = true;
       this.$axios.post(api.addHelpType,{name:this.questionType})
       .then((res) => {
-        this.$message.success(res.data.data);
+        this.$message.success(res.data.msg);
         this.getList(this.page.currentPage);
         this.addQuesTypeBtn = false;
         this.isShowAddQues = false;

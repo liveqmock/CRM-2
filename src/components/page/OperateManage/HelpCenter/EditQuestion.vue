@@ -142,7 +142,7 @@ export default {
       data.id = this.questionId;
       this.$axios.post(api.updateHelpQuestion,data)
       .then((res) => {
-        this.$message.success(res.data.data);
+        this.$message.success(res.data.msg);
         this.$router.push('/questionList');
       }).catch((err) => {
         console.log(err);

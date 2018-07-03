@@ -29,7 +29,7 @@
             </el-form-item>
             <el-form-item label=" ">
                 <el-button type="primary" @click="submitForm(1)">搜索</el-button>
-                <!-- <el-button @click="resetForm('form')" >重置</el-button> -->
+                <el-button @click="resetForm('form')" >重置</el-button>
             </el-form-item>
           </el-form>
       </div>
@@ -183,7 +183,7 @@ export default {
     } else if (n == "downProduct") {
       this.status = "5";
     } else if (n == "auditProduct") {
-      this.status = "";
+      this.status = "7";
     } else if (n == "modifyProduct") {
       this.status = "3";
     }
@@ -224,6 +224,9 @@ export default {
     resetForm(formName) {
       this.form.saleMax = "";
       this.form.priceMax = "";
+      this.form.firstCategoryId = "";
+      this.form.secondCategoryId = "";
+      this.getFirstItem();
       this.$refs[formName].resetFields();
     },
     // 全选
@@ -328,6 +331,7 @@ export default {
       this.$axios
         .post(api.getCategoryList, { fatherid: 0,url: pApi.queryProductPageList})
         .then(res => {
+          this.itemList.push({ label: '全部', value: '', children: [] });
           res.data.data.data.forEach((v, k) => {
             this.itemList.push({ label: v.name, value: v.id, children: [] });
           });
