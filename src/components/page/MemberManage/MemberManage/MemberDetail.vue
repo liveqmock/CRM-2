@@ -51,21 +51,21 @@
                         <img class="img" v-if="dealer.head_img" :src="dealer.head_img" alt="">
                         <img class="img" v-else src="../../../../assets/images/logo.png" alt="">
                     </div>
-                    <!--<div>-->
-                    <!--<el-button type="primary" @click="toLowerAgent">下级代理({{dealer.sub_level_num}})</el-button>-->
-                    <!--</div>-->
-                    <!--<div>-->
-                    <!--<el-button type="primary" @click="toMemberTree" style="margin-left: 0">查看会员树状图</el-button>-->
-                    <!--</div>-->
-                    <!--<div>-->
-                    <!--<el-button type="primary" @click="toOperateLog" style="margin-left: 0">用户操作日志</el-button>-->
-                    <!--</div>-->
-                    <!--<div>-->
-                    <!--<el-button type="primary" @click="toAccount" style="margin-left: 0">他的账户</el-button>-->
-                    <!--</div>-->
-                    <!--<div>-->
-                    <!--<el-button type="primary" style="margin-left: 0">实名信息</el-button>-->
-                    <!--</div>-->
+                    <div>
+                    <el-button type="primary" @click="toLowerAgent">下级代理({{dealer.sub_level_num}})</el-button>
+                    </div>
+                    <div>
+                    <el-button type="primary" @click="toMemberTree" style="margin-left: 0">查看会员树状图</el-button>
+                    </div>
+                    <div>
+                    <el-button type="primary" @click="toOperateLog" style="margin-left: 0">用户操作日志</el-button>
+                    </div>
+                    <div>
+                    <el-button type="primary" @click="toAccount" style="margin-left: 0">他的账户</el-button>
+                    </div>
+                    <div>
+                    <el-button type="primary" style="margin-left: 0">实名信息</el-button>
+                    </div>
                     <div>
                         <el-button type="primary" @click="btnClicked('/lowerMemberManage')">下级代理({{dealer.sub_level_num}})</el-button>
                     </div>
