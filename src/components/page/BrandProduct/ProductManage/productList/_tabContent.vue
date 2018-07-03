@@ -13,7 +13,7 @@
                 <el-input v-model.trim="form.barCode" placeholder="请输入条形码"></el-input>
             </el-form-item>
             <el-form-item prop="item" label="产品类目">
-                <el-cascader @change='getProItemId' :options="itemList" @active-item-change="handleItemChange" :props="itemProps"></el-cascader>
+                <el-cascader @change='getProItemId' v-model="defItem" :options="itemList" @active-item-change="handleItemChange" :props="itemProps"></el-cascader>
             </el-form-item>
             <el-form-item prop="saleMin" label="总销量">
                 <el-input style="width:95px" v-model.trim="form.saleMin"></el-input> -
@@ -77,7 +77,7 @@
                     <el-button v-if='p.queryProductStockList' @click="inventoryManage(scope.row)" type="primary">库存管理</el-button>
                     <el-button v-if='p.querySaleSpecList' @click="specificationsManage(scope.row)" type="primary">规格管理</el-button>
                     <el-button v-if='p.queryProductPriceSaleSpecList' @click="priceManage(scope.row)" type="primary">价格管理</el-button>
-                    <template v-if='(scope.row.status == 1 || scope.row.status == 3 || scope.row.status == 5) && name == "auditProduct" && p.updateProductStatus'>
+                    <template v-if='(scope.row.status == 1 || scope.row.status == 5) && name == "auditProduct" && p.updateProductStatus'>
                       <el-button @click="auditProduct(scope.row,2)" type="primary">通过审核</el-button>
                       <el-button @click="auditProduct(scope.row,3)" type="danger">驳回审核</el-button>
                     </template>
@@ -142,6 +142,7 @@ export default {
       },
 
       itemList: [],
+      defItem:[],
       itemProps: {
         value: "value",
         children: "children"
@@ -152,7 +153,7 @@ export default {
         brandId: "",
         barCode: "",
         firstCategoryId: "",
-        secondCategoryId: "",
+        secCategoryId: "",
         saleMin: "",
         saleMax: "",
         priceMin: "",
@@ -225,8 +226,8 @@ export default {
       this.form.saleMax = "";
       this.form.priceMax = "";
       this.form.firstCategoryId = "";
-      this.form.secondCategoryId = "";
-      this.getFirstItem();
+      this.form.secCategoryId = "";
+      this.defItem = [];
       this.$refs[formName].resetFields();
     },
     // 全选
@@ -331,7 +332,6 @@ export default {
       this.$axios
         .post(api.getCategoryList, { fatherid: 0,url: pApi.queryProductPageList})
         .then(res => {
-          this.itemList.push({ label: '全部', value: '', children: [] });
           res.data.data.data.forEach((v, k) => {
             this.itemList.push({ label: v.name, value: v.id, children: [] });
           });
@@ -365,7 +365,7 @@ export default {
     // 获取一二级类目id
     getProItemId(val) {
       this.form.firstCategoryId = val[0];
-      this.form.secondCategoryId = val[1];
+      this.form.secCategoryId = val[1];
     },
     // 批量操作
     batchOperate(status) {

@@ -6,13 +6,13 @@
           <el-table-column prop="spec" label="规格" align="center"></el-table-column>
           <el-table-column  label="总库存" align="center" :render-header="renderHeader">
             <template slot-scope="scope">
-              <el-input style="width:150px" v-model="scope.row.stock"></el-input>
+              <el-input style="width:150px" @change="changeBtnStyle(scope.row)" v-model="scope.row.stock"></el-input>
               <span>{{unitName}}</span>
             </template>
           </el-table-column>
           <el-table-column label="操作" align="center">
             <template slot-scope="scope">
-              <el-button :loading="btnLoading" type="primary" @click="saveMsg(scope.row)">保存</el-button>
+              <el-button :loading="btnLoading" :type="scope.row.btnStyle" @click="saveMsg(scope.row)">保存</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -34,6 +34,7 @@ export default {
     return {
       nav: ["品牌产品管理", "产品管理", "产品库存管理"],
       btnLoading: false,
+      btnStyle:'primary',
       unit: "1",
       unitArr: [
         { label: "包", value: "1" }, 
@@ -77,6 +78,7 @@ export default {
         .post(api.queryProductStockList, { productId: this.productId,url:pApi.queryProductStockList })
         .then(res => {
           res.data.data.forEach((v, k) => {
+            v.btnStyle = 'primary';
             this.tableData.push(v);
           });
         })
@@ -97,6 +99,7 @@ export default {
         .then(res => {
           this.$message.success(res.data.data);
           this.btnLoading = false;
+          row.btnStyle = 'success';
         })
         .catch(err => {
           console.log(err);
@@ -145,6 +148,11 @@ export default {
           })
         )
       ];
+    },
+    // 恢复按钮样式
+    changeBtnStyle(row){
+      console.log(123)
+      row.btnStyle = 'primary';
     }
   }
 };
