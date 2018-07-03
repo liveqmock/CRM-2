@@ -72,6 +72,7 @@ export default {
   },
   activated() {
     this.getList();
+    this.pControl();
   },
   methods: {
     // 权限控制
