@@ -70,6 +70,7 @@
                             <el-button type="primary" size="small"
                                        @click="updateStatus(2,scope.row)">驳回
                             </el-button>
+
                         </template>
                     </el-table-column>
                 </el-table>

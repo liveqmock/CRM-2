@@ -230,7 +230,7 @@ export const getManageList='/mock/5aeac1c6c186102e067af3f3/test/getManageList';
         //积分
         export const queryDetailUserscorePageList='/admin/detailUserscore/queryDetailUserscorePageList';
         // TA的账户
-        export const queryDealerAccount='/admin/dealer/queryDealerAccount';
+        export const queryDealerAccount='/admin/dealer/findDealerAccountById';
         // 用户银行卡
         export const findBindBankInfoBydealerId='/admin/bindBankInfo/findBindBankInfoBydealerId';
         // 删除用户银行卡
