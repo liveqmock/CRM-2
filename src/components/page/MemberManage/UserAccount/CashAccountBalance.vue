@@ -76,7 +76,7 @@
                 let data = {
                     page: val,
                     dealerId: that.id,
-                    url:pApi.queryDetailBalanceList
+                    url:pApi.queryDealerAccount
                 };
                 that.tableLoading = true;
                 that.$axios

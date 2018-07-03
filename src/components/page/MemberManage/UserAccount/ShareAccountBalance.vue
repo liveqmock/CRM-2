@@ -79,7 +79,7 @@ export default {
             let data = {
                 page: val,
                 dealerId: that.id,
-                url:pApi.queryDetailBonuspointList
+                url:pApi.queryDealerAccount
             };
             that.tableLoading = true;
             that.$axios

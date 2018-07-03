@@ -77,7 +77,7 @@ export default {
             let data = {
                 page: val,
                 dealerId: that.id,
-                url:pApi.queryDetailTokencoinList
+                url:pApi.queryDealerAccount
             };
             that.tableLoading = true;
             that.$axios

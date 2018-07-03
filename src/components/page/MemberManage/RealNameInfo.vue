@@ -46,7 +46,7 @@ export default {
             that.img=[];
             let data={
                 id:that.id,
-                url:pApi.findDealerRealnameInfo
+                url:pApi.findDealerRealnameInfo_1
             };
             that.$axios
                 .post(api.findDealerRealnameInfo, data)

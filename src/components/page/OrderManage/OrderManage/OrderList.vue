@@ -673,6 +673,7 @@ export default {
               this.markArr[res.data.data.data[0][i].stars] == undefined
                 ? "#ccc"
                 : this.markArr[res.data.data.data[0][i].stars - 1].label;
+                res.data.data.data[0][i].price = res.data.data.data[0][i].price == null?'0':res.data.data.data[0][i].price;
             this.tableData.push(res.data.data.data[0][i]);
           }
           this.page.totalPage = res.data.data.resultCount;

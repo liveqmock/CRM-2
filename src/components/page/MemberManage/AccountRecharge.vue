@@ -70,6 +70,7 @@
                             <el-button type="primary" size="small"
                                        @click="updateStatus(2,scope.row)">驳回
                             </el-button>
+
                         </template>
                     </el-table-column>
                 </el-table>
@@ -143,6 +144,7 @@
                 <el-button @click="cancel">取消</el-button>
             </div>
         </el-dialog>
+
     </div>
 </template>
 
@@ -256,6 +258,11 @@
             //充值
             recharge() {
                 this.addMask = true;
+                this.addForm.phone='';
+                this.addForm.money='';
+                this.addForm.type='1';
+                this.addForm.remark='';
+                this.showDetail=false
             },
             findMember(){
               let reg=/^1[3-8]\d{9}$/;
@@ -266,7 +273,7 @@
               }else{
                   let data={
                       phone:that.addForm.phone,
-                      url:pApi.findDealerByPhone
+                      // url:pApi.findDealerByPhone
                   };
                   that.$axios
                       .post(api.findDealerByPhone, data)

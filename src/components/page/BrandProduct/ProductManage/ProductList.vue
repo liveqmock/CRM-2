@@ -7,7 +7,7 @@
             <el-tab-pane label="上架产品" name="upProduct"><v-tab-content v-if="activeName == 'upProduct'" :name='activeName'></v-tab-content></el-tab-pane>
             <el-tab-pane label="下架产品" name="downProduct"><v-tab-content v-if="activeName == 'downProduct'" :name='activeName'></v-tab-content></el-tab-pane>
             <el-tab-pane label="审核产品" name="auditProduct"><v-tab-content v-if="activeName == 'auditProduct'" :name='activeName'></v-tab-content></el-tab-pane>
-            <el-tab-pane label="待修改产品" name="modifyProduct"><v-tab-content v-if="activeName == 'modifyProduct'" :name='activeName'></v-tab-content></el-tab-pane>
+            <!-- <el-tab-pane label="待修改产品" name="modifyProduct"><v-tab-content v-if="activeName == 'modifyProduct'" :name='activeName'></v-tab-content></el-tab-pane> -->
         </el-tabs>
       </el-card>
         

@@ -82,7 +82,7 @@
                       <el-button @click="auditProduct(scope.row,3)" type="danger">驳回审核</el-button>
                     </template>
                     <template v-else>
-                      <el-button v-if='p.findProductAllDataById' @click="editProduct(scope.row)" type="success">编辑产品</el-button>
+                      <el-button v-if='p.findProductAllDataById && scope.row.status != 4 ' @click="editProduct(scope.row)" type="success">编辑产品</el-button>
                       <template v-if='p.updateProductShelves'>
                         <el-button v-if='scope.row.status == 4' @click="productStatus(scope.row,'5')" type="warning">产品下架</el-button>
                         <el-button v-else-if="scope.row.status == 2" @click="productStatus(scope.row,'4')" type="warning">产品上架</el-button>

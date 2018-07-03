@@ -227,7 +227,7 @@ export default {
         })
         this.categoryArr = [];
         this.categoryArr.push(res.data.data.product.first_category_id);
-        this.handleItemChange(this.categoryArr);
+        // this.handleItemChange(this.categoryArr);
         this.categoryArr.push(res.data.data.product.sec_category_id);
         this.getProItemId(this.categoryArr);
         this.form.brandId = res.data.data.product.brand_id;

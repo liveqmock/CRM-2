@@ -224,15 +224,15 @@ export const getManageList='/mock/5aeac1c6c186102e067af3f3/test/getManageList';
         //现金
         export const queryDetailBalanceList='/admin/detailBalance/queryDetailBalanceList';
         //代币
-        export const queryDetailTokencoinList='/admin/detailTokencoin/queryDetailTokencoinList';
+        export const queryDetailTokencoinList='/admin/detailTokenCoin/queryDetailTokenCoinList';
         //分红点
-        export const queryDetailBonuspointList='/admin/detailBonuspoint/queryDetailBonuspointList';
+        export const queryDetailBonuspointList='/admin/detailBonusPoint/queryDetailBonusPointList';
         //积分
-        export const queryDetailUserscorePageList='/admin/detailUserscore/queryDetailUserscorePageList';
+        export const queryDetailUserscorePageList='/admin/detailUserScore/queryDetailUserScorePageList';
         // TA的账户
-        export const queryDealerAccount='/admin/dealer/queryDealerAccount';
+        export const queryDealerAccount='/admin/dealer/findDealerAccountById';
         // 用户银行卡
-        export const findBindBankInfoBydealerId='/admin/bindBankInfo/findBindBankInfoBydealerId';
+        export const findBindBankInfoBydealerId='/admin/bindBankInfo/findBindBankInfoByDealerId';
         // 删除用户银行卡
         export const deleteBindBankInfo='admin/bindBankInfo/updateBindBankInfoDeleteById';
 //账户充值
