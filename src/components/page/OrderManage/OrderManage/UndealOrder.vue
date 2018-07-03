@@ -250,13 +250,13 @@ export default {
         .post(api.queryPendingOrderPageList, data)
         .then(res => {
           this.tabLoading = false;
-          for (let i in res.data.data.data[0]) {
-            res.data.data.data[0][i].isShowPop = false;
-            res.data.data.data[0][i].starColor =
-              this.markArr[res.data.data.data[0][i].stars] == undefined
+          for (let i in res.data.data.data) {
+            res.data.data.data[i].isShowPop = false;
+            res.data.data.data[i].starColor =
+              this.markArr[res.data.data.data[i].stars] == undefined
                 ? "#ccc"
-                : this.markArr[res.data.data.data[0][i].stars - 1].label;
-            this.tableData.push(res.data.data.data[0][i]);
+                : this.markArr[res.data.data.data[i].stars - 1].label;
+            this.tableData.push(res.data.data.data[i]);
           }
           this.page.totalPage = res.data.data.resultCount;
             this.form.today = '';

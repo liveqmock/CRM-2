@@ -121,7 +121,7 @@
                                         <div class="operate">
                                             <el-button v-if='value.status == 8 && (value.return_type== 1 || scope.row.return_type== 2)' @click='changeSingStatus(1,scope.row)' type="primary">退款成功</el-button>
                                             <el-button v-if='value.status == 4 || value.status == 5' @click='changeSingStatus(2,scope.row)' type="primary">买家申请退款</el-button>
-                                            <el-button v-if='value.status == 2' type="primary">已自提</el-button>
+                                            <el-button v-if='value.status == 2' @click="changeStatus(value,3)" type="primary">已自提</el-button>
                                             <el-button v-if='value.status == 6' @click='changeSingStatus(scope.row)' type="primary">买家申请退换</el-button>
                                             <el-button v-if='value.status == 8 && value.return_type== 3' @click='changeSingStatus(scope.row)' type="primary">退换成功</el-button>
                                             <template v-if='value.status == 3 || value.status == 8'>已提货</template>
@@ -326,7 +326,7 @@
                                       <div class="operate">
                                         <el-button v-if='value.status == 8 && (value.return_type== 1 || scope.row.return_type== 2)' @click='changeSingStatus(1,scope.row)' type="primary">退款成功</el-button>
                                         <el-button v-if='value.status == 4 || value.status == 5' @click='changeSingStatus(2,scope.row)' type="primary">买家申请退款</el-button>
-                                        <el-button v-if='value.status == 2' type="primary">已自提</el-button>
+                                        <el-button v-if='value.status == 2' @click="changeStatus(value,3)" type="primary">已自提</el-button>
                                         <el-button v-if='value.status == 6' @click='changeSingStatus(scope.row)' type="primary">买家申请退换</el-button>
                                         <el-button v-if='value.status == 8 && value.return_type== 3' @click='changeSingStatus(scope.row)' type="primary">退换成功</el-button>
                                         <template v-if='value.status == 3 || value.status == 8'>已提货</template>
@@ -670,7 +670,7 @@ export default {
           for (let i in res.data.data.data) {
             res.data.data.data[i].isShowPop = false;
             res.data.data.data[i].starColor =
-              this.markArr[res.data.data.data[i].stars] == undefined
+              this.markArr[res.data.data.data[i].stars - 1] == undefined
                 ? "#ccc"
                 : this.markArr[res.data.data.data[i].stars - 1].label;
                 res.data.data.data[i].price = res.data.data.data[i].price == null?'0':res.data.data.data[i].price;
@@ -797,16 +797,18 @@ export default {
       this.submitForm(1);
     },
     // 更改订单状态（单个）
-    changeStatus(url, row) {
-      this.$axios
-        .post(url, { orderProductId: row.id })
-        .then(res => {
-          this.$message.success(res.data.data);
-          this.submitForm(1);
-        })
-        .catch(err => {
-          console.log(err);
-        });
+    changeStatus(row, status) {
+      if(status == 3) {
+        this.$axios
+          .post(api.pickUpOrderProduct, { orderProductId: row.id, url: pApi.pickUpOrderProduct })
+          .then(res => {
+            this.$message.success(res.data.data);
+            this.submitForm(this.page.currentPage);
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      }
     },
     // 待处理订单
     unDealOrder() {

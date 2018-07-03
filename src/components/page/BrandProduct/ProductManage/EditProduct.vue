@@ -88,7 +88,7 @@
               <el-button style="margin-bottom:10px" v-for="(v,k) in tagArr" :key="k" @click="insertTag(v)" :disabled="v.selected" :class="{'selected-btn':v.selected}">{{v.label}}</el-button>
             </div>
             <el-button type="primary" @click="submitForm">确认发布</el-button>
-            <el-button >取消</el-button>
+            <!-- <el-button >取消</el-button> -->
           </el-form>
       </el-card>
   </div>

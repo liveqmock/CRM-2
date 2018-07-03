@@ -46,7 +46,7 @@
           </el-table-column>
           <el-table-column label="操作" align="center">
             <template slot-scope="scope">
-              <el-button :loading="btnLoading" type="primary" @click="saveMsg(scope.row)">保存</el-button>
+              <el-button :loading="btnLoading" :type="scope.row.btnStyle" @click="saveMsg(scope.row)">保存</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -85,6 +85,7 @@ export default {
       this.$axios.post(api.queryProductPriceSaleSpecList,{productId:this.productId,url:pApi.queryProductPriceSaleSpecList})
       .then((res) => {
         res.data.data.forEach((v,k)=>{
+          v.btnStyle = 'primary';
           this.tableData.push(v)
         })
       }).catch((err) => {
@@ -93,6 +94,10 @@ export default {
     },
     // 保存表单信息
     saveMsg(row){
+      if(!(row.original_price>=row.v1 && row.v1>=row.v2 && row.v2>=row.v3 && row.v3>=row.v4 && row.v4>=row.group_price && row.group_price>=row.min_payment && row.min_payment>=row.settlement_price)){
+        this.$message.warning('参数填写有误,请输入正确的参数');
+        return;
+      }
       this.btnLoading = true;
       let data = {};
       data.id = row.id;
@@ -109,6 +114,7 @@ export default {
       .then((res) => {
           this.$message.success(res.data.data);
           this.btnLoading = false;
+          row.btnStyle = 'success';
       }).catch((err) => {
         console.log(err)
         this.btnLoading = false;

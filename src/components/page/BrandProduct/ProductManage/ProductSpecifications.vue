@@ -60,7 +60,7 @@
           </el-table-column>
         </el-table>
         <el-button @click="submitForm" style="margin-top:10px" type="primary">确认提交</el-button>
-        <el-button >取消</el-button>
+        <!-- <el-button >取消</el-button> -->
       </el-card>
       
   </div>
@@ -128,7 +128,7 @@ export default {
           this.specificationArr.push({type:v.spec,id:v.spec_id,speArr:v.spec_values.split(',')});
         })
         res.data.data.specValue.forEach((v,k)=>{
-          this.tableData.push({spec:v.spec,imgUrl:v.spec_img,code:v.bar_code,id:v.spec_ids.split(','),status:v.status})
+          this.tableData.push({spec:v.spec,imgUrl:v.specImg,code:v.barCode,id:v.specIds.split(','),status:v.status})
         })
       }).catch((err) => {
         console.log(err)

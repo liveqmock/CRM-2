@@ -82,10 +82,11 @@
                       <el-button @click="auditProduct(scope.row,3)" type="danger">驳回审核</el-button>
                     </template>
                     <template v-else>
-                      <el-button v-if='p.findProductAllDataById && scope.row.status != 4 ' @click="editProduct(scope.row)" type="success">编辑产品</el-button>
+                      <el-button v-if='p.findProductAllDataById && scope.row.status != 4' @click="editProduct(scope.row)" type="success">编辑产品</el-button>
                       <template v-if='p.updateProductShelves'>
                         <el-button v-if='scope.row.status == 4' @click="productStatus(scope.row,'5')" type="warning">产品下架</el-button>
                         <el-button v-else-if="scope.row.status == 2" @click="productStatus(scope.row,'4')" type="warning">产品上架</el-button>
+                        <el-button v-if="scope.row.status == 5" @click="productStatus(scope.row,'4')" type="warning">产品上架</el-button>
                       </template>
                     </template>
                     <el-button v-if="p.findProductById" @click="productInfo(scope.row)" type="primary">查看详情</el-button>
@@ -107,8 +108,8 @@
         <el-popover placement="top" width="160" v-model="isShowPop">
           <p>确定删除吗？</p>
           <div style="text-align: right; margin: 0">
-            <el-button size="mini" type="text" @click="isShowPop = false">取消</el-button>
             <el-button @click="batchOperate('6')" type="primary" size="mini">确定</el-button>
+            <el-button size="mini" type="text" @click="isShowPop = false">取消</el-button>
           </div>
           <el-button slot="reference" @click="isShowPop = true" >删除</el-button>
         </el-popover>
@@ -207,6 +208,7 @@ export default {
       data.page = val;
       data.status = this.status;
       data.url = pApi.queryProductPageList;
+      this.page.currentPage = val;
       this.tableLoading = true;
       this.$axios
         .post(api.queryProductPageList, data)

@@ -151,7 +151,6 @@ export default {
     },
     // 恢复按钮样式
     changeBtnStyle(row){
-      console.log(123)
       row.btnStyle = 'primary';
     }
   }
