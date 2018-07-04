@@ -101,9 +101,13 @@
                 }
                 that.$emit('brandids', that.brandIds)
             },
+            // search(){
+            //     this.getBrandList(this.brandName)
+            // },
             //获取品牌
             getBrandList(value) {
                 let that = this;
+                that.allBrandList=[];
                 let data = {
                     name: value,
                     page: 1,

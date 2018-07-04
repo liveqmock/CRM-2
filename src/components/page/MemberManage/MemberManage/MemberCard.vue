@@ -26,17 +26,23 @@
             </ul>
 
         </div>
+        <!--删除弹窗-->
+        <delete-toast :id='delId' :url='delUrl' :uri='delUri' @msg='deleteToast' v-if="isShowDelToast"></delete-toast>
     </div>
+
 </template>
 
 
 <script>
     import vBreadcrumb from '../../../common/Breadcrumb.vue';
     import icon from '../../../common/ico.vue';
+    import deleteToast from "../../../common/DeleteToast";
     import { findBindBankInfoBydealerId, deleteBindBankInfo } from '../../../../api/api.js';
+    import * as pApi from '../../../../privilegeList/index.js';
+
     export default {
         components: {
-            icon, vBreadcrumb
+            icon, vBreadcrumb,deleteToast
         },
         activated() {
             this.id = this.$route.query.memberId || JSON.parse(sessionStorage.getItem("memberId"));
@@ -47,7 +53,11 @@
                 // 权限控制
                 test:'',
                 defaultCard:require('../../../../assets/images/userCard-default.png'),
-                card:[]
+                card:[],
+                delId: '',
+                delUrl: '',
+                delUri:'',
+                isShowDelToast: false,
             }
         },
         methods: {
@@ -71,32 +81,16 @@
                 })
             },
             dismiss(id,index){
-                this.$confirm('是否继续删除银行卡?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    this.deleteCard(id,index)
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消删除'
-                    });
-                });
+                this.delId = id;
+                this.delUrl = deleteBindBankInfo;
+                this.delUri = pApi.queryDealerAccount;
+                this.isShowDelToast = true;
             },
-            deleteCard(id,index){
-                this.$axios.post(deleteBindBankInfo, {id:id})
-                    .then(res => {
-                    if (res.data.code == 200) {
-                        this.card.splice(index,1)
-                        this.getFindBindBankInfoBydealerId(this.id)
-                    } else {
-                        this.$message.warning(res.data.msg);
-                    }
-                }).catch(err => {
-                    console.log(err);
-                })
-            }
+            // 删除弹窗
+            deleteToast(msg) {
+                this.isShowDelToast = msg;
+                this.getFindBindBankInfoBydealerId(this.id)
+            },
         }
     }
 </script>

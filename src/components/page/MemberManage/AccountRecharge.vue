@@ -7,6 +7,9 @@
                     <el-form-item prop="nickname" label="会员昵称" label-width="120">
                         <el-input style="width:200px" placeholder="请输入会员昵称" v-model="form.nickname"></el-input>
                     </el-form-item>
+                    <el-form-item prop="phone" label="手机号" label-width="120">
+                        <el-input style="width:200px" placeholder="请输入手机号" v-model="form.phone"></el-input>
+                    </el-form-item>
                     <el-form-item prop="status" label="状态" label-width="120">
                         <el-select v-model="form.status" placeholder="请选择">
                             <el-option label="全部记录" value=""></el-option>
@@ -29,13 +32,11 @@
                         <el-button @click="getList(1)" type="primary">查询</el-button>
                         <el-button @click="resetForm('form')">重置</el-button>
                     </el-form-item>
-                    <el-form-item>
-                        <el-button @click="recharge" type="primary" v-if="p.addRechargeRecord">账户充值</el-button>
-                    </el-form-item>
                 </el-form>
             </el-card>
         </transition>
         <div class="table-block">
+            <el-button @click="recharge" type="primary" v-if="p.addRechargeRecord" style="margin-bottom: 20px">账户充值</el-button>
             <template>
                 <el-table :data="tableData" :height="height" border style="width: 100%">
                     <el-table-column type="index" label="编号" width="60" align="center"></el-table-column>
@@ -223,6 +224,7 @@
                 let data = {
                     page: val,
                     nickname: that.form.nickname,
+                    phone: that.form.phone,
                     status: that.form. status,
                     startTime: that.form.date ? moment(that.form.date[0]).format('YYYY-MM-DD') : '',
                     endTime: that.form.date ? moment(that.form.date[1]).format('YYYY-MM-DD') : '',
@@ -279,7 +281,7 @@
                       .post(api.findDealerByPhone, data)
                       .then(res => {
                           if (res.data.code == 200) {
-                              this.$message.success(res.data.msg);
+                              // this.$message.success(res.data.msg);
                               that.showDetail=true;
                               that.detail=res.data.data;
                               that.dealerId=res.data.data.id;

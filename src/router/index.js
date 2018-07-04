@@ -564,6 +564,18 @@ export default new Router({
                     meta: { title: '广告位管理',url:'/advertisingManage'}
                 },
                 {
+                    name:'featuredManage',
+                    path: '/featuredManage',
+                    component: resolve => require(['../components/page/OperateManage/FeaturedManage.vue'], resolve),
+                    meta: { title: '推荐位管理',url:'/featuredManage'}
+                },
+                {
+                    name:'featured',
+                    path: '/featured',
+                    component: resolve => require(['../components/page/OperateManage/Featured.vue'], resolve),
+                    meta: { title: '推荐位管理',url:'/featured'}
+                },
+                {
                     name:'appBannerAdv',
                     path: '/appBannerAdv',
                     component: resolve => require(['../components/page/OperateManage/AdvertisingManage/AppBannerAdv.vue'], resolve),

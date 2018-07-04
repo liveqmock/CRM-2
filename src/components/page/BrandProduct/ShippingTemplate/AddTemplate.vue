@@ -268,7 +268,7 @@
                         that.tableData.forEach(function (v, k) {
                             let tableTemp = {
                                 includeAreaName: v.includeAreaName,
-                                includeArea: v.checkedId,
+                                includeArea: v.includeArea,
                                 startUnit: v.startUnit,
                                 startPrice: v.startPrice,
                                 nextUnit: v.nextUnit,
@@ -480,8 +480,9 @@
                 .mask-content {
                     position: relative;
                     width: 100%;
-                    height: 160px;
-                    overflow: hidden;
+                    overflow-x: hidden;
+                    max-height: 500px;
+                    overflow-y: auto;
                     padding: 10px 45px 0 45px;
                     box-sizing: border-box;
                     .del-btn-group {

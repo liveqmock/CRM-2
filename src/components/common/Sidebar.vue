@@ -219,6 +219,10 @@
                                 title: "广告位管理"
                             },
                             {
+                                index: "featured",
+                                title: "推荐位管理"
+                            },
+                            {
                                 index: "allKeyWords",
                                 title: "搜索关键词"
                             },

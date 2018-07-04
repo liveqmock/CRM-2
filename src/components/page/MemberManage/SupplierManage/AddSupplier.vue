@@ -104,6 +104,7 @@
                 address: '',
                 areaDisabled: true,
                 phone: true,
+                ajax:false,
             }
         },
         activated() {
@@ -126,6 +127,7 @@
             this.areaDisabled = true;
             this.phone = true;
             this.detailData = [];
+            this.ajax=false;
         },
         methods: {
             // 获取省市区
@@ -162,7 +164,6 @@
             // 提交表单
             submitForm(form) {
                 let that = this;
-                that.btnLoading = true;
                 if(!that[form].name){
                     that.$message.warning('请输入供货商名称!');
                     return
@@ -175,7 +176,7 @@
                     that.$message.warning('请输入联系方式!');
                     return
                 }
-                if(that.form.country==2){
+                if(that.form.country==1){
                     if(!that.form.provinceId||!that.form.cityId||!that.form.areaId){
                         that.$message.warning('请输入省市区!');
                         return
@@ -200,6 +201,12 @@
                 if(!that.form.bankCard){
                     that.$message.warning('请输入银行卡号!');
                     return
+                }else{
+                    let reg = /^(\d{16}|\d{19})$/;
+                    if(!reg.test(that.form.bankCard)){
+                        that.$message.warning('请输入合法的银行卡号!');
+                        return
+                    }
                 }
                 if(!that.form.bankUsername){
                     that.$message.warning('请输入持卡人姓名!');
@@ -208,26 +215,32 @@
                 if(that.phone==false){
                     return false
                 }
+                that.btnLoading = true;
                 let data = that[form];
                 data.telephone=that.first+that.second;
                 data.url = pApi.addSupplier;
-                this.$axios
-                    .post(api.addSupplier, data)
-                    .then(res => {
-                        that.btnLoading = false;
-                        if (res.data.code == 200) {
-                            that.$message.success(res.data.msg);
-                            setTimeout(function () {
-                                that.$router.push('/supplierManage')
-                            }, 1000)
-                        } else {
-                            that.$message.warning(res.data.msg);
-                        }
-                    })
-                    .catch(err => {
-                        console.log(err);
-                        that.btnLoading = false;
-                    });
+                if(!that.ajax) {
+                    that.ajax=true;
+                    this.$axios
+                        .post(api.addSupplier, data)
+                        .then(res => {
+                            that.btnLoading = false;
+                            if (res.data.code == 200) {
+                                that.$message.success(res.data.msg);
+                                setTimeout(function () {
+                                    that.$router.push('/supplierManage')
+                                }, 1000)
+                            } else {
+                                that.ajax=false;
+                                that.$message.warning(res.data.msg);
+                            }
+                        })
+                        .catch(err => {
+                            console.log(err);
+                            that.btnLoading = false;
+                            that.ajax=false;
+                        });
+                }
             },
             //取消
             cancel() {

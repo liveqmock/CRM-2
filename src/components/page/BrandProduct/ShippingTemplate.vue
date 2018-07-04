@@ -21,12 +21,12 @@
                             <template v-if="scope.row.calc_type==3">按件数量</template>
                         </template>
                     </el-table-column>
-                    <el-table-column label="状态" width="180" align="center">
+                   <!-- <el-table-column label="状态" width="180" align="center">
                         <template slot-scope="scope">
                             <template v-if="scope.row.status == 1">启用</template>
                             <template v-if="scope.row.status == 2">停用</template>
                         </template>
-                    </el-table-column>
+                    </el-table-column>-->
                     <el-table-column prop="num" label="使用数" width="180" align="center"></el-table-column>
                     <el-table-column v-if="isShowOperate" label="模板设置" align="center">
                         <template slot-scope="scope">

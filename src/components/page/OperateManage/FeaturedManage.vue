@@ -1,19 +1,19 @@
 <template>
     <div class="second-classify">
-        <v-breadcrumb :nav="['运营管理','广告位管理','推荐产品管理']"></v-breadcrumb>
+        <v-breadcrumb :nav="['运营管理','推荐位管理','推荐产品管理']"></v-breadcrumb>
         <div class="table-block">
             <el-button v-if="" type="primary" style="margin-bottom: 20px" @click="addClassify">添加banner图片</el-button>
             <template>
                 <el-table :data="tableData" :height="height" border style="width: 100%">
-                    <el-table-column type="index" label="编号" width="180" align="center"></el-table-column>
+                    <el-table-column type="index" label="编号" width="120" align="center"></el-table-column>
                     <el-table-column label="图片" align="center">
                         <template slot-scope="scope">
-                            <img :src="scope.row.img" alt="">
+                            <img :src="scope.row.img_url" alt="">
                         </template>
                     </el-table-column>
-                    <el-table-column prop="product_name" label="链接" align="center"></el-table-column>
-                    <el-table-column prop="product_name" label="备注" align="center"></el-table-column>
-                    <el-table-column prop="status" label="排序位置" align="center">
+                    <el-table-column prop="img_url" label="链接" align="center"></el-table-column>
+                    <el-table-column prop="remark" label="备注" align="center"></el-table-column>
+                    <el-table-column prop="position" label="排序位置" align="center">
                     </el-table-column>
                     <el-table-column v-if="isShowOperate" label="操作" align="center">
                         <template slot-scope="scope">
@@ -23,40 +23,38 @@
                     </el-table-column>
                 </el-table>
             </template>
-            <div class="block">
-                <el-pagination
-                    background
-                    @size-change="handleSizeChange"
-                    @current-change="handleCurrentChange"
-                    :current-page="page.currentPage"
-                    layout="total, prev, pager, next, jumper"
-                    :total="page.totalPage">
-                </el-pagination>
-            </div>
         </div>
 
         <!--添加/编辑弹窗-->
         <el-dialog title="添加banner图片" :visible.sync="addMask">
             <el-form v-model="addForm" label-width="100px">
-                <el-form-item label="类目名称" >
-                    <el-input v-model="addForm.name" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="类目图标"  class="icon-area">
-                    <el-input readonly v-model="addForm.img" auto-complete="off"></el-input>
+                <el-form-item label="选择banner图"  class="icon-area">
+                    <el-input readonly v-model="addForm.img" placeholder="上传图片" auto-complete="off"></el-input>
                     <el-upload class="icon-uploader"
                                action="/commonAPI/ossClient/aliyunOSSUploadImage"
                                :on-success="handleAvatarSuccess">
                         <el-button size="small" type="primary"><i class="el-icon-upload"></i>上传</el-button>
                     </el-upload>
                 </el-form-item>
+                <div class="inf-area">
+                    <img :src="addForm.imgUrl" alt="" class="banner-img">
+                    <div class="tips">建议图片尺寸350px*350px</div>
+                </div>
+                <el-form-item label="请选择类型">
+                    <el-select v-model="addForm.linkType" placeholder="请选择类型">
+                        <el-option label="链接产品" value="1"></el-option>
+                        <el-option label="链接专题" value="2"></el-option>
+                    </el-select>
+                </el-form-item>
                 <el-form-item label="请输入ID" >
-                    <el-input v-model="addForm.linkTypeValue" auto-complete="off" disabled=""></el-input>
+                    <el-input v-model="addForm.linkTypeValue" placeholder="请输入ID" @change="searchProduct" auto-complete="off"></el-input>
                 </el-form-item>
+                <div class="inf-area">{{productName}}</div>
                 <el-form-item label="备注说明" >
-                    <el-input v-model="addForm.remark" auto-complete="off" disabled=""></el-input>
+                    <el-input v-model="addForm.remark" placeholder="请输入备注说明" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="position" >
-                    <el-input v-model="addForm.name" auto-complete="off" disabled=""></el-input>
+                <el-form-item label="排序位置" >
+                    <el-input v-model="addForm.position" placeholder="请输入排序位置" auto-complete="off"></el-input>
                 </el-form-item>
 
             </el-form>
@@ -65,28 +63,37 @@
                 <el-button @click="cancel">取 消</el-button>
             </div>
         </el-dialog>
-        <el-dialog :title="title" :visible.sync="editMask">
+        <el-dialog title="编辑banner图片" :visible.sync="editMask">
             <el-form v-model="form" label-width="100px">
-                <el-form-item label="类目名称" >
-                    <el-input v-model="form.name" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="类目图标"  class="icon-area">
-                    <el-input readonly v-model="form.img" auto-complete="off"></el-input>
+                <el-form-item label="选择banner图"  class="icon-area">
+                    <el-input readonly v-model="form.img" placeholder="上传图片" auto-complete="off"></el-input>
                     <el-upload class="icon-uploader"
                                action="/commonAPI/ossClient/aliyunOSSUploadImage"
                                :on-success="handleAvatarSuccess">
                         <el-button size="small" type="primary"><i class="el-icon-upload"></i>上传</el-button>
                     </el-upload>
                 </el-form-item>
-                <el-form-item label="一级分类" >
-                    <el-input v-model="name" auto-complete="off" disabled=""></el-input>
-                </el-form-item>
-                <el-form-item label="是否启用" >
-                    <el-select v-model="form.status">
-                        <el-option label="是" value="1"></el-option>
-                        <el-option label="否" value="2"></el-option>
+                <div class="inf-area">
+                    <img :src="form.imgUrl" alt="" class="banner-img">
+                    <div class="tips">建议图片尺寸350px*350px</div>
+                </div>
+                <el-form-item label="请选择类型">
+                    <el-select v-model="form.linkType" placeholder="请选择类型">
+                        <el-option label="链接产品" value="1"></el-option>
+                        <el-option label="链接专题" value="2"></el-option>
                     </el-select>
                 </el-form-item>
+                <el-form-item label="请输入ID" >
+                    <el-input v-model="form.linkTypeValue" placeholder="请输入ID" @change="searchProduct" auto-complete="off"></el-input>
+                </el-form-item>
+                <div class="inf-area">{{productName}}</div>
+                <el-form-item label="备注说明" >
+                    <el-input v-model="form.remark" placeholder="请输入备注说明" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="排序位置" >
+                    <el-input v-model="form.position" placeholder="请输入排序位置" auto-complete="off"></el-input>
+                </el-form-item>
+
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="addOrEdit('form')">确 认</el-button>
@@ -102,9 +109,9 @@
     import vBreadcrumb from "../../common/Breadcrumb.vue";
     import icon from "../../common/ico.vue";
     import deleteToast from "../../common/DeleteToast";
-    import * as api from "../../../api/api";
+    import * as api from "../../../api/OperateManage/FeaturedManage";
     import utils from '../../../utils/index.js'
-    import * as pApi from '../../../privilegeList/index.js';
+    import * as pApi from '../../../privilegeList/OperateManage/FeaturedManage';
 
     export default {
         components: {
@@ -116,39 +123,44 @@
             return {
                 // 权限控制
                 p:{
-                    addProductCategory_2:false,
-                    updateProductCategory_2:false,
-                    deleteProductCategory_2:false,
+                    addFeatured:false,
+                    updateFeatured:false,
+                    deleteFeatured:false,
                 },
                 isShowOperate:true,
 
                 tableData: [],
-                page: {
-                    currentPage: 1,
-                    totalPage: 20
-                },
-                height: "",
+                height:'',
                 addMask: false,
                 editMask: false,
                 isShowDelToast: false,
                 form: {
-                    name: "",
-                    status: "1",
-                    img: ""
+                    img:'',
+                    imgUrl:'',
+                    linkType:'',
+                    linkTypeValue:'',
+                    remark:'',
+                    position:''
                 },
                 addForm: {
-                    name: "",
-                    status: "1",
-                    img: ""
+                    img:'',
+                    imgUrl:'',
+                    linkType:'',
+                    linkTypeValue:'',
+                    remark:'',
+                    position:''
                 },
-                title: "添加二级类目",
                 id: "",
                 itemId: "",
                 name: "",
                 itype: "",
-                delId: 66,
-                delUrl: "http://api",
-                delUri:''
+                delId: '',
+                delUrl: "",
+                delUri:'',
+                showDetail:false,
+                productName:'',
+                pageType:'',
+                proId:true
             };
         },
         created() {
@@ -158,13 +170,8 @@
         },
         activated() {
             this.pControl();
-            this.name =
-                this.$route.query.name ||
-                JSON.parse(sessionStorage.getItem("secondClassify").name);
-            this.id =
-                this.$route.query.id ||
-                JSON.parse(sessionStorage.getItem("secondClassify").id);
-            this.getList(this.page.currentPage);
+            this.pageType = this.$route.query.pageType || sessionStorage.getItem("pageType");
+            this.getList();
         },
         methods: {
             // 权限控制
@@ -172,84 +179,85 @@
                 for (const k in this.p) {
                     this.p[k] = utils.pc(pApi[k]);
                 }
-                if (!this.p.updateProductCategory_2 && !this.p.deleteProductCategory_2) {
+                if (!this.p.updateFeatured && !this.p.deleteFeatured) {
                     this.isShowOperate = false;
                 }
             },
             //获取列表
-            getList(val) {
-                let that = this;
+            getList() {
                 let data = {
-                    page: val,
-                    fatherid: this.id,
-                    url:pApi.queryProductCategoryPageList_2
+                    pageType:this.pageType,
+                    url:pApi.queryFeaturedList
                 };
                 this.$axios
-                    .post(api.getCategoryList, data)
+                    .post(api.queryFeaturedList, data)
                     .then(res => {
                         if (res.data.code == 200) {
                             this.tableData = [];
-                            this.tableData = res.data.data.data;
-                            this.page.totalPage = res.data.data.resultCount;
+                            this.tableData = res.data.data;
                         } else {
                             this.$message.warning(res.data.msg);
                         }
-                        console.log(res.data);
                     })
                     .catch(err => {
                         console.log(err);
                     });
             },
-            //分页
-            handleSizeChange(val) {
-                console.log(`每页 ${val} 条`);
-            },
-            handleCurrentChange(val) {
-                console.log(`当前页: ${val}`);
-                this.page.currentPage = val;
-                this.getList(val);
-            },
-            // 添加二级类目
+
+            // 添加
             addClassify() {
-                this.title = "添加二级类目";
                 this.addMask = true;
-                this.addForm.name='';
+                this.addForm.imgUrl='';
                 this.addForm.img='';
-                this.addForm.status='1';
+                this.addForm.linkType='';
+                this.addForm.linkTypeValue='';
+                this.productName='';
+                this.remark='';
+                this.position='';
                 this.itype = "add";
+                this.proId=true
             },
             //编辑
             editItem(row) {
-                this.title = "编辑二级类目";
                 this.editMask = true;
-                row.status = row.status.toString();
-                this.form = row;
                 this.itemId = row.id;
+                this.getDetail(row.id);
                 this.itype = "edit";
+                this.productName='';
+                this.proId=true
             },
             //添加修改确定
             addOrEdit(formName) {
                 let url = "";
                 let data = {};
-                data.name = this[formName].name;
-                data.img = this[formName].img;
-                data.status = this[formName].status;
-                if(!data.name){
-                    this.$message.warning('请输入类目名称!');
+                data.imgUrl = this[formName].imgUrl;
+                data.linkType = this[formName].linkType;
+                data.linkTypeValue = this[formName].linkTypeValue;
+                data.pageType = this.pageType;
+                data.remark = this[formName].remark;
+                data.position = this[formName].position;
+                if(!data.imgUrl){
+                    this.$message.warning('请上传图片!');
                     return
                 }
-                if(!data.img){
-                    this.$message.warning('请上传类目图标!');
+                if(!data.linkType){
+                    this.$message.warning('请选择类型!');
                     return
+                }
+                if(!data.linkTypeValue){
+                    this.$message.warning('请输入ID!');
+                    return
+                }
+                if(!this.proId){
+                    return false
                 }
                 if (this.itype == "add") {
-                    url = api.addCategory;
-                    data.fatherid = this.id;
-                    data.url = pApi.addProductCategory_2;
+                    url = api.addFeatured;
+                    data.url = pApi.addFeatured;
                 } else {
-                    url = api.editCategory;
+                    url = api.updateFeatured;
                     data.id = this.itemId;
-                    data.url = pApi.updateProductCategory_2;
+                    data.url = pApi.updateFeatured;
                 }
                 this.btnLoading = true;
                 this.$axios
@@ -260,11 +268,11 @@
                             this.btnLoading = false;
                             this.addMask = false;
                             this.editMask = false;
-                            this.getList(this.page.currentPage);
+                            this.getList();
                         } else {
                             this.btnLoading = false;
                             this.$message.warning(res.data.msg);
-                            this.getList(this.page.currentPage);
+                            this.getList();
                         }
                     })
                     .catch(err => {
@@ -274,28 +282,75 @@
             //删除
             delItem(id) {
                 this.delId = id;
-                this.delUrl = api.deleteCategory;
-                this.delUri = pApi.deleteProductCategory_2;
+                this.delUrl = api.deleteFeatured;
+                this.delUri = pApi.deleteFeatured;
                 this.isShowDelToast = true;
             },
             // 删除弹窗
             deleteToast(msg) {
                 this.isShowDelToast = msg;
-                this.getList(this.page.currentPage);
+                this.getList();
             },
             //上传图片
             handleAvatarSuccess(res, file) {
                 if (this.itype == "add") {
-                    this.addForm.img = URL.createObjectURL(file.raw);
+                    this.addForm.img = res.data.imageUrl;
+                    this.addForm.imgUrl = res.data.imageUrl;
                 } else {
-                    this.form.img = URL.createObjectURL(file.raw);
+                    this.form.img = res.data.imageUrl;
+                    this.form.imgUrl = res.data.imageUrl;
                 }
             },
             //取消
             cancel() {
                 this.addMask = false;
                 this.editMask = false;
-                this.getList(this.page.currentPage);
+                this.getList();
+            },
+            //根据产品id查询产品名称
+            searchProduct(){
+                let data={};
+                if(this.itype=='add'){
+                    data.prodCode=this.addForm.linkTypeValue
+                }else {
+                    data.prodCode=this.form.linkTypeValue
+                }
+                this.$axios
+                    .post(api.findProductNameByProdCode, data)
+                    .then(res => {
+                        if (res.data.code == 200) {
+                            this.showDetail=true;
+                            this.productName=res.data.data;
+                            this.proId=true
+                        } else {
+                            this.proId=false;
+                            this.$message.warning(res.data.msg);
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        this.proId=false;
+                    });
+            },
+            //获取详情
+            getDetail(id){
+                let data={
+                    id:id,
+                    pageType:this.pageType,
+                };
+                this.$axios
+                    .post(api.findFeaturedById, data)
+                    .then(res => {
+                        if (res.data.code == 200) {
+                            this.form=res.data.data;
+                            this.form.img=this.form.imgUrl;
+                        } else {
+                            this.$message.warning(res.data.msg);
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
             }
         }
     };
@@ -309,10 +364,11 @@
             background: #fff;
         }
         img {
-            width: 38px;
-            height: 38px;
-            border-radius: 5px;
-            vertical-align: middle;
+            width: 94px;
+            height: 94px;
+            background-color: #ffffff;
+            border-radius: 4px;
+            border: solid 2px #dddddd;
         }
         .block {
             float: right;
@@ -371,6 +427,12 @@
         }
         .el-upload-list {
             display: none;
+        }
+        .inf-area{
+            margin:-10px 0 10px 100px;
+            .tips{
+                color: #ff6868;
+            }
         }
     }
 </style>
