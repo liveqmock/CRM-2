@@ -141,6 +141,10 @@
                                 index: "shopList",
                                 title: "店铺管理"
                             },
+                            {
+                                index: "recruitShopManage",
+                                title: "招募店铺管理"
+                            },
                         ]
                     },
                     {
