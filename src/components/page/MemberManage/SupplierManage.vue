@@ -62,7 +62,7 @@
                                 </el-button>
                             </template>
                            <template v-else>
-                               <el-button type="primary" disabled v-if="p.findSupplierById" size="small"
+                               <el-button type="primary" disabled v-if="p.updateSupplier" size="small"
                                           @click="editItem(scope.$index,scope.row)">编辑
                                </el-button>
                            </template>
