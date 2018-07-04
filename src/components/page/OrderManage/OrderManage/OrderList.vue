@@ -811,7 +811,7 @@ export default {
           .post(api.pickUpOrderProduct, { orderProductId: row.id, url: pApi.pickUpOrderProduct })
           .then(res => {
             this.$message.success(res.data.data);
-            this.submitForm(this.page.currentPage);
+            this.submitForm(1);
           })
           .catch(err => {
             console.log(err);
