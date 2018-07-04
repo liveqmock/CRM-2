@@ -137,7 +137,7 @@
                     <el-input v-model="addForm.money" auto-complete="off" placeholder="请输入充值金额"></el-input>
                 </el-form-item>
                 <el-form-item label="备注说明" class="remark-area">
-                    <el-input v-model="addForm.remark" auto-complete="off" placeholder="请输入说明文字"></el-input>
+                    <el-input type="textarea" v-model="addForm.remark" auto-complete="off" placeholder="请输入备注说明"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -419,7 +419,7 @@
         }
 
         .el-dialog .el-input__inner {
-            width: 180px
+            width: 270px
         }
 
         .remark-area .el-input__inner {
@@ -463,9 +463,14 @@
         }
         .detail{
             margin: -10px 100px 10px;
+            width: 250px;
+            height: 120px;
+            background-color: #33b4ff;
+            border-radius: 5px;
+            color: #fff;
+            padding: 10px;
         }
         .member-title{
-            width: 70px;
             display: inline-block;
         }
         .pwd-mask {
@@ -532,6 +537,13 @@
                     }
                 }
             }
+        }
+        .el-textarea__inner{
+            width: 346px;
+            height: 150px;
+            border-radius: 5px;
+            border: solid 1px #dddddd;
+            resize: none;
         }
     }
 
