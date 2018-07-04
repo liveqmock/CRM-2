@@ -173,6 +173,24 @@ export default new Router({
                     component: resolve => require(['../components/page/SpellShopManage/ShopManage/ShopAnnouncement.vue'], resolve),
                     meta: { title: '店铺公告'}
                 },
+                {
+                    name:'tradeInfo',
+                    path: '/tradeInfo',
+                    component: resolve => require(['../components/page/SpellShopManage/ShopManage/TradeInfo.vue'], resolve),
+                    meta: { title: '账户交易明细'}
+                },
+                {
+                    name:'recruitShopManage',
+                    path: '/recruitShopManage',
+                    component: resolve => require(['../components/page/SpellShopManage/RecruitShopManage/RecruitShopManage.vue'], resolve),
+                    meta: { title: '招募店铺管理'}
+                },
+                {
+                    name:'recruitShopInfo',
+                    path: '/recruitShopInfo',
+                    component: resolve => require(['../components/page/SpellShopManage/RecruitShopManage/RecruitShopInfo.vue'], resolve),
+                    meta: { title: '招募店铺详情'}
+                },
                 // 会员管理
                 {
                     name:'levelManage',

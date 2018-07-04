@@ -24,5 +24,5 @@ export const orderSign = '/admin/order/orderSign';
 export const pickUpGoods = '/admin/order/pickUpGoods';
 // 提货按钮(单个)
 export const pickUpOrderProduct = '/admin/order/pickUpOrderProduct';
-// 批量导出
 // 推送云仓
+export const orderSendOut = '/admin/order/orderSendOut'

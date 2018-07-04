@@ -76,7 +76,7 @@
                                 <div class="operate-btn-group">
                                     <span v-if='v.status == 2' @click="pushCloud(v)">推送云仓</span>
                                     <span v-if='p.getOrderDetail' @click="orderInfo(v)" style="margin:0 15px 0 15px">订单详情</span>
-                                    <el-popover v-if='p.orderSign' placement="bottom" width="150" v-model="v.isShowPop" trigger="click">
+                                    <el-popover v-if='p.orderSign' placement="bottom" width="150" v-model="v.isShowPop" trigger="hover">
                                         <span slot="reference" style="cursor:pointer">标记 &nbsp <span class="star"
                                                                                                     :style="{color:v.starColor}">★</span></span>
                                         <span v-for="(v1,k1) in markArr" :key="k1" @click="changeColor(v1,v)"
@@ -151,7 +151,7 @@
                           <span style="margin-left:30px">创建时间：{{v.orderCreateTime|formatDate}}</span>
                           <div class="operate-btn-group">
                               <span v-if='p.getOrderDetail' @click="orderInfo(v)" style="margin:0 15px 0 15px">订单详情</span>
-                              <el-popover v-if='p.orderSign' placement="bottom" width="150" v-model="v.isShowPop" trigger="click">
+                              <el-popover v-if='p.orderSign' placement="bottom" width="150" v-model="v.isShowPop" trigger="hover">
                                   <span slot="reference" style="cursor:pointer">标记 &nbsp <span class="star"
                                                                                               :style="{color:v.starColor}">★</span></span>
                                   <span v-for="(v1,k1) in markArr" :key="k1" @click="changeColor(v1,v)"
@@ -218,9 +218,9 @@
                             <span>订单号：{{v.orderNum}}</span>
                             <span v-if='p.getOrderDetail' style="margin-left:30px">创建时间：{{v.orderCreateTime|formatDate}}</span>
                             <div class="operate-btn-group">
-                                <span @click="pushCloud(v)">推送云仓</span>
+                                <span v-if='p.orderSendOut' @click="pushCloud(v)">推送云仓</span>
                                 <span @click="orderInfo(v)" style="margin:0 15px 0 15px">订单详情</span>
-                                <el-popover v-if='p.orderSign' placement="bottom" width="150" v-model="v.isShowPop" trigger="click">
+                                <el-popover v-if='p.orderSign' placement="bottom" width="150" v-model="v.isShowPop" trigger="hover">
                                     <span slot="reference" style="cursor:pointer">标记 &nbsp <span class="star"
                                                                                                 :style="{color:v.starColor}">★</span></span>
                                     <span v-for="(v1,k1) in markArr" :key="k1" @click="changeColor(v1,v)"
@@ -258,7 +258,6 @@
                                     <div class="operate">
                                         <el-button v-if='value.status == 8 && (value.return_type== 1 || scope.row.return_type== 2)' @click='changeSingStatus(1,scope.row)' type="primary">退款成功</el-button>
                                         <el-button v-if='value.status == 4 || value.status == 5' @click='changeSingStatus(2,scope.row)' type="primary">买家申请退款</el-button>
-                                        <el-button v-if='value.status == 2' type="primary">已自提</el-button>
                                         <el-button v-if='value.status == 6' @click='changeSingStatus(scope.row)' type="primary">买家申请退换</el-button>
                                         <el-button v-if='value.status == 8 && value.return_type== 3' @click='changeSingStatus(scope.row)' type="primary">退换成功</el-button>
                                         <template v-if='value.status == 3 || value.status == 8'>已提货</template>
@@ -288,7 +287,7 @@
                               <span style="margin-left:30px">创建时间：{{v.orderCreateTime|formatDate}}</span>
                               <div class="operate-btn-group">
                                   <span v-if='p.getOrderDetail' @click="orderInfo(v)" style="margin:0 15px 0 15px">订单详情</span>
-                                  <el-popover v-if='p.orderSign' placement="bottom" width="150" v-model="v.isShowPop" trigger="click">
+                                  <el-popover v-if='p.orderSign' placement="bottom" width="150" v-model="v.isShowPop" trigger="hover">
                                       <span slot="reference" style="cursor:pointer">标记 &nbsp <span class="star"
                                                                                                   :style="{color:v.starColor}">★</span></span>
                                       <span v-for="(v1,k1) in markArr" :key="k1" @click="changeColor(v1,v)"
@@ -356,7 +355,7 @@
                               <span style="margin-left:30px">创建时间：{{v.orderCreateTime|formatDate}}</span>
                               <div class="operate-btn-group">
                                   <span v-if='p.getOrderDetail' @click="orderInfo(v)" style="margin:0 15px 0 15px">订单详情</span>
-                                  <el-popover v-if='p.orderSign' placement="bottom" width="150" v-model="v.isShowPop" trigger="click">
+                                  <el-popover v-if='p.orderSign' placement="bottom" width="150" v-model="v.isShowPop" trigger="hover">
                                       <span slot="reference" style="cursor:pointer">标记 &nbsp <span class="star"
                                                                                                   :style="{color:v.starColor}">★</span></span>
                                       <span v-for="(v1,k1) in markArr" :key="k1" @click="changeColor(v1,v)"
@@ -394,7 +393,7 @@
                                       <div class="operate">
                                         <el-button v-if='value.status == 8 && (value.return_type== 1 || scope.row.return_type== 2)' @click='changeSingStatus(1,scope.row)' type="primary">退款成功</el-button>
                                         <el-button v-if='value.status == 4 || value.status == 5' @click='changeSingStatus(2,scope.row)' type="primary">买家申请退款</el-button>
-                                        <el-button v-if='value.status == 2' type="primary">已自提</el-button>
+                                        <!-- <el-button v-if='value.status == 2' type="primary">已自提</el-button> -->
                                         <el-button v-if='value.status == 6' @click='changeSingStatus(scope.row)' type="primary">买家申请退换</el-button>
                                         <el-button v-if='value.status == 8 && value.return_type== 3' @click='changeSingStatus(scope.row)' type="primary">退换成功</el-button>
                                         <template v-if='value.status == 3 || value.status == 8'>已提货</template>
@@ -424,7 +423,7 @@
                             <span style="margin-left:30px">创建时间：{{v.orderCreateTime|formatDate}}</span>
                             <div class="operate-btn-group">
                                 <span v-if='p.getOrderDetail' @click="orderInfo(v)" style="margin:0 15px 0 15px">订单详情</span>
-                                <el-popover v-if='p.orderSign' placement="bottom" width="150" v-model="v.isShowPop" trigger="click">
+                                <el-popover v-if='p.orderSign' placement="bottom" width="150" v-model="v.isShowPop" trigger="hover">
                                     <span slot="reference" style="cursor:pointer">标记 &nbsp <span class="star"
                                                                                                 :style="{color:v.starColor}">★</span></span>
                                     <span v-for="(v1,k1) in markArr" :key="k1" @click="changeColor(v1,v)"
@@ -492,7 +491,7 @@
                             <span style="margin-left:30px">创建时间：{{v.orderCreateTime|formatDate}}</span>
                             <div class="operate-btn-group">
                                 <span v-if='p.getOrderDetail' @click="orderInfo(v)" style="margin:0 15px 0 15px">订单详情</span>
-                                <el-popover v-if='p.orderSign' placement="bottom" width="150" v-model="v.isShowPop" trigger="click">
+                                <el-popover v-if='p.orderSign' placement="bottom" width="150" v-model="v.isShowPop" trigger="hover">
                                     <span slot="reference" style="cursor:pointer">标记 &nbsp <span class="star"
                                                                                                 :style="{color:v.starColor}">★</span></span>
                                     <span v-for="(v1,k1) in markArr" :key="k1" @click="changeColor(v1,v)"
@@ -579,6 +578,7 @@ export default {
         queryClosedOrderPageList: false,
         getOrderDetail:false,
         orderSign:false,
+        orderSendOut:false,
       },
       nav: ["订单管理", "订单管理"],
       tabLoading: false,
@@ -673,7 +673,7 @@ export default {
               this.markArr[res.data.data.data[i].stars - 1] == undefined
                 ? "#ccc"
                 : this.markArr[res.data.data.data[i].stars - 1].label;
-                res.data.data.data[i].price = res.data.data.data[i].price == null?'0':res.data.data.data[i].price;
+                res.data.data.data[i].price = res.data.data.data[i].totalPrice == null?'0':res.data.data.data[i].totalPrice;
             this.tableData.push(res.data.data.data[i]);
           }
           this.page.totalPage = res.data.data.resultCount;
@@ -768,7 +768,15 @@ export default {
     },
     // 推送云仓
     pushCloud(row) {
-      console.log(row);
+      this.$axios
+        .post(api.orderSendOut, {orderId:row.id,url:pApi.orderSendOut})
+        .then(res => {
+          this.$message.success(res.data.data);
+          this.submitForm(this.page.currentPage);
+        })
+        .catch(err => {
+          console.log(err);
+        });
     },
     // 订单详情
     orderInfo(row) {

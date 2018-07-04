@@ -10,7 +10,7 @@
             <p class="spell-shop-content" style="font-size: 22px;">拼店额：￥58000/￥60000</p>
             <p class="spell-shop-content">分红金：￥60000</p>
             <p class="spell-shop-content">交易利润：￥6800</p>
-            <p class="btn">账户明细</p>
+            <p class="btn" @click="showInfo">账户明细</p>
         </div>
     </el-card>
   </div>
@@ -27,7 +27,13 @@ export default {
     };
   },
 
-  methods: {}
+  methods: {
+    // 查看交易明细
+    showInfo(){
+        sessionStorage.setItem('tradeInfoId',1);
+        this.$router.push({name:'tradeInfo',query:{'tradeInfoId':1}})
+    }
+  }
 }
 
 </script>
