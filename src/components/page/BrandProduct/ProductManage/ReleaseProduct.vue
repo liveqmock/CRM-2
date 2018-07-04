@@ -25,7 +25,7 @@
                 <div class="upload-tip">建议尺寸：800*800,拖拽图片可以改变顺序，第一张为默认头图</div>
             </el-form-item>
             <el-form-item label="产品分类">
-                <el-cascader filterable  @change='getProItemId' :options="itemList" @active-item-change="handleItemChange" :props="itemProps"></el-cascader>
+                <el-cascader filterable  @change='getProItemId' :options="itemList" :props="itemProps"></el-cascader>
                 <span style="margin-left:30px">产品品牌</span>
                 <el-select @change="getSupplyList" v-model="form.brandId" placeholder="请选择">
                   <el-option v-for="(v,k) in brandArr" :key="k" :label="v.label" :value="v.value"></el-option>
@@ -400,7 +400,8 @@ export default {
         .post(api.getCategoryList, { fatherid: 0 ,url:pApi.addProduct})
         .then(res => {
             res.data.data.data.forEach((v,k)=>{
-                this.itemList.push({label:v.name,value:v.id,children:[]})
+                this.itemList.push({label:v.name,value:v.id,children:[]});
+                this.handleItemChange(v.id)
             })
         })
         .catch(err => {
@@ -411,12 +412,12 @@ export default {
     handleItemChange(val){
         let index = 0;
         this.itemList.forEach((v,k)=>{
-            if(v.value == val[0]){
+            if(v.value == val){
                 index = k;
             }
         })
         let data ={};
-        data.fatherid = val[0];
+        data.fatherid = val;
         data.url = pApi.addProduct;
         this.itemList[index].children = [];
         this.$axios
@@ -461,7 +462,7 @@ export default {
         .post(api.querySupplierBrandPageList, data)
         .then(res => {
             res.data.data.forEach((v,k)=>{
-              this.supplierArr.push({label:v.name,value:v.id})
+              this.supplierArr.push({label:v.name,value:v.supplier_id})
             })
         })
         .catch(err => {

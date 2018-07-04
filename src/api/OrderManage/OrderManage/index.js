@@ -41,3 +41,6 @@ export const queryWaitReceivingOrderPageList = '/admin/order/queryWaitReceivingO
 
 // 待处理订单
 export const queryPendingOrderPageList = '/admin/order/queryPendingOrderPageList'
+
+// 云仓发货
+export const orderSendOut = '/admin/order/orderSendOut' 

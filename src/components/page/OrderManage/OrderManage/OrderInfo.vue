@@ -22,8 +22,8 @@
             <span v-if='orderStatus==1' class="pay-time">订单剩余时间：{{orderFreeTime}}</span>
             <span v-if='orderStatus==3' class="pay-time">订单待完成时间：{{orderFinishTime}}</span>
             <br/>
-            <el-button v-if="orderStatus == 2" @click='changeStatus' class="cloud-delivery-btn" type="danger">云仓发货</el-button>
-            <el-button v-if="orderStatus == 4" @click='changeStatus(orderMsg.url)' class="cloud-delivery-btn" type="danger">已提货</el-button>
+            <el-button v-if="orderStatus == 2 && p.orderSendOut" @click='orderSendOut' class="cloud-delivery-btn" type="danger">云仓发货</el-button>
+            <el-button v-if="orderStatus == 4 && p.pickUpGoods" @click='changeStatus(orderMsg.url)' class="cloud-delivery-btn" type="danger">已提货</el-button>
             <p class="preferential-info" @click='isShowPreferential = true'>优惠详情</p>
             <span class="mark">标记</span>
             <span class="star" :style="{color:orderMsg.star}">★</span>
@@ -76,10 +76,10 @@
                 <span v-if='orderStatus != 1 && orderStatus != 2 && orderStatus != 9' class="content-con">第三方支付时间：{{ orderMsg.payTime | formatDate }}</span>
             </p>
             <p class="info-content">
-                <span v-if='orderStatus == 3 || orderStatus == 4 || orderStatus == 5 || orderStatus == 7' class="content-con">发货时间：{{ orderMsg.deliveryTime | formatDate }}</span>
-                <span v-if='orderStatus == 6 || orderStatus == 8 || orderStatus == 10' class="content-con">取消时间：2018-06-221131</span>
+                <span v-if='orderStatus == 3 || orderStatus == 4 || orderStatus == 5 || orderStatus == 7' class="content-con">发货时间：{{ orderMsg.sendTime | formatDate }}</span>
+                <span v-if='orderStatus == 6 || orderStatus == 8 || orderStatus == 10' class="content-con">取消时间：{{ orderMsg.cancleTime }}</span>
                 <span v-if='orderStatus != 1 && orderStatus != 2 && orderStatus != 9' class="content-con">支付宝（第三方支付）交易号：{{ orderMsg.tradeNo }}</span>
-                <span v-if='orderStatus == 5 || orderStatus == 7' class="content-con">确认时间：2018-06-221131</span>
+                <span v-if='orderStatus == 5 || orderStatus == 7' class="content-con">确认时间：{{orderMsg.deliveryTime | formatDate}}</span>
             </p>
             <el-table border :data="tableData" :span-method="spanMethod">
               <el-table-column label="产品名称" align="center" width="500px">
@@ -180,7 +180,8 @@ export default {
     return {
       // 权限控制
       p: {
-        pickUpGoods: false
+        pickUpGoods: false,
+        orderSendOut:false
       },
       nav: ["订单管理", "订单详情"],
       detailUrl: "",
@@ -223,7 +224,9 @@ export default {
         sysPayTime: "", // 平台支付时间
         payTime: "", //第三方支付时间
         deliveryTime: "", // 发货时间
-        tradeNo: "" //第三方支付交易号
+        tradeNo: "", //第三方支付交易号
+        sendTime:"",//发货时间
+        cancleTime:""//取消时间
       }
     };
   },
@@ -270,7 +273,7 @@ export default {
             res.data.data.star == null
               ? ""
               : this.markArr[res.data.data.star - 1].label;
-          this.orderMsg.adminRemark = res.data.data.adminRemark;
+          this.orderMsg.adminRemark = res.data.data.adminRemark;  
           this.orderMsg.nickName = res.data.data.nickname;
           this.orderMsg.phone = res.data.data.phone;
           this.orderMsg.receiver = res.data.data.receiver;
@@ -279,20 +282,26 @@ export default {
             res.data.data.province == undefined ? "" : res.data.data.province
           }${res.data.data.city}${res.data.data.area}`;
           this.orderMsg.buyerRemark = res.data.data.buyerRemark;
-          this.orderMsg.storehouseName = `${
-            res.data.data.storehouseProvince == undefined
+          if(res.data.data.storehouseProvince == null && res.data.data.storehouseCity == null &&res.data.data.storehouseArea == null){
+            this.orderMsg.storehouseName = '';
+          }else{
+            this.orderMsg.storehouseName = `${
+            res.data.data.storehouseProvince == null
               ? ""
               : res.data.data.storehouseProvince
-          }${res.data.data.storehouseCity}${res.data.data.storehouseArea}${
-            res.data.data.storehouseAddress
-          }`;
+            }${res.data.data.storehouseCity}${res.data.data.storehouseArea}${
+              res.data.data.storehouseAddress
+            }`;
+          }
           this.orderMsg.orderNum = res.data.data.orderNum;
-          this.orderMsg.createTime = res.data.data.createTime;
-          this.orderMsg.sysPayTime = res.data.data.sysPayTime;
-          this.orderMsg.payTime = res.data.data.payTime;
-          this.orderMsg.deliveryTime = res.data.data.deliveryTime;
-          this.orderMsg.tradeNo = res.data.data.tradeNo;
-          this.orderFreePayTime = res.data.data.createTime;
+          this.orderMsg.createTime = res.data.data.createTime;  // 创建时间
+          this.orderMsg.sysPayTime = res.data.data.sysPayTime;  // 平台支付时间
+          this.orderMsg.payTime = res.data.data.payTime;  // 第三方支付时间
+          this.orderMsg.deliveryTime = res.data.data.deliveryTime;  // 确认时间
+          this.orderMsg.sendTime = res.data.data.sendTime; // 发货时间
+          // this.order.cancleTime = res.data.data.sendTime; // 取消时间
+          this.orderMsg.tradeNo = res.data.data.tradeNo;  
+          this.orderFreePayTime = res.data.data.createTime; // 倒计时
           this.tableData = [];
           res.data.data.list.forEach((v, k) => {
             v.totalPrice = res.data.data.totalPrice;
@@ -508,6 +517,18 @@ export default {
             row.province == undefined
               ? ""
               : row.province + row.city + row.area + row.address;
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    // 云仓发货
+    orderSendOut(){
+      this.$axios
+        .post(api.orderSendOut, {orderId:this.orderId,url:pApi.orderSendOut})
+        .then(res => {
+          this.$message.success(res.data.data);
+          this.getInfo();
         })
         .catch(err => {
           console.log(err);

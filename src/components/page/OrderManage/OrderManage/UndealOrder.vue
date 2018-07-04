@@ -124,7 +124,7 @@
                             </div>
                             <div class="collection"
                                 :style="{height:120*v.orderProduct.length+v.orderProduct.length-1+'px',paddingTop:120*v.orderProduct.length/2-30+'px'}">
-                                <span>{{v.price | handleMoney}}<br>（含运费：{{v.freightPrice | handleMoney}}）</span>
+                                <span>{{v.totalPrice | handleMoney}}<br>（含运费：{{v.freightPrice | handleMoney}}）</span>
                             </div>
                         </div>
                         <div class="right">
@@ -165,7 +165,7 @@ export default {
 
   data() {
     return {
-      nav: ["订单管理", "订单管理"],
+      nav: ["订单管理", "订单管理","待处理订单"],
       tabLoading: false,
       w: {
         name: "25%",

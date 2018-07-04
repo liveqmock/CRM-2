@@ -180,7 +180,7 @@
     import draggable from "vuedraggable";
     import Quill from "quill";
     import icon from "@/components/common/ico";
-    import * as api from "@/api/index.js";
+    // import * as api from "@/api/index.js";
     import * as pApi from "@/privilegeList/index.js";
     import utils from "@/utils/index.js";
 
