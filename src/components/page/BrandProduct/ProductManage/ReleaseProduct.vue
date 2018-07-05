@@ -25,7 +25,7 @@
                 <div class="upload-tip">建议尺寸：800*800,拖拽图片可以改变顺序，第一张为默认头图</div>
             </el-form-item>
             <el-form-item label="产品分类">
-                <el-cascader filterable  @change='getProItemId' :options="itemList" :props="itemProps"></el-cascader>
+                <el-cascader filterable  @change='getProItemId' v-model="proItemArr" :options="itemList" :props="itemProps"></el-cascader>
                 <span style="margin-left:30px">产品品牌</span>
                 <el-select @change="getSupplyList" v-model="form.brandId" placeholder="请选择">
                   <el-option v-for="(v,k) in brandArr" :key="k" :label="v.label" :value="v.value"></el-option>
@@ -180,6 +180,7 @@ export default {
       selectedTagArr:[],
       tagArr:[],
       tagName:'',
+      proItemArr:[]
     };
   },
 
@@ -192,6 +193,7 @@ export default {
   activated() {
     this.uploadImg = api.addImg;
     this.imgArr = [];
+    this.proItemArr = [];
     this.selectedTagArr = [];
     // 获取一级类目
     this.getFirstItem();

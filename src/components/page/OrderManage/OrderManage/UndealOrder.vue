@@ -20,12 +20,6 @@
                 <el-form-item prop="recevicePhone" label="收货人手机">
                     <el-input v-model="form.recevicePhone" placeholder="请输入收货人手机号"></el-input>
                 </el-form-item>
-                <el-form-item prop="startTime" label="下单开始时间">
-                  <el-date-picker v-model="form.startTime" type="datetime" placeholder="请选择开始时间"></el-date-picker>
-                </el-form-item>
-                <el-form-item prop="endTime" label="下单结束时间">
-                  <el-date-picker v-model="form.endTime" type="datetime" placeholder="请选择结束时间"></el-date-picker>
-                </el-form-item>
                 <el-form-item prop="shutDownStatus" label="关闭状态">
                     <el-select v-model="form.closeReason" placeholder="请选择">
                       <el-option label="暂不选择" value=""></el-option>
@@ -56,6 +50,15 @@
                       <el-option label="申请售后" value="1"></el-option>
                       <el-option label="售后成功" value="2"></el-option>
                     </el-select>
+                </el-form-item>
+                <el-form-item prop="dateRange" label="下单时间">
+                  <el-date-picker
+                        v-model="dateRange"
+                        type="datetimerange"
+                        start-placeholder="开始日期"
+                        end-placeholder="结束日期"
+                    >
+                    </el-date-picker>
                 </el-form-item>
                 <el-form-item label=" ">
                     <el-button type="primary" @click="submitForm(1)">查询</el-button>
@@ -157,6 +160,7 @@ import vBreadcrumb from "@/components/common/Breadcrumb.vue";
 import * as api from "@/api/OrderManage/OrderManage/index.js";
 import * as pApi from "@/privilegeList/OrderManage/OrderManage/index.js";
 import utils from "@/utils/index.js";
+import moment from 'moment';
 
 export default {
   components: {
@@ -193,13 +197,12 @@ export default {
         { label: "purple", value: "5" }
       ],
       status: "",
+      dateRange:[],
       form: {
         orderNum: "",
         productName: "",
         receiver: "",
         recevicePhone: "",
-        startTime: "",
-        endTime: "",
         stars: "",
         today: "",
         yesterday: "",
@@ -240,8 +243,8 @@ export default {
       this.page.currentPage = 1;
       this.tableData = [];
       let data = {};
-      data.startTime = utils.formatTime(this.form.startTime);
-      data.endTime = utils.formatTime(this.form.endTime);
+      data.startTime =this.dateRange.length!=0?moment(this.dateRange[0]).format('YYYY-MM-DD HH:mm:ss'):'';
+      data.endTime = this.dateRange.length!=0?moment(this.dateRange[1]).format('YYYY-MM-DD HH:mm:ss'):'';
       Object.assign(data, this.form);
       data.page = val;
       data.url = this.priUrl;
@@ -283,6 +286,7 @@ export default {
       this.form.today = "";
       this.form.yesterday = "";
       this.form.threeMonths = "";
+      this.dateRange = []
     },
     // 修改星级
     changeColor(v1, v) {
