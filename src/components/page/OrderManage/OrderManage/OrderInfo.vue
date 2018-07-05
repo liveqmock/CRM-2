@@ -282,17 +282,17 @@ export default {
             res.data.data.province == undefined ? "" : res.data.data.province
           }${res.data.data.city}${res.data.data.area}`;
           this.orderMsg.buyerRemark = res.data.data.buyerRemark;
-          if(res.data.data.storehouseProvince == null && res.data.data.storehouseCity == null &&res.data.data.storehouseArea == null){
-            this.orderMsg.storehouseName = '';
-          }else{
-            this.orderMsg.storehouseName = `${
+          res.data.data.storehouseProvince= res.data.data.storehouseProvince == null?'':res.data.data.storehouseProvince;
+          res.data.data.storehouseCity= res.data.data.storehouseCity == null?'':res.data.data.storehouseCity;
+          res.data.data.storehouseArea= res.data.data.storehouseArea == null?'':res.data.data.storehouseArea;
+          res.data.data.storehouseAddress= res.data.data.storehouseAddress == null?'':res.data.data.storehouseAddress;
+          this.orderMsg.storehouseName = `${
             res.data.data.storehouseProvince == null
               ? ""
               : res.data.data.storehouseProvince
             }${res.data.data.storehouseCity}${res.data.data.storehouseArea}${
               res.data.data.storehouseAddress
             }`;
-          }
           this.orderMsg.orderNum = res.data.data.orderNum;
           this.orderMsg.createTime = res.data.data.createTime;  // 创建时间
           this.orderMsg.sysPayTime = res.data.data.sysPayTime;  // 平台支付时间
