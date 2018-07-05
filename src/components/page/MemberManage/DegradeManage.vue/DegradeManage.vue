@@ -26,7 +26,7 @@
                     <span>元</span>
                 </el-form-item>
                 <el-form-item label="扣除经验值">
-                    <el-input v-model="form.demotionWeekSalesNumScore" placeholder="请输入数值" auto-complete="off"></el-input>
+                    <el-input v-model="form.demotionWeekSalesNumExp" placeholder="请输入数值" auto-complete="off"></el-input>
                     <span>分</span>
                 </el-form-item>
             </el-form>
@@ -98,7 +98,7 @@
                     this.setIsAjax(flag1)
                 } else if (index == 1) {
                     flag1=this.isEmpty(data.demotionWeekSalesNum,true);
-                    flag2=this.isEmpty(data.demotionWeekSalesNumScore,false);
+                    flag2=this.isEmpty(data.demotionWeekSalesNumExp,false);
                     this.setIsAjax(flag1&&flag2);
                 }
                 if(this.isAjax){
