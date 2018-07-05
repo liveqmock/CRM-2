@@ -32,7 +32,11 @@
                             <img :src="scope.row.original_img" alt="">
                         </template>
                     </el-table-column>
-                    <el-table-column prop="num" label="产品数" width="180" align="center"></el-table-column>
+                    <el-table-column label="产品数" width="180" align="center">
+                        <template slot-scope="scope">
+                            <template><span class="color-blue" @click="toProductList(scope.row.id)">{{scope.row.num}}</span></template>
+                        </template>
+                    </el-table-column>
                     <el-table-column label="状态" width="180" align="center">
                         <template slot-scope="scope">
                             <template v-if="scope.row.status == 1">启用</template>
@@ -196,7 +200,11 @@
                 this.$refs[formName].resetFields();
                 this.getList(this.page.currentPage)
             },
-
+            //跳到产品列表页
+            toProductList(id){
+                sessionStorage.setItem('brandId',id);
+                this.$router.push({ path: "/productList", query: { brandId: id } });
+            }
         }
     }
 </script>
@@ -271,6 +279,10 @@
         }
         .el-upload-list {
             display: none
+        }
+        .color-blue{
+            color: #33b4ff;
+            cursor: pointer;
         }
     }
 

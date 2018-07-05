@@ -41,10 +41,10 @@
                     供应产品品类品牌：
                     <div style="margin-top: -40px">
                         <div v-for="p in product" class="area">
-                            <div class="product-item">{{p.p_name}}-{{p.name}}</div><span>供应产品数：{{p.porductNum}}</span>
+                            <div class="product-item">{{p.p_name}}-{{p.name}}</div><span>供应产品数：<span @click="toProductList" class="color-blue">{{p.porductNum}}</span></span>
                         </div>
                         <div v-for="b in brand" class="area">
-                            <div class="product-item">{{b.name}}</div><span>供应产品数：{{b.porductNum}}</span>
+                            <div class="product-item">{{b.name}}</div><span>供应产品数：<span @click="toProductList" class="color-blue">{{b.porductNum}}</span></span>
                         </div>
                     </div>
 
@@ -116,6 +116,10 @@
             toUserDetail(item) {
                 localStorage.setItem('memberDetail', item.id);
                 this.$router.push({path: '/memberDetail', query: {id: item.id}})
+            },
+            //跳到产品列表页
+            toProductList(){
+
             }
         }
     }

@@ -15,7 +15,7 @@
             <!--设置降级经验值-->
             <el-form v-model="form" label-width="120px" v-if="index==0">
                 <el-form-item label="扣除经验值">
-                    <el-input v-model="form.demotionWeekNologinScore" placeholder="请输入数值" auto-complete="off"></el-input>
+                    <el-input v-model="form.demotionWeekNologinExp" placeholder="请输入数值" auto-complete="off"></el-input>
                     <span>分</span>
                 </el-form-item>
             </el-form>
@@ -84,7 +84,7 @@
                 let url;
                 switch (index) {
                     case 0://设置降级经验值
-                        url = api.updateDealerLevelDemotionWeekNologinScoreById;
+                        url = api.updateDealerLeveldemotionWeekNologinExpById;
                         break;
                     case 1://设置必要条件
                         url = api.updateDealerLevelDemotionWeekSalesById;
@@ -94,7 +94,7 @@
                 data.id = this.id;
                 let flag1=true,flag2=true;
                 if (index == 0) {
-                    flag1=this.isEmpty(data.demotionWeekNologinScore, false);
+                    flag1=this.isEmpty(data.demotionWeekNologinExp, false);
                     this.setIsAjax(flag1)
                 } else if (index == 1) {
                     flag1=this.isEmpty(data.demotionWeekSalesNum,true);
