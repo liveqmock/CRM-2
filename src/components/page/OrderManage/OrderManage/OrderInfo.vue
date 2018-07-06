@@ -42,7 +42,7 @@
                 <span class="smal-span">收货人：{{orderMsg.receiver}}</span>
                 <span class="smal-span">收货人联系方式：{{orderMsg.recevicePhone}}</span>
             </p>
-            <p v-if='orderStatus == 3 || orderStatus == 5 || orderStatus == 7' class="info-content">
+            <p v-if='(orderStatus == 3 || orderStatus == 5 || orderStatus == 7) && pickedUp !=2' class="info-content">
                 <span class="smal-span">收货地址：{{orderMsg.receiveAddress}}</span>
             </p>
             <p class="info-content">
@@ -193,6 +193,7 @@ export default {
       isShowPreferential: false, //优惠活动
       isShowWarehouse: false, // 更换提货仓
       orderStatus: "", //总订单状态: 1:待支付 2:待发货 3:待确认 4:待自提 5:确认收货 6:退款（关闭） 7:正常已完成 8:已关闭 9:用户删除 10:超时关闭
+      pickedUp:"", // 是否自提状态（1.正常 2.自提完成）
       markArr: [
         { label: "red", value: "1" },
         { label: "skyblue", value: "2" },
@@ -315,6 +316,7 @@ export default {
             v.type = res.data.data.payType;
             v.amounts =
               res.data.data.amounts == null ? "0" : res.data.data.amounts;
+              this.pickedUp = v.pickedUp;
             this.tableData.push(v);
           });
           this.orderFreeTimeDown(this.orderFreePayTime);
