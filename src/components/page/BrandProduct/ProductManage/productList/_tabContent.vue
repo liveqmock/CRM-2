@@ -6,8 +6,8 @@
             <el-form-item prop="name" label="产品名称">
                 <el-input v-model.trim="form.name" placeholder="请输入产品名称"></el-input>
             </el-form-item>
-            <el-form-item prop="brandId" label="产品ID号">
-                <el-input v-model.trim="form.brandId" placeholder="请输入产品ID"></el-input>
+            <el-form-item prop="prodCode" label="产品ID号">
+                <el-input v-model.trim="form.prodCode" placeholder="请输入产品ID"></el-input>
             </el-form-item>
             <el-form-item prop="barCode" label="条形码">
                 <el-input v-model.trim="form.barCode" placeholder="请输入条形码"></el-input>
@@ -151,7 +151,7 @@ export default {
       status: "",
       form: {
         name: "",
-        brandId: "",
+        prodCode: "",
         barCode: "",
         firstCategoryId: "",
         secCategoryId: "",
@@ -245,8 +245,6 @@ export default {
       console.log(`每页 ${val} 条`);
     },
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
-      this.page.currentPage = val;
       this.submitForm(val);
     },
     // 发布产品
