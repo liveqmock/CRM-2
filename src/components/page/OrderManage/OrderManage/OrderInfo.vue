@@ -72,7 +72,7 @@
             <p class="info-content">
                 <span v-if='orderStatus != 9' class="content-con">订单号：{{ orderMsg.orderNum }}</span>
                 <span v-if='orderStatus != 9' class="content-con">创建时间：{{ orderMsg.createTime | formatDate }}</span>
-                <span v-if='orderStatus != 9' class="content-con">平台支付时间：{{ orderMsg.sysPayTime | formatDate }}</span>
+                <span v-if='orderStatus != 9' class="content-con">平台支付时间：{{ orderMsg.payTime | formatDate }}</span>
                 <span v-if='orderStatus != 1 && orderStatus != 2 && orderStatus != 9' class="content-con">第三方支付时间：{{ orderMsg.payTime | formatDate }}</span>
             </p>
             <p class="info-content">
@@ -222,9 +222,8 @@ export default {
         storehouseName: "", //提货点
         orderNum: "", //订单号
         createTime: "", //订单创建时间
-        sysPayTime: "", // 平台支付时间
-        payTime: "", //第三方支付时间
-        deliveryTime: "", // 发货时间
+        payTime: "", //第三方/平台支付时间
+        deliveryTime: "", // 确认时间
         tradeNo: "", //第三方支付交易号
         sendTime:"",//发货时间
         cancleTime:""//取消时间
@@ -296,7 +295,6 @@ export default {
             }`;
           this.orderMsg.orderNum = res.data.data.orderNum;
           this.orderMsg.createTime = res.data.data.createTime;  // 创建时间
-          this.orderMsg.sysPayTime = res.data.data.sysPayTime;  // 平台支付时间
           this.orderMsg.payTime = res.data.data.payTime;  // 第三方支付时间
           this.orderMsg.deliveryTime = res.data.data.deliveryTime;  // 确认时间
           this.orderMsg.sendTime = res.data.data.sendTime; // 发货时间
@@ -304,6 +302,8 @@ export default {
           this.orderMsg.tradeNo = res.data.data.tradeNo;  
           this.orderFreePayTime = res.data.data.createTime; // 倒计时
           this.tableData = [];
+          this.pickedUp = res.data.data.pickedUp;
+          console.log(this.pickedUp)
           res.data.data.list.forEach((v, k) => {
             v.totalPrice = res.data.data.totalPrice;
             v.freightPrice = res.data.data.freightPrice;
@@ -316,7 +316,6 @@ export default {
             v.type = res.data.data.payType;
             v.amounts =
               res.data.data.amounts == null ? "0" : res.data.data.amounts;
-              this.pickedUp = v.pickedUp;
             this.tableData.push(v);
           });
           this.orderFreeTimeDown(this.orderFreePayTime);

@@ -294,6 +294,7 @@ export default {
       })
       this.form.smallImg = JSON.stringify(tmpSmalUrll);
       this.form.originalImg = JSON.stringify(tmpOriUrl);
+      this.form.type = 2;
       let data = {};
       data = this.form;
       data.id = this.productId;
@@ -420,6 +421,7 @@ export default {
         let data = {};
         data.name = this.tagName;
         data.url = pApi.findProductAllDataById;
+        data.type= 2;
         this.$axios.post(api.addTagLibrary,data)
         .then(res=>{
           this.$message.success('添加成功!');
@@ -537,7 +539,7 @@ export default {
     getAllTags(){
       this.tagArr = [];
        this.$axios
-        .post(api.queryTagLibraryList, {url:pApi.findProductAllDataById})
+        .post(api.queryTagLibraryList, {url:pApi.findProductAllDataById,type:2})
         .then(res => {
             res.data.data.forEach((v,k)=>{
               this.tagArr.push({label:v.name,value:v.id})

@@ -261,7 +261,6 @@
                                     <div class="operate">
                                         <el-button v-if='value.status == 8 && (value.return_type== 1 || value.return_type== 2)' @click='changeSingStatus(1,value)' type="primary">退款成功</el-button>
                                         <el-button v-if='value.status == 4 || value.status == 5' @click='changeSingStatus(2,value)' type="primary">买家申请退款</el-button>
-                                        <el-button v-if='value.status == 2' @click="changeStatus(value,3)" type="primary">已自提</el-button>
                                         <el-button v-if='value.status == 6' @click='changeSingStatus(value)' type="primary">买家申请退换</el-button>
                                         <el-button v-if='value.status == 8 && value.return_type== 3' @click='changeSingStatus(value)' type="primary">退换成功</el-button>
                                         <template v-if='value.status == 3 || value.status == 8'>已提货</template>
